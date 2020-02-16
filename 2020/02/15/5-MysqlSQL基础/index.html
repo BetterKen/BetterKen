@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>5.MysqlSQL基础 | KenBetter</title>
+  <meta name="keywords" content=" Mysql ">
+  <meta name="description" content="5.MysqlSQL基础 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(5)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(5)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(5)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="5">
+<input type="hidden" id="yelog_site_word_count" value="6.5k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB%E5%8F%8A%E5%AE%9E%E4%BE%8B%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类及实例介绍">1.数据库分类及实例介绍</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-5-MysqlSQL基础" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">5.MysqlSQL基础</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="数据库">数据库</a>/
+            
+                <a  data-rel="Mysql">Mysql</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Mysql</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-15</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:4k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈17分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-常用数据类型"><span class="toc-text">5.1 常用数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-1-整型"><span class="toc-text">5.1.1 整型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-2-小数"><span class="toc-text">5.1.2 小数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-3-字符"><span class="toc-text">5.1.3 字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-4-时间"><span class="toc-text">5.1.4 时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-列属性"><span class="toc-text">5.2 列属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-1-PRIMARY"><span class="toc-text">5.2.1 PRIMARY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-2-UNIQUE"><span class="toc-text">5.2.2 UNIQUE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-3-NULL"><span class="toc-text">5.2.3 NULL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-4-DEFAULT"><span class="toc-text">5.2.4 DEFAULT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-5-AUTO-INCREMENT"><span class="toc-text">5.2.5 AUTO_INCREMENT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-6-COMMENT"><span class="toc-text">5.2.6 COMMENT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-7-FOREIGN-KEY"><span class="toc-text">5.2.7 FOREIGN KEY</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-3-表属性"><span class="toc-text">5.3 表属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-1-engine"><span class="toc-text">5.3.1 engine</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-2-charset"><span class="toc-text">5.3.2 charset</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-常用SQL分类"><span class="toc-text">5.4 常用SQL分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-DDL语句"><span class="toc-text">5.5 DDL语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-1-数据库操作"><span class="toc-text">5.5.1 数据库操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-2-表操作"><span class="toc-text">5.5.2 表操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-6-DML语句"><span class="toc-text">5.6 DML语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-7-DCL语句"><span class="toc-text">5.7 DCL语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-8-DQL语句"><span class="toc-text">5.8 DQL语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-1-SELECT"><span class="toc-text">5.8.1 SELECT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-2-多表查询"><span class="toc-text">5.8.2 多表查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-3-SHOW"><span class="toc-text">5.8.3 SHOW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-4其它关键字"><span class="toc-text">5.8.4其它关键字</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="5-1-常用数据类型"><a href="#5-1-常用数据类型" class="headerlink" title="5.1 常用数据类型"></a>5.1 常用数据类型</h2><h3 id="5-1-1-整型"><a href="#5-1-1-整型" class="headerlink" title="5.1.1 整型"></a>5.1.1 整型</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">字节</th>
+<th align="center">范围(有符号位)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">TINYINT</td>
+<td align="center">1Byte</td>
+<td align="center">0~2^8 OR  -2^7 ~ 2^7-1</td>
+</tr>
+<tr>
+<td align="center">INT</td>
+<td align="center">4Byte</td>
+<td align="center">0~2^32 OR  -2^31 ~ 2^31-1</td>
+</tr>
+<tr>
+<td align="center">BIGINT</td>
+<td align="center">8Byte</td>
+<td align="center">0~2^64 OR -2^63 ~ 2^63-1</td>
+</tr>
+</tbody></table>
+<ul>
+<li>int(M)  M表示总位数<ul>
+<li>如果某个数不够定义字段时设置的位数，则前面以0补填，zerofill 属性修改</li>
+<li>例：int(5)   插入一个数’123’，补填后为’00123’</li>
+</ul>
+</li>
+<li>默认存在符号位，unsigned 属性修改</li>
+<li>在满足要求的情况下，越小越好</li>
+<li>1表示bool值真，0表示bool值假。MySQL没有布尔类型，通过整型0和1表示。常用tinyint(1)表示布尔型</li>
+</ul>
+<h3 id="5-1-2-小数"><a href="#5-1-2-小数" class="headerlink" title="5.1.2 小数"></a>5.1.2 小数</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">字节</th>
+<th align="center">范围(有符号位)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">float(单精度)</td>
+<td align="center">4Byte</td>
+<td align="center">自定义，表示近似值</td>
+</tr>
+<tr>
+<td align="center">double(双精度)</td>
+<td align="center">8Byte</td>
+<td align="center">自定义，表示近似值</td>
+</tr>
+<tr>
+<td align="center">decimal</td>
+<td align="center">自定义</td>
+<td align="center">自定义,表示精确数值</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>浮点型既支持符号位 unsigned 属性，也支持显示宽度 zerofill 属性，不同于整型，前后均会补填0</p>
+</li>
+<li><p>支持科学计数法表示。</p>
+</li>
+<li><p>定义浮点型时，需指定总位数和小数位数。</p>
+<blockquote>
+<p>float(M, D)     double(M, D)</p>
+<p>M表示总位数，D表示小数位数</p>
+<p>M和D的大小会决定浮点数的范围 不同于整型的固定范围</p>
+<p>M既表示总位数（不包括小数点和正负号），也表示显示宽度（所有显示符号均包括）</p>
+<p>decimal(M, D)   M也表示总位数，D表示小数位数</p>
+<p>保存一个精确的数值，不会发生数据的改变，不同于浮点数的四舍五入<br>将浮点数转换为字符串来保存，每9位数字保存为4个字节</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="5-1-3-字符"><a href="#5-1-3-字符" class="headerlink" title="5.1.3 字符"></a>5.1.3 字符</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">CHAR</td>
+<td align="left">定长字符串最多255个字符</td>
+</tr>
+<tr>
+<td align="center">VARCHAR</td>
+<td align="left">变长字符串最多65535个字符</td>
+</tr>
+<tr>
+<td align="center">TEXT</td>
+<td align="left">变长字符串最多65535个字符类型，在定义时,不需要定义长度<br/>也不会计算总长度不可给default值</td>
+</tr>
+<tr>
+<td align="center">BLOB</td>
+<td align="left">二进制字符串（字节字符串）</td>
+</tr>
+<tr>
+<td align="center">ENUM</td>
+<td align="left">枚举类型 smallint 存储</td>
+</tr>
+<tr>
+<td align="center">SET</td>
+<td align="left">集合类型 bigint存储</td>
+</tr>
+</tbody></table>
+<pre><code>char(11) ：
+定长字符串类型,在存储字符串时，最大字符长度11个，立即分配11个字符长度的存储空间，如果存不满，空格填充
+varchar(11):
+变长的字符串类型看，最大字符长度11个。在存储字符串时，自动判断字符长度，按需分配存储空间。
+M表示能存储的最大长度，此长度是字符数，非字节数。
+不同的编码，所占用的空间不同。
+char,最多255个字符，与编码无关。
+varchar,最多65535字符，与编码有关。
+一条有效记录最大不能超过65535个字节。
+utf8 最大为21844个字符，gbk 最大为32766个字符，latin1 最大为65532个字符
+【注】varchar 是变长的，需要利用存储空间保存 varchar 的长度，如果数据小于255个字节，则采用一个字节来保存长度，反之需要两个字节来保存。
+varchar 的最大有效长度由最大行大小和使用的字符集确定。
+
+最大有效长度是65532字节，因为在varchar存字符串时，第一个字节是空的，不存在任何数据，然后还需两个字节来存放字符串的长度，所以有效长度是64432-1-2=65532字节。
+
+例：若一个表定义为 CREATE TABLE tb(c1 int, c2 char(30), c3 varchar(N)) charset=utf8; 问N的最大值是多少？
+答：(65535-1-2-4-30*3)/3
+</code></pre><pre><code>枚举类型说明
+enum(val1, val2, val3...)
+在已知的值中进行单选。最大数量为65535.
+枚举值在保存时，以2个字节的整型(smallint)保存。每个枚举值，按保存的位置顺序，从1开始逐一递增。
+表现为字符串类型，存储却是整型。
+NULL值的索引是NULL。
+空字符串错误值的索引值是0
+枚举类型，比较适合于将来此列的值是固定范围内的特点，可以使用enum,可以很大程度的优化我们的索引结构</code></pre><pre><code class="mysql">集合类型说明
+set(val1, val2, val3...)
+create table tab ( gender set(&#39;男&#39;, &#39;女&#39;, &#39;无&#39;) );
+insert into tab values (&#39;男, 女&#39;);
+最多可以有64个不同的成员。以bigint存储，共8个字节。采取位运算的形式
+当创建表时，SET成员值的尾部空格将自动被删除</code></pre>
+<h3 id="5-1-4-时间"><a href="#5-1-4-时间" class="headerlink" title="5.1.4 时间"></a>5.1.4 时间</h3><table>
+<thead>
+<tr>
+<th align="center">类型</th>
+<th align="center">字节</th>
+<th align="center">说明</th>
+<th align="center">范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">datetime</td>
+<td align="center">8Byte</td>
+<td align="center">日期及时间</td>
+<td align="center">1000-01-01 00:00:00 到 9999-12-31 23:59:59</td>
+</tr>
+<tr>
+<td align="center">date</td>
+<td align="center">3Byte</td>
+<td align="center">日期</td>
+<td align="center">1000-01-01 到 9999-12-31</td>
+</tr>
+<tr>
+<td align="center">timestamp</td>
+<td align="center">4Byte</td>
+<td align="center">时间戳</td>
+<td align="center">19700101000000 到 2038-01-19 03:14:07</td>
+</tr>
+<tr>
+<td align="center">time</td>
+<td align="center">3Byte</td>
+<td align="center">时间</td>
+<td align="center">-838:59:59 到 838:59:59</td>
+</tr>
+<tr>
+<td align="center">year</td>
+<td align="center">1Byte</td>
+<td align="center">年份</td>
+<td align="center">1901 - 2155</td>
+</tr>
+</tbody></table>
+<h2 id="5-2-列属性"><a href="#5-2-列属性" class="headerlink" title="5.2 列属性"></a>5.2 列属性</h2><h3 id="5-2-1-PRIMARY"><a href="#5-2-1-PRIMARY" class="headerlink" title="5.2.1 PRIMARY"></a>5.2.1 PRIMARY</h3><ul>
+<li>能唯一标识记录的字段，可以作为主键。</li>
+<li>一个表只能有一个主键。</li>
+<li>主键具有唯一性。</li>
+<li>声明字段时，用 primary key 标识。</li>
+<li>也可以在字段列表之后声明：create table tab ( id int, stu varchar(10), primary key (id));</li>
+<li>主键字段的值不能为null。</li>
+<li>主键可以由多个字段共同组成。此时需要在字段列表后声明的方法。<br>  例：create table tab ( id int, stu varchar(10), age int, primary key (stu, age));</li>
+</ul>
+<h3 id="5-2-2-UNIQUE"><a href="#5-2-2-UNIQUE" class="headerlink" title="5.2.2 UNIQUE"></a>5.2.2 UNIQUE</h3><p>唯一索引,使得某字段的值也不能重复。</p>
+<h3 id="5-2-3-NULL"><a href="#5-2-3-NULL" class="headerlink" title="5.2.3 NULL"></a>5.2.3 NULL</h3><ul>
+<li>null不是数据类型，是列的一个属性。</li>
+<li>表示当前列是否可以为null，表示什么都没有。</li>
+<li>null, 允许为空。默认；not null, 不允许为空。</li>
+<li>insert into tab values (null, ‘val’); – 此时表示将第一个字段的值设为null, 取决于该字段是否允许为null</li>
+</ul>
+<h3 id="5-2-4-DEFAULT"><a href="#5-2-4-DEFAULT" class="headerlink" title="5.2.4 DEFAULT"></a>5.2.4 DEFAULT</h3><ul>
+<li>当前字段的默认值。<pre><code class="mysql">#表示强制使用默认值
+insert into tab values (default, &#39;val&#39;);
+#表示将当前时间的时间戳 设为默认值
+create table tab ( add_time timestamp default current_timestamp )</code></pre>
+</li>
+</ul>
+<h3 id="5-2-5-AUTO-INCREMENT"><a href="#5-2-5-AUTO-INCREMENT" class="headerlink" title="5.2.5 AUTO_INCREMENT"></a>5.2.5 AUTO_INCREMENT</h3><ul>
+<li>自动增长约束</li>
+<li>自动增长必须为索引（主键或unique）</li>
+<li>只能存在一个字段为自动增长。</li>
+<li>默认为1开始自动增长。可以通过表属性 auto_increment = x进行设置，或 alter table tbl auto_increment = x;</li>
+</ul>
+<h3 id="5-2-6-COMMENT"><a href="#5-2-6-COMMENT" class="headerlink" title="5.2.6 COMMENT"></a>5.2.6 COMMENT</h3><p>注释<br>例：create table tab ( id int ) comment ‘注释内容’;</p>
+<h3 id="5-2-7-FOREIGN-KEY"><a href="#5-2-7-FOREIGN-KEY" class="headerlink" title="5.2.7 FOREIGN KEY"></a>5.2.7 FOREIGN KEY</h3><p>外键约束 高并发下不建议使用 ERP中常用</p>
+<h2 id="5-3-表属性"><a href="#5-3-表属性" class="headerlink" title="5.3 表属性"></a>5.3 表属性</h2><h3 id="5-3-1-engine"><a href="#5-3-1-engine" class="headerlink" title="5.3.1 engine"></a>5.3.1 engine</h3><p>使用的存储引擎 建议都是用Innodb</p>
+<h3 id="5-3-2-charset"><a href="#5-3-2-charset" class="headerlink" title="5.3.2 charset"></a>5.3.2 charset</h3><p>使用的字符集 这个参数也可以在列属性里设置,但是不建议这样做,整表设置相同字符集即可</p>
+<p>常用的有:</p>
+<ul>
+<li>utf8 推荐使用** </li>
+<li>utf8mb4 推荐使用***</li>
+<li>gbk</li>
+</ul>
+<p>建议默认使用utf8mb4格式:</p>
+<blockquote>
+<p>MySQL在5.5.3之后增加了utf8mb4的编码，mb4即4-Byte UTF-8 Unicode Encoding，专门用来兼容四字节的unicode。utf8mb4为utf8的超集并兼容utf8，比utf8能表示更多的字符。</p>
+<p>低版本的MySQL支持的utf8编码，最大字符长度为 3 字节，如果遇到 4 字节的字符就会出现错误了。</p>
+<p>常见的四字节就是Emoji 表情（Emoji 是一种特殊的 Unicode 编码，常见于 ios 和 android 手机上），和一些不常用的汉字，以及任何新增的 Unicode 字符等等。</p>
+</blockquote>
+<h2 id="5-4-常用SQL分类"><a href="#5-4-常用SQL分类" class="headerlink" title="5.4 常用SQL分类"></a>5.4 常用SQL分类</h2><ul>
+<li>DDL：数据定义语言</li>
+<li>DML：数据操作语言</li>
+<li>DCL：数据控制语言</li>
+<li>DQL：数据的查询语言</li>
+</ul>
+<h2 id="5-5-DDL语句"><a href="#5-5-DDL语句" class="headerlink" title="5.5 DDL语句"></a>5.5 DDL语句</h2><h3 id="5-5-1-数据库操作"><a href="#5-5-1-数据库操作" class="headerlink" title="5.5.1 数据库操作"></a>5.5.1 数据库操作</h3><pre><code class="mysql"># 创建demo数据库
+mysql&gt; create database demo charset utf8mb4
+mysql&gt; create database if not exists demo charset utf8mb4;
+
+# 删除demo数据库
+mysql&gt; drop database demo;
+mysql&gt; drop database if exists demo;
+
+# 修改database字符集
+mysql&gt; alter database demo charset=utf8;</code></pre>
+<h3 id="5-5-2-表操作"><a href="#5-5-2-表操作" class="headerlink" title="5.5.2 表操作"></a>5.5.2 表操作</h3><pre><code class="mysql"># 创建表
+CREATE TABLE `t_scrm_user_info`
+(
+  `id`          INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id`     VARCHAR(32)      NOT NULL COMMENT &#39;用户ID作为唯一标示&#39;,
+  `user_name`   VARCHAR(32)      NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户姓名&#39;,
+  `user_sex`    TINYINT(3)       NOT NULL DEFAULT 0 COMMENT &#39;用户性别 0未知 1男 2女&#39;,
+  `user_mobile` VARCHAR(16)      NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户手机号&#39;,
+  `user_status` TINYINT(3)       NOT NULL DEFAULT 0 COMMENT &#39;用户状态 0正常 1锁定 -1删除&#39;,
+  `user_avatar` varchar(256)     NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户头像&#39;,
+  `create_time` DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#39;创建时间&#39;,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_USER_ID` (`user_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT =&#39;用户信息表&#39;;
+
+# 删除表
+mysql&gt; drop table t_scrm_user_info;
+
+# 重命名表
+mysql&gt; RENAME TABLE t_scrm_user_info to demo;
+
+# 复制表
+mysql&gt; CREATE table t_scrm_user_info like demo;
+
+# 清空表
+mysql&gt; truncate table t_scrm_user_info;
+
+# 添加列——添加update_time列
+ALTER TABLE t_scrm_user_info ADD update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &#39;更新时间&#39;;
+
+# 添加列——在user_avatar列后添加user_remark列
+ALTER TABLE t_scrm_user_info ADD `user_remark` VARCHAR(128) NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户备注&#39; AFTER user_avatar;
+
+# 更新列
+mysql&gt; ALTER TABLE t_scrm_user_info MODIFY user_name VARCHAR(64);
+注意上面语句更新的时候 会把user_name列上的其他属性更新没 如not null属性和comment属性
+所以建议写成如下：
+mysql&gt; ALTER TABLE t_scrm_user_info MODIFY user_name VARCHAR(32)      NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户姓名&#39;;
+
+# 更新列名
+mysql&gt; ALTER TABLE t_scrm_user_info CHANGE user_name u_name VARCHAR(32)      NOT NULL DEFAULT &#39;&#39; COMMENT &#39;用户姓名&#39;;
+
+# 删除列
+ALTER TABLE t_scrm_user_info DROP user_avatar;
+
+#添加索引
+ALTER TABLE tbl_name ADD INDEX index_name (column_list): 添加普通索引，索引值可出现多次。
+
+#删除索引
+DROP INDEX [indexName] ON mytable;</code></pre>
+<h2 id="5-6-DML语句"><a href="#5-6-DML语句" class="headerlink" title="5.6 DML语句"></a>5.6 DML语句</h2><pre><code class="mysql"># 插入
+INSERT INTO t_scrm_user_info
+(user_id,user_name,user_sex,user_mobile,user_status) 
+VALUES
+(&quot;123&quot;,&#39;nihao&#39;,1,&#39;18611111111&#39;,&#39;0&#39;),
+(&quot;345&quot;,&#39;hahah&#39;,1,&#39;18611111111&#39;,&#39;0&#39;);
+
+# 更新
+UPDATE t_scrm_user_info set user_id=&quot;444&quot; WHERE user_id=&quot;123&quot;;
+
+# 删除
+mysql&gt; DELETE FROM t_scrm_user_info where user_id =&quot;444&quot;;
+
+# 全表删除
+
+mysql&gt; DELETE FROM t_scrm_user_info;
+
+与truncate区别
+delete: 
+        DML操作, 是逻辑性质删除,逐行进行删除,速度慢. 还在文件里 文件大小不会改变
+        主键继续原来的增长计数
+truncate: 
+        DDL操作,对与表段中的数据页进行清空,速度快. 从文件里删除 文件大小改变
+        主键从1开始计数</code></pre>
+<h2 id="5-7-DCL语句"><a href="#5-7-DCL语句" class="headerlink" title="5.7 DCL语句"></a>5.7 DCL语句</h2><pre><code class="mysql"># 管理用户
+通配符：%表示可以在任意主机使用用户登录数据库
+【注意】在mysql里面用户的定义为:用户名+主机名
+【注意】在mysql8.0中添加用户和授权必须是两步进行 不能用一条语句
+# 添加用户
+mysql&gt; CREATE USER &#39;read&#39;@&#39;10.15.2.%&#39; identified by &#39;123&#39;;
+
+# 删除用户
+mysql&gt; DROP USER &#39;read&#39;@&#39;10.15.2.%&#39;;
+
+#修改用户密码
+mysql&gt; set password for &#39;read&#39;@&#39;10.15.2.%&#39; = password(&#39;456&#39;);
+
+# 授权
+# 查看授权
+mysql&gt; show grants for &#39;read&#39;@&#39;10.15.2.%&#39;;
++------------------------------------------+
+| Grants for read@10.15.2.%                |
++------------------------------------------+
+| GRANT USAGE ON *.* TO &#39;read&#39;@&#39;10.15.2.%&#39; |
++------------------------------------------+
+1 row in set (0.00 sec)
+
+# 添加授权
+grant 权限列表 on 数据库.表名  to  &#39;用户名&#39;@&#39;主机名&#39;;
+mysql&gt; GRANT CREATE,ALTER,DROP,INSERT,UPDATE,DELETE,SELECT ON demo.* TO &#39;read&#39;@&#39;10.15.2.%&#39;;
+# 授权所有权限
+mysql&gt; grant all privileges on demo.* to &#39;read&#39;@&#39;10.15.2.%&#39;;
+
+
+# 删除授权
+revoke 权限列表  on  数据库.表名  from  &#39;用户名&#39;@&#39;主机名&#39;;
+mysql&gt; revoke DROP,DELETE  on  demo.* from &#39;read&#39;@&#39;10.15.2.%&#39;;
+
+# 让授权生效
+FLUSH PRIVILEGES;
+</code></pre>
+<h2 id="5-8-DQL语句"><a href="#5-8-DQL语句" class="headerlink" title="5.8 DQL语句"></a>5.8 DQL语句</h2><h3 id="5-8-1-SELECT"><a href="#5-8-1-SELECT" class="headerlink" title="5.8.1 SELECT"></a>5.8.1 SELECT</h3><pre><code class="mysql">SELECT [ALL|DISTINCT] select_expr FROM -&gt; WHERE -&gt; GROUP BY [合计函数] -&gt; HAVING -&gt; ORDER BY -&gt; LIMIT
+a. select_expr
+    -- 可以用 * 表示所有字段。
+        select * from tb;
+    -- 可以使用表达式（计算公式、函数调用、字段也是个表达式）
+        select stu, 29+25, now() from tb;
+    -- 可以为每个列使用别名。适用于简化列标识，避免多个列标识符重复。
+        - 使用 as 关键字，也可省略 as.
+        select stu+10 as add10 from tb;
+b. FROM 子句
+    用于标识查询来源。
+    -- 可以为表起别名。使用as关键字。
+        SELECT * FROM tb1 AS tt, tb2 AS bb;
+    -- from子句后，可以同时出现多个表。
+        -- 多个表会横向叠加到一起，而数据会形成一个笛卡尔积。
+        SELECT * FROM tb1, tb2;
+    -- 向优化符提示如何选择索引
+        USE INDEX、IGNORE INDEX、FORCE INDEX
+        SELECT * FROM table1 USE INDEX (key1,key2) WHERE key1=1 AND key2=2 AND key3=3;
+        SELECT * FROM table1 IGNORE INDEX (key3) WHERE key1=1 AND key2=2 AND key3=3;
+c. WHERE 子句
+    -- 从from获得的数据源中进行筛选。
+    -- 整型1表示真，0表示假。
+    -- 表达式由运算符和运算数组成。
+        -- 运算数：变量（字段）、值、函数返回值
+        -- 运算符：
+            =, &lt;=&gt;, &lt;&gt;, !=, &lt;=, &lt;, &gt;=, &gt;, !, &amp;&amp;, ||,
+            in (not) null, (not) like, (not) in, (not) between and, is (not), and, or, not, xor
+            is/is not 加上ture/false/unknown，检验某个值的真假
+            &lt;=&gt;与&lt;&gt;功能相同，&lt;=&gt;可用于null比较
+d. GROUP BY 子句, 分组子句
+    GROUP BY 字段/别名 [排序方式]
+    分组后会进行排序。升序：ASC，降序：DESC
+    以下[合计函数]需配合 GROUP BY 使用：
+    count 返回不同的非NULL值数目  count(*)、count(字段)
+    sum 求和
+    max 求最大值
+    min 求最小值
+    avg 求平均值
+    group_concat 返回带有来自一个组的连接的非NULL值的字符串结果。组内字符串连接。
+e. HAVING 子句，条件子句
+    与 where 功能、用法相同，执行时机不同。
+    where 在开始时执行检测数据，对原数据进行过滤。
+    having 对筛选出的结果再次进行过滤。
+    having 字段必须是查询出来的，where 字段必须是数据表存在的。
+    where 不可以使用字段的别名，having 可以。因为执行WHERE代码时，可能尚未确定列值。
+    where 不可以使用合计函数。一般需用合计函数才会用 having
+    SQL标准要求HAVING必须引用GROUP BY子句中的列或用于合计函数中的列。
+f. ORDER BY 子句，排序子句
+    order by 排序字段/别名 排序方式 [,排序字段/别名 排序方式]...
+    升序：ASC，降序：DESC
+    支持多个字段的排序。
+g. LIMIT 子句，限制结果数量子句
+    仅对处理好的结果进行数量限制。将处理好的结果的看作是一个集合，按照记录出现的顺序，索引从0开始。
+    limit 起始位置, 获取条数
+    省略第一个参数，表示从索引0开始。limit 获取条数
+h. DISTINCT, ALL 选项
+    distinct 去除重复记录
+    默认为 all, 全部记录</code></pre>
+<h3 id="5-8-2-多表查询"><a href="#5-8-2-多表查询" class="headerlink" title="5.8.2 多表查询"></a>5.8.2 多表查询</h3><p>多表查询使用join关键字进行连接</p>
+<p>连接方式分为四种:</p>
+<ul>
+<li>INNER JOIN：如果表中有至少一个匹配，则返回行</li>
+<li>LEFT JOIN：即使右表中没有匹配，也从左表返回所有的行</li>
+<li>RIGHT JOIN：即使左表中没有匹配，也从右表返回所有的行</li>
+<li>FULL JOIN：只要其中一个表中存在匹配，则返回行</li>
+</ul>
+<p>这里不详细介绍 看图理解</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/sql-join.png" alt=""></p>
+<p>也可参考此篇<a href="https://www.runoob.com/sql/sql-join.html" target="_blank" rel="noopener">文档</a></p>
+<h3 id="5-8-3-SHOW"><a href="#5-8-3-SHOW" class="headerlink" title="5.8.3 SHOW"></a>5.8.3 SHOW</h3><pre><code class="mysql">show  databases;                          #查看所有数据库
+show tables;                              #查看当前库的所有表
+SHOW TABLES FROM                          #查看某个指定库下的表
+show create database world                #查看建库语句
+show create table world.city              #查看建表语句
+show  grants for  root@&#39;localhost&#39;        #查看用户的权限信息
+show  charset；                            #查看字符集
+show collation                             #查看校对规则
+show processlist;                          #查看数据库连接情况
+show index from                            #表的索引情况
+show status                                 #数据库状态查看
+SHOW STATUS LIKE &#39;%lock%&#39;;                 #模糊查询数据库某些状态
+SHOW VARIABLES                             #查看所有配置信息
+SHOW variables LIKE &#39;%lock%&#39;;              #查看部分配置信息
+show engines                                #查看支持的所有的存储引擎
+show engine innodb status                  #查看InnoDB引擎相关的状态信息
+show binary logs                            #列举所有的二进制日志
+show master status                           #查看数据库的日志位置信息
+show binlog events;                          #查看二进制日志事件
+show slave status                           #查看从库状态
+SHOW RELAYLOG EVENTS                        #查看从库relaylog事件信息
+desc  (show colums from city)               #查看表的列定义信息
+</code></pre>
+<h3 id="5-8-4其它关键字"><a href="#5-8-4其它关键字" class="headerlink" title="5.8.4其它关键字"></a>5.8.4其它关键字</h3><pre><code class="mysql"># distinct：去重复
+SELECT countrycode FROM city ;
+SELECT DISTINCT(countrycode) FROM city  ;
+
+# 联合查询- union all
+SELECT * FROM city 
+WHERE countrycode IN (&#39;CHN&#39; ,&#39;USA&#39;);
+
+SELECT * FROM city WHERE countrycode=&#39;CHN&#39;
+UNION ALL
+SELECT * FROM city WHERE countrycode=&#39;USA&#39;
+
+# 联合查询- union 
+SELECT * FROM city WHERE countrycode=&#39;CHN&#39;
+UNION 
+SELECT * FROM city WHERE countrycode=&#39;USA&#39;
+
+说明:一般情况下,我们会将 IN 或者 OR 语句 改写成 UNION (ALL),来提高性能
+UNION     去重复
+UNION ALL 不去重复
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
