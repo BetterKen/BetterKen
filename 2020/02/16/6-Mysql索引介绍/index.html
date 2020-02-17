@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>6.Mysql索引介绍 | KenBetter</title>
+  <meta name="keywords" content=" Mysql ">
+  <meta name="description" content="6.Mysql索引介绍 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(9)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(9)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(9)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="9">
+<input type="hidden" id="yelog_site_word_count" value="18.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-6-Mysql索引介绍" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">6.Mysql索引介绍</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="数据库">数据库</a>/
+            
+                <a  data-rel="Mysql">Mysql</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Mysql</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-16</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:5.1k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈18分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-Innodb索引组织表"><span class="toc-text">6.1 Innodb索引组织表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-Innodb逻辑存储结构"><span class="toc-text">6.1 Innodb逻辑存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-1-表空间"><span class="toc-text">6.2.1 表空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-2-段"><span class="toc-text">6.2.2 段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-3-区"><span class="toc-text">6.2.3 区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-4-页"><span class="toc-text">6.2.4 页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-5-行"><span class="toc-text">6.2.5 行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-B-树结构"><span class="toc-text">6.3 B+树结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-1-B-树结构"><span class="toc-text">6.3.1 B+树结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-2-MyISAM实现B-Tree"><span class="toc-text">6.3.2 MyISAM实现B+Tree</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-3-Innodb实现B-Tree"><span class="toc-text">6.3.3 Innodb实现B+Tree</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-索引分类"><span class="toc-text">6.4 索引分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-1-聚簇索引"><span class="toc-text">6.4.1 聚簇索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-1-非聚集索引"><span class="toc-text">6.4.1 非聚集索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-索引作用"><span class="toc-text">6.4 索引作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-1-索引的优点"><span class="toc-text">6.4.1 索引的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-2-索引平衡"><span class="toc-text">6.4.2 索引平衡</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-5-索引种类"><span class="toc-text">6.5 索引种类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-1-主键索引"><span class="toc-text">6.5.1 主键索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-2-普通单列索引"><span class="toc-text">6.5.2 普通单列索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-3-唯一索引"><span class="toc-text">6.5.3 唯一索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-4-前缀索引"><span class="toc-text">6.5.4 前缀索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-5-多列索引"><span class="toc-text">6.5.5 多列索引</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-6-覆盖索引"><span class="toc-text">6.6 覆盖索引</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-1-定义"><span class="toc-text">6.6.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-2-判断标准"><span class="toc-text">6.6.2 判断标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-3-优点"><span class="toc-text">6.6.3 优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-7-索引管理"><span class="toc-text">6.7 索引管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-1-什么是Cardinality"><span class="toc-text">6.7.1 什么是Cardinality</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-2-查看高选择性"><span class="toc-text">6.7.2 查看高选择性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-7-3-Cardinality统计"><span class="toc-text">6.7.3 Cardinality统计</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>【注意】主要介绍Innodb的索引结构</p>
+<h2 id="6-1-Innodb索引组织表"><a href="#6-1-Innodb索引组织表" class="headerlink" title="6.1 Innodb索引组织表"></a>6.1 Innodb索引组织表</h2><p>和MyISAM的一个大区别,在Innodb的存储引擎中,表都是根据<code>主键</code>顺序组织存放的.我们把这种存储方式的表成为<code>索引组织表(index origanized table)</code>即大家常说的<code>IOT</code>方式</p>
+<p>Innodb规定每一个表必须需要有主键(PK),主键的选择方式按照如下顺序选择:</p>
+<ol>
+<li>如有有定义主键 则选择此主键</li>
+<li>如果为定义主键 选择<code>第一个定义的非空唯一索引</code>做主键:这里注意有三个条件:<code>非空</code>,<code>唯一</code>,<code>第一个满足以上两个条件的索引</code></li>
+<li>如果以上两个都没有,Innodb会自动创建一个6字节大小的指针:隐式的创建,平时查询不能看到</li>
+</ol>
+<pre><code class="mysql">我们可以通过以下语句查看每一行的主键id,
+select *,_rowid form table;
+
+_rowid表示表的主键 
+需要注意的是 _rowid只能用于查看单个列为主键的情况 对于多列组成的主键就不好使了</code></pre>
+<h2 id="6-1-Innodb逻辑存储结构"><a href="#6-1-Innodb逻辑存储结构" class="headerlink" title="6.1 Innodb逻辑存储结构"></a>6.1 Innodb逻辑存储结构</h2><p>之间介绍过Innodb库表的文件结构为两个:</p>
+<pre><code>${tablename}.frm   #表结构文件
+${tablename}.idb   #表索引及数据文件</code></pre><p>所有的数据都被逻辑的存放在一个空间中(.idb文件中),我们称这个空间为<code>表空间(tablespace)</code></p>
+<p>表空间的组成结构如下图所示:</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/innodb_engine_struct.png" alt=""></p>
+<p>这样看可能不明显 再看一个:</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/tablespace.png" alt=""></p>
+<pre><code>可以看到:
+表空间
+  ↓
+段segment
+  ↓
+区extent
+  ↓
+页page/块block   &lt;---最小储存单元
+
+而页里面包含了一个一个的行数据
+</code></pre><h3 id="6-2-1-表空间"><a href="#6-2-1-表空间" class="headerlink" title="6.2.1 表空间"></a>6.2.1 表空间</h3><p>在5.6以前所有的数据都存在共享表空间ibdata1中，在5.6以后加入了<code>innodb_file_per_table</code>参数默认是开启的,建议也是开启的,开启了这个参数后,每张表内的数据会单独放到一个表空间内</p>
+<p>需要注意的是:每张表空间内存放的只有:</p>
+<ul>
+<li>数据</li>
+<li>索引</li>
+<li>插入缓存Bitmap</li>
+</ul>
+<p>其他的一些信息如:undo操作,插入缓存索引页,失误信息,double write buffer还是存在ibdata里</p>
+<p>ibdata的具体介绍会在innodb索引章节进行介绍说明</p>
+<h3 id="6-2-2-段"><a href="#6-2-2-段" class="headerlink" title="6.2.2 段"></a>6.2.2 段</h3><p>常见的段分类如下:</p>
+<ul>
+<li>数据段</li>
+<li>索引段</li>
+<li>回滚段</li>
+</ul>
+<h3 id="6-2-3-区"><a href="#6-2-3-区" class="headerlink" title="6.2.3 区"></a>6.2.3 区</h3><p>区是由<code>连续的页</code>组成的空间,<code>在任何情况下每个区的大小都为1MB</code></p>
+<p>为了保证区的连续性,每次存储引擎都会从磁盘申请四五个区</p>
+<p>默认情况下,Innodb页的大小为16KB,即一个区共有64个页  =&gt; (2^10) / (2^4)</p>
+<p>页的大小可以在初始化的时候进行调整,但是区的大小总为1MB</p>
+<h3 id="6-2-4-页"><a href="#6-2-4-页" class="headerlink" title="6.2.4 页"></a>6.2.4 页</h3><p>页是InnoDB存储引擎磁盘管理的最小单位，每个页默认16KB</p>
+<p>可以通过参数<code>innodb_page_size</code>将页的大小设置为4K、8K、16K</p>
+<p>若设置完成，则所有表中页的大小都为innodb_page_size，不可以再次对其进行修改</p>
+<p>除非通过mysqldump导入和导出操作来产生新的库</p>
+<p>innodb的所有数据文件（后缀为ibd的文件），他的大小始终都是<code>innodb_page_size</code> (16384(16k))的整数倍</p>
+<pre><code>[root@centos7-1 baseinfo]# ll|grep &#39;ibd&#39; 
+-rw-r-----. 1 mysql mysql 2663383040 xxx.ibd  =&gt; 2663383040 = 16384*162560
+-rw-r-----. 1 mysql mysql  868220928 ccc.ibd  =&gt; 868220928 = 16384*52992</code></pre><p><code>innodb_page_size</code>的大小限制了tablespace表空间的大小:</p>
+<p>Table 14.25 InnoDB Maximum Tablespace Size</p>
+<table>
+<thead>
+<tr>
+<th>InnoDB Page Size</th>
+<th>Maximum Tablespace Size</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4KB</td>
+<td>16TB</td>
+</tr>
+<tr>
+<td>8KB</td>
+<td>32TB</td>
+</tr>
+<tr>
+<td>16KB</td>
+<td>64TB</td>
+</tr>
+<tr>
+<td>32KB</td>
+<td>128TB</td>
+</tr>
+<tr>
+<td>64KB</td>
+<td>256TB</td>
+</tr>
+</tbody></table>
+<h3 id="6-2-5-行"><a href="#6-2-5-行" class="headerlink" title="6.2.5 行"></a>6.2.5 行</h3><p>Innodb存储引擎是面向列的,也就是数据是按行存放的,每个页存放行的记录也是有硬性规定的</p>
+<p>最多允许存放16KB/2-200行记录,即7992行</p>
+<p>但实际上互联网公司一行的数据大概为1KB,即一个page可以存放16行数据</p>
+<h2 id="6-3-B-树结构"><a href="#6-3-B-树结构" class="headerlink" title="6.3 B+树结构"></a>6.3 B+树结构</h2><p>无论是MyISAM还是Innodb 他们在存储数据时,都用到了B+树结构</p>
+<h3 id="6-3-1-B-树结构"><a href="#6-3-1-B-树结构" class="headerlink" title="6.3.1 B+树结构"></a>6.3.1 B+树结构</h3><p>(1) 原理图:</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/BTree.png" alt=""></p>
+<p>(2)特点：</p>
+<ul>
+<li>非叶子节点只存储键值信息</li>
+<li>所有叶子节点之间都有一个链指针</li>
+<li>叶子节点也多存储了指向下一个叶子节点的指针，更方便叶子节点的范围遍历</li>
+<li>数据记录都存放在叶子节点中</li>
+<li>所有的叶子节点组成一个循环双向链表</li>
+</ul>
+<h3 id="6-3-2-MyISAM实现B-Tree"><a href="#6-3-2-MyISAM实现B-Tree" class="headerlink" title="6.3.2 MyISAM实现B+Tree"></a>6.3.2 MyISAM实现B+Tree</h3><p>(1)原理图：</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/MtISAMBTree.png" alt=""></p>
+<p>(2)特点：</p>
+<ul>
+<li>索引文件和数据文件是分离的</li>
+<li>索引文件仅保存数据行记录的地址（行指针）</li>
+<li>主索引与二级索引无区别</li>
+<li>二级索引也存储的是行指针</li>
+</ul>
+<h3 id="6-3-3-Innodb实现B-Tree"><a href="#6-3-3-Innodb实现B-Tree" class="headerlink" title="6.3.3 Innodb实现B+Tree"></a>6.3.3 Innodb实现B+Tree</h3><p>(1)原理图：</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/InnodbBtree.png" alt=""></p>
+<p>(2)特点：</p>
+<ul>
+<li>主键索引既存储索引值，又在叶子节点中存储整行的数据</li>
+<li>二级索引存储索引列值+主键信息</li>
+<li>必须有主键 主键的选择如前文所释</li>
+</ul>
+<h2 id="6-4-索引分类"><a href="#6-4-索引分类" class="headerlink" title="6.4 索引分类"></a>6.4 索引分类</h2><p>我们根据索引文件是否和数据文件共同存储,可讲索引分为:</p>
+<ul>
+<li>聚簇索引(聚集索引)</li>
+<li>非聚簇索引(辅助索引)</li>
+</ul>
+<p>不管是聚簇索引还是非聚簇索引我们看到他们内部都是B+树的,即高度平衡的,他们之间的区别是叶子节点是否存放的是一整行数据信息</p>
+<h3 id="6-4-1-聚簇索引"><a href="#6-4-1-聚簇索引" class="headerlink" title="6.4.1 聚簇索引"></a>6.4.1 聚簇索引</h3><p>Innodb的数据页同B+树数据结构一样,每个页都通过一个双向链表来进行链接。</p>
+<p>由于实际的数据页只能按照一颗B+树进行排序,因此每张表只能拥有一个<code>聚簇索引</code></p>
+<p>在多数情况下,查询优化器倾向与采用聚簇索引:</p>
+<ul>
+<li>聚簇索引能够在叶子节点上直接找到数据</li>
+<li>由于定义了数据的逻辑顺序,聚簇索引能够特别快的访问针对范围值的查询</li>
+</ul>
+<p>【注意】聚簇索引的存储并不是物理上连续的,而是逻辑上连续的:</p>
+<ul>
+<li>页通过双向链表链接,页按照主键的顺序排序</li>
+<li>每个页的记录也是通过双向链表进行维护的,物理储存上可以同样不按照主键存储</li>
+</ul>
+<h3 id="6-4-1-非聚集索引"><a href="#6-4-1-非聚集索引" class="headerlink" title="6.4.1 非聚集索引"></a>6.4.1 非聚集索引</h3><p>对于非聚集索引,叶子节点不包含行记录的全部数据。叶子节点除了包含主键值以外,每个叶子节点的索引行还包含了一个书签(bookmark),在Innodb数据引擎中,这个bookmark就代表相应行数据的聚集索引键</p>
+<p>他们之间的关系如下:</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/IndexRelat.jpg" alt=""></p>
+<p>辅助索引的存在并不影响数据在聚集索引中的组织，因此<code>每张表上可以有多个辅助索引，但只能有一个聚集索引</code>。当通过辅助索引来寻找数据时，InnoDB存储引擎会遍历辅助索引并通过叶子级别的指针获得只想主键索引的主键，然后再通过主键索引来找到一个完整的行记录。</p>
+<p>举例来说，如果在一棵高度为3的辅助索引树种查找数据，那需要对这个辅助索引树遍历3次找到指定主键，如果聚集索引树的高度同样为3，那么还需要对聚集索引树进行3次查找，最终找到一个完整的行数据所在的页，因此一共需要6次逻辑IO访问才能得到最终的一个数据页。</p>
+<p>当然后面优化器部分会有相应的优化算法来优化IO次数</p>
+<h2 id="6-4-索引作用"><a href="#6-4-索引作用" class="headerlink" title="6.4 索引作用"></a>6.4 索引作用</h2><blockquote>
+<p>索引是存储引擎用于快速找到记录的一种数据结构,这是索引的基本功能</p>
+</blockquote>
+<h3 id="6-4-1-索引的优点"><a href="#6-4-1-索引的优点" class="headerlink" title="6.4.1 索引的优点"></a>6.4.1 索引的优点</h3><ul>
+<li>索引大大检索了服务器需要扫描的数据量</li>
+<li>索引可以帮助服务器避免排序和临时表</li>
+<li>索引可以将随机IO变为顺序IO</li>
+</ul>
+<h3 id="6-4-2-索引平衡"><a href="#6-4-2-索引平衡" class="headerlink" title="6.4.2 索引平衡"></a>6.4.2 索引平衡</h3><p>索引太多,应用程序的性能可能受到影响,索引太少,对查询性能又会产生影响,要找到一个平衡点至关重要。</p>
+<p>不要总是在事后才想起添加索引,设计表时要知道数据的使用,从一开始就应该在需要处添加索引</p>
+<p>当然索引并不一定是最好的解决方案:</p>
+<ul>
+<li><p>在创建索引，更新数据表的时候，会给数据库带来额外的消耗。总的来说，只有当索引帮助存储引擎快速查找到记录带来的好处大于其带来的额外工作时，索引才是有效的。</p>
+</li>
+<li><p>对于非常小的表，大部分情况下全表扫描更高效。</p>
+</li>
+<li><p>对于中到大型的表，索引特别有效</p>
+</li>
+<li><p>但是对于特大型的表，建立和使用索引带来的代价将随之增长，这种情况下，需要使用一种技术可以直接区分出查询需要的一组数据，而不是一条记录一条记录的匹配。例如分区表技术;</p>
+</li>
+</ul>
+<h2 id="6-5-索引种类"><a href="#6-5-索引种类" class="headerlink" title="6.5 索引种类"></a>6.5 索引种类</h2><ul>
+<li>聚簇索引<ul>
+<li>主键索引</li>
+</ul>
+</li>
+<li>非聚簇索引<ul>
+<li>普通单列索引</li>
+<li>唯一索引</li>
+<li>前缀索引</li>
+<li>多列索引</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-5-1-主键索引"><a href="#6-5-1-主键索引" class="headerlink" title="6.5.1 主键索引"></a>6.5.1 主键索引</h3><p>必须要有的索引，用于构建聚簇索引的基本条件</p>
+<p>一个表只能有一个主键，不允许有空值。一般是在建表的时候同时创建主键索引。</p>
+<p>关键字及创建方式:</p>
+<pre><code class="mysql">  PRIMARY KEY (`id`)</code></pre>
+<h3 id="6-5-2-普通单列索引"><a href="#6-5-2-普通单列索引" class="headerlink" title="6.5.2 普通单列索引"></a>6.5.2 普通单列索引</h3><p>普通索引是最基本的索引类型，唯一的任务是加快对数据的访问速度，没有任何限制。</p>
+<p>关键字及创建方式:</p>
+<pre><code class="mysql">CREATE INDEX index_name ON TABLE(column_name);
+ALTER TABLE table_name ADD INDEX index_name(column_name);
+INDEX index_name (name(length))</code></pre>
+<h3 id="6-5-3-唯一索引"><a href="#6-5-3-唯一索引" class="headerlink" title="6.5.3 唯一索引"></a>6.5.3 唯一索引</h3><p>索引列的值必须唯一，但允许有空值。如果是组合索引，则列值的组合必须唯一。</p>
+<p>关键字及创建方式:</p>
+<pre><code class="mysql">UNIQUE INDEX index_name (column_name)
+CREATE UNIQUE INDEX index_name ON mytable(column_name)
+ALTER TABLE table_name ADD UNIQUE indexName(column_name)
+</code></pre>
+<h3 id="6-5-4-前缀索引"><a href="#6-5-4-前缀索引" class="headerlink" title="6.5.4 前缀索引"></a>6.5.4 前缀索引</h3><p>有时候需要索引很长的字符列，这会让索引变得大且慢。</p>
+<p>通常可以索引开始的部分字符，这样可以大大节约索引空间，从而提高索引效率。但这样也会降低索引的选择性。索引的选择性是指不重复的索引值（也称为基数，cardinality)和数据表的记录总数的比值，范围从1/#T到1之间。索引的选择性越高则查询效率越高，因为选择性高的索引可以让MySQL在查找时过滤掉更多的行。唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。</p>
+<p>一般情况下某个前缀的选择性也是足够高的，足以满足查询性能。对于BLOB，TEXT，或者很长的VARCHAR类型的列，必须使用前缀索引，因为MySQL不允许索引这些列的完整长度。</p>
+<p>诀窍在于要选择足够长的前缀以保证较高的选择性，同时又不能太长（以便节约空间）。前缀应该足够长，以使得前缀索引的选择性接近于索引的整个列。</p>
+<p>换句话说，<code>前缀的”基数“应该接近于完整的列的”基数“</code>。</p>
+<p>【注意】前缀索引只能作用在普通索引上 不能作用在唯一索引上</p>
+<p>那就是计算完整列的选择性，并使其前缀的选择性接近于完整列的选择性。下面显示如何计算完整列的选择性：</p>
+<pre><code class="mysql">mysql&gt; select count(distinct city) / count(*) from city_demo;
++---------------------------------+
+| count(distinct city) / count(*) |
++---------------------------------+
+|                          0.4283 |
++---------------------------------+
+1 row in set (0.05 sec)
+</code></pre>
+<p>可以在一个查询中针对不同前缀长度的选择性进行计算，这对于大表非常有用，下面给出如何在同一个查询中计算不同前缀长度的选择性：</p>
+<pre><code class="mysql">mysql&gt; select count(distinct left(city,3))/count(*) as sel3,
+    -&gt; count(distinct left(city,4))/count(*) as sel4,
+    -&gt; count(distinct left(city,5))/count(*) as sel5, 
+    -&gt; count(distinct left(city,6))/count(*) as sel6 
+    -&gt; from city_demo;
++--------+--------+--------+--------+
+| sel3   | sel4   | sel5   | sel6   |
++--------+--------+--------+--------+
+| 0.3367 | 0.4075 | 0.4208 | 0.4267 |
++--------+--------+--------+--------+
+1 row in set (0.01 sec)</code></pre>
+<p>可以看见当索引前缀为6时的基数是0.4267，已经接近完整列选择性0.4283。</p>
+<p>在上面的示例中，已经找到了合适的前缀长度，下面创建前缀索引：</p>
+<pre><code class="mysql">mysql&gt; alter table city_demo add key (city(6));
+Query OK, 0 rows affected (0.19 sec)
+Records: 0  Duplicates: 0  Warnings: 0</code></pre>
+<p>前缀索引是一种能使索引更小，更快的有效办法，但另一方面也有其<code>缺点</code>：</p>
+<ul>
+<li>mysql无法使用其前缀索引做ORDER BY和GROUP BY</li>
+<li>无法使用前缀索引做覆盖扫描。</li>
+</ul>
+<h3 id="6-5-5-多列索引"><a href="#6-5-5-多列索引" class="headerlink" title="6.5.5 多列索引"></a>6.5.5 多列索引</h3><p>指多个字段上创建的索引，只有在查询条件中使用了创建索引时的第一个字段，索引才会被使用。使用组合索引时遵循最左前缀集合。</p>
+<p>关键字及创建方式:</p>
+<pre><code class="mysql">ALTER TABLE table ADD INDEX name_city_age (name,city,age);</code></pre>
+<p>联合索引在内部的结构图如下图所示:</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/unionindex.png" alt=""></p>
+<p>对于联合索引（a,b），where a =xxx and b =xxx，和where a=xxx 可以使用此联合索引，但是对于where b = xxx不能使用，因为b列数据在此联合索引上不是有序的。具体的索引是否生效会在以后章节介绍。</p>
+<h2 id="6-6-覆盖索引"><a href="#6-6-覆盖索引" class="headerlink" title="6.6 覆盖索引"></a>6.6 覆盖索引</h2><h3 id="6-6-1-定义"><a href="#6-6-1-定义" class="headerlink" title="6.6.1 定义"></a>6.6.1 定义</h3><p>SQL只需要通过索引就可以返回查询所需要的数据，而不必通过二级索引查到主键之后再去查询数据。</p>
+<p>这样可以减少大量的IO操作,无需进行回表操作。</p>
+<h3 id="6-6-2-判断标准"><a href="#6-6-2-判断标准" class="headerlink" title="6.6.2 判断标准"></a>6.6.2 判断标准</h3><p>使用explain，可以通过输出的extra列来判断，对于一个索引覆盖查询，显示为<code>using index</code>,MySQL查询优化器在执行查询前会决定是否有索引覆盖查询</p>
+<h3 id="6-6-3-优点"><a href="#6-6-3-优点" class="headerlink" title="6.6.3 优点"></a>6.6.3 优点</h3><p>覆盖索引是一种非常强大的工具，能大大提高查询性能，只需要读取索引而不用读取数据有以下一些优点<br>1、索引项通常比记录要小，所以MySQL访问更少的数据<br>2、索引都按值的大小顺序存储，相对于随机访问记录，需要更少的I/O<br>3、大多数据引擎能更好的缓存索引，比如MyISAM只缓存索引<br>4、覆盖索引对于InnoDB表尤其有用，因为InnoDB使用聚集索引组织数据，如果二级索引中包含查询所需的数据，就不再需要在聚集索引中查找了</p>
+<h2 id="6-7-索引管理"><a href="#6-7-索引管理" class="headerlink" title="6.7 索引管理"></a>6.7 索引管理</h2><p>我们可以通过<code>SHOW INDEX FROM table</code>查看表的索引情况</p>
+<p><img src="http://mysql317.oss-cn-beijing.aliyuncs.com/showindex.png" alt=""></p>
+<p>具体每个字段的含义如下:</p>
+<p>下面我们一起了解下返回的这张表的含义：</p>
+<ol>
+<li>Table: 表名</li>
+<li>Non_unique: 如果索引不能包括重复值则为0，如果可以则为1。也就是平时所说的唯一索引。</li>
+<li>Key_name 索引名称，如果名字相同则表明是同一个索引，而并不是重复，比如上图中的而三条数据，其实是一个联合索引。</li>
+<li>Seq_in_index 索引中的列序列号，从1开始。上图中的二、三数据，Seq_in_index一个是1一个是2，就是表明在联合索引中的顺序，我们就能推断出联合索引中索引的前后顺序。</li>
+<li>Column_name 索引的列名。</li>
+<li>Collation指的是列以什么方式存储在索引中，可是A或NULL,Btree总是A,即排序的。</li>
+<li>Cardinality 是基数的意思，表示索引中唯一值的数目的估计值。我们知道某个字段的重复值越少越适合建索引，所以我们一般都是根据Cardinality来判断索引是否具有高选择性，如果这个值非常小，那就需要重新评估这个字段是否适合建立索引。</li>
+<li>Sub_part 前置索引的意思，如果列只是被部分地编入索引，则为被编入索引的字符的数目。如果整列被编入索引，则为NULL。</li>
+<li>Packed 指示关键字如何被压缩。如果没有被压缩，则为NULL。压缩一般包括压缩传输协议、压缩列解决方案和压缩表解决方案。</li>
+<li>.Null 如果列含有NULL，则含有YES。</li>
+<li>.Index_type表示索引类型，Mysql目前主要有以下几种索引类型：FULLTEXT，HASH，BTREE，RTREE。</li>
+<li>.Comment Index_comment 注释的意思。</li>
+</ol>
+<h3 id="6-7-1-什么是Cardinality"><a href="#6-7-1-什么是Cardinality" class="headerlink" title="6.7.1 什么是Cardinality"></a>6.7.1 什么是Cardinality</h3><p>不是所有的查询条件出现的列都需要添加索引。对于什么时候添加B+树索引。一般的经验是，在访问表中很少一部分时使用B+树索引才有意义。对于性别字段、地区字段、类型字段，他们可取值范围很小，称为低选择性。如</p>
+<pre><code class="mysql">SELECT * FROM student WHERE sex=&#39;M&#39;</code></pre>
+<p>按性别进行查询时，可取值一般只有M、F。</p>
+<p>因此SQL语句得到的结果可能是该表50%的数据(加入男女比例1:1)这时添加B+树索引是完全没有必要的。</p>
+<p>相反，如果某个字段的取值范围很广，几乎没有重复，属于高选择性。则此时使用B+树的索引是最合适的。</p>
+<p>例如对于姓名字段，基本上在一个应用中不允许重名的出现</p>
+<h3 id="6-7-2-查看高选择性"><a href="#6-7-2-查看高选择性" class="headerlink" title="6.7.2 查看高选择性"></a>6.7.2 查看高选择性</h3><p>怎样查看索引是否有高选择性？通过SHOW INDEX结果中的列Cardinality来观察。非常关键，表示所以中不重复记录的预估值，需要注意的是Cardinality是一个预估值，而不是一个准确值基本上用户也不可能得到一个准确的值</p>
+<p>在实际应用中，<code>Cardinality/n_row_in_table应尽可能的接近1</code>，如果非常小,那用户需要考虑是否还有必要创建这个索引。故在访问高选择性属性的字段并从表中取出很少一部分数据时，对于字段添加B+树索引是非常有必要的。如</p>
+<pre><code class="mysql">SELECT * FROM member WHERE usernick=&#39;David&#39;;</code></pre>
+<p>表member大约有500W行数据,usernick字段上有一个唯一索引。这也符号提到的高选择性</p>
+<h3 id="6-7-3-Cardinality统计"><a href="#6-7-3-Cardinality统计" class="headerlink" title="6.7.3 Cardinality统计"></a>6.7.3 Cardinality统计</h3><p>Cardinality统计时放在存储引擎层进行的</p>
+<p>在生成环境中，索引的更新操作可能非常频繁。如果每次索引在发生操作时就对其进行Cardinality统计，那么将会对数据库带来很大的负担。另外需要考虑的是，如果一张表的数据非常大，如一张表有50G的数据，那么统计一次Cardinality信息所需要的时间可能非常长。这样的环境下，是不能接受的。因此，数据库对于Cardinality信息的统计都是通过采样的方法完成</p>
+<p>在InnoDB存储引擎中，Cardinality统计信息的更新发生在两个操作中：insert和update。InnoDB存储引擎内部对更新Cardinality信息的策略为:</p>
+<ul>
+<li>表中1/16的数据已发生了改变</li>
+<li>stat_modified_counter&gt;2000 000 000</li>
+</ul>
+<p>接着考虑InnoDB存储引擎内部是怎样进行Cardinality信息统计和更新操作呢？同样是通过采样的方法。默认的InnoDB存储引擎对8个叶子节点Leaf Page进行采用。采用过程如下</p>
+<ol>
+<li>取得B+树索引中叶子节点的数量，记为A</li>
+<li>随机取得B+树索引中的8个叶子节点，统计每个页不同记录的个数，即为P1，P2….P8</li>
+<li>通过采样信息给出Cardinality的预估值:Cardinality=(P1+P2+…+P8)*A/8</li>
+</ol>
+<p>根据上述的说明可以发现，在InnoDB存储引擎中，Cardinality值通过对8个叶子节点预估而得的。而<code>不是一个实际精确的值</code>。再者，每次对Cardinality值的统计，都是通过随机取8个叶子节点得到的，这同时有暗示了另外一个Cardinality现象，即每次得到的Cardinality值可能不同的;</p>
+<p>当然，有一种情况可以使得用户每次观察到的索引Cardinality值是一样的。那就是表足够小，表的叶子节点树小于或者等于8个</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

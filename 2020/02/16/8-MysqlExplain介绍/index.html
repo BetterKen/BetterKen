@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>8.MysqlExplain介绍 | KenBetter</title>
+  <meta name="keywords" content=" Mysql ">
+  <meta name="description" content="8.MysqlExplain介绍 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(9)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(9)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(9)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="9">
+<input type="hidden" id="yelog_site_word_count" value="18.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-8-MysqlExplain介绍" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">8.MysqlExplain介绍</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="数据库">数据库</a>/
+            
+                <a  data-rel="Mysql">Mysql</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Mysql</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-16</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:3k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈14分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-Explain各列意义"><span class="toc-text">8.1 Explain各列意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-id"><span class="toc-text">8.2 id</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-select-type"><span class="toc-text">8.3 select_type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-4-table"><span class="toc-text">8.4 table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-5-partitions"><span class="toc-text">8.5 partitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-6-type"><span class="toc-text">8.6 type</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-7-possible-keys"><span class="toc-text">8.7  possible_keys</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-8-key"><span class="toc-text">8.8 key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-9-key-len列"><span class="toc-text">8.9 key_len列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-10-ref列"><span class="toc-text">8.10 ref列</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-11-rows列rows"><span class="toc-text">8.11 rows列rows</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-12-Extra列"><span class="toc-text">8.12 Extra列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-1-Using-filesort"><span class="toc-text">8.12.1 Using filesort</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-2-Using-temporary"><span class="toc-text">8.12.2 Using temporary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-3-Using-where"><span class="toc-text">8.12.3 Using where</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-4-Using-index"><span class="toc-text">8.12.4 Using index</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-5-Using-index-condition"><span class="toc-text">8.12.5 Using index condition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-6-Using-join-buffer"><span class="toc-text">8.12.6 Using join buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-12-7-Using-MRR"><span class="toc-text">8.12.7 Using MRR</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="8-1-Explain各列意义"><a href="#8-1-Explain各列意义" class="headerlink" title="8.1 Explain各列意义"></a>8.1 Explain各列意义</h2><p>EXPLAIN 命令的输出内容大致如下:</p>
+<pre><code class="mysql">mysql&gt; explain select *  from t_scrm_user_info where bigdata_user_id &gt; &#39;A1001036&#39; and bigdata_user_id &lt; &#39;A2100000&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_user_info
+   partitions: NULL
+         type: range
+possible_keys: UQ_CUSTOMER_ID
+          key: UQ_CUSTOMER_ID
+      key_len: 130
+          ref: NULL
+         rows: 168902
+     filtered: 100.00
+        Extra: Using index condition
+1 row in set, 1 warning (0.00 sec)</code></pre>
+<table>
+<thead>
+<tr>
+<th align="center">列名称</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">id</td>
+<td align="center">SELECT 查询的标识符. 每个 SELECT 都会自动分配一个唯一的标识符.</td>
+</tr>
+<tr>
+<td align="center">select_type</td>
+<td align="center">SELECT 查询的类型.</td>
+</tr>
+<tr>
+<td align="center">table</td>
+<td align="center">查询的是哪个表</td>
+</tr>
+<tr>
+<td align="center">partitions</td>
+<td align="center">匹配的分区</td>
+</tr>
+<tr>
+<td align="center">type</td>
+<td align="center">join 类型</td>
+</tr>
+<tr>
+<td align="center">possible_keys</td>
+<td align="center">此次查询中可能选用的索引</td>
+</tr>
+<tr>
+<td align="center">key</td>
+<td align="center">此次查询中确切使用到的索引.</td>
+</tr>
+<tr>
+<td align="center">ref</td>
+<td align="center">哪个字段或常数与 key 一起被使用</td>
+</tr>
+<tr>
+<td align="center">rows</td>
+<td align="center">显示此查询一共扫描了多少行. 这个是一个估计值.</td>
+</tr>
+<tr>
+<td align="center">filtered</td>
+<td align="center">表示此查询条件所过滤的数据的百分比</td>
+</tr>
+<tr>
+<td align="center">extra</td>
+<td align="center">额外的信息</td>
+</tr>
+</tbody></table>
+<h2 id="8-2-id"><a href="#8-2-id" class="headerlink" title="8.2 id"></a>8.2 id</h2><p>表示select标识符，同时表明执行顺序，也就是说id是一个查询的序列号，查询序号即为sql语句执行的顺序。</p>
+<ol>
+<li>当id值相同时，按从上到下的顺序执行</li>
+<li>当id全部不同时，按id从大到小执行</li>
+<li>当id部分不同时，先执行id大的，id相同的，按从上到下的顺序执行</li>
+</ol>
+<h2 id="8-3-select-type"><a href="#8-3-select-type" class="headerlink" title="8.3 select_type"></a>8.3 select_type</h2><ol>
+<li>SIMPLE 简单的select查询，查询中不包含子查询或者UNION</li>
+<li>PRIMARY 查询中若包含任何复杂的子部分，最外层查询则被标记为PRIMARY</li>
+<li>SUBQUERY 在SELECT或WHERE列表中包含了子查询</li>
+<li>DERIVED 在FROM列表中包含的子查询被标记为DERIVED（衍生），MySQL会递归执行这些子查询，把结果放在临时表中</li>
+<li>UNION 若第二个SELECT出现在UNION之后，则被标记为UNION：若UNION包含在FROM子句的子查询中，外层SELECT将被标记为：DERIVED</li>
+<li>UNION RESULT 从UNION表获取结果的SELECT</li>
+</ol>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_user_info where  id = 1\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_user_info
+   partitions: NULL
+         type: const
+possible_keys: PRIMARY,IX_ID_CREATE_TIME
+          key: PRIMARY
+      key_len: 4
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+==================================================================================
+mysql&gt; explain select * from (select * from t_scrm_pet_info limit 20) t where  t.id = (select id from t_scrm_map limit 1)\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: PRIMARY
+        table: &lt;derived2&gt;
+   partitions: NULL
+         type: ref
+possible_keys: &lt;auto_key0&gt;
+          key: &lt;auto_key0&gt;
+      key_len: 4
+          ref: const
+         rows: 2
+     filtered: 100.00
+        Extra: Using where
+*************************** 2. row ***************************
+           id: 3
+  select_type: SUBQUERY
+        table: t_scrm_map
+   partitions: NULL
+         type: index
+possible_keys: NULL
+          key: IX_CREATE_TIME
+      key_len: 5
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: Using index
+*************************** 3. row ***************************
+           id: 2
+  select_type: DERIVED
+        table: t_scrm_pet_info
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 4578062
+     filtered: 100.00
+        Extra: NULL
+3 rows in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+
+==================================================================================
+
+mysql&gt; explain select * from t_scrm_map where id =10 union select * from t_scrm_map where id = 20\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: PRIMARY
+        table: t_scrm_map
+   partitions: NULL
+         type: const
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 2. row ***************************
+           id: 2
+  select_type: UNION
+        table: t_scrm_map
+   partitions: NULL
+         type: const
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 3. row ***************************
+           id: NULL
+  select_type: UNION RESULT
+        table: &lt;union1,2&gt;
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: NULL
+     filtered: NULL
+        Extra: Using temporary
+3 rows in set, 1 warning (0.00 sec)
+</code></pre>
+<h2 id="8-4-table"><a href="#8-4-table" class="headerlink" title="8.4 table"></a>8.4 table</h2><p>这一列表示 explain 的一行正在访问哪个表。</p>
+<p>当 from 子句中有子查询时，table列是 <derivenN> 格式，表示当前查询依赖 id=N 的查询，于是先执行 id=N 的查询。当有 union 时，UNION RESULT 的 table 列的值为 &lt;union1,2&gt;，1和2表示参与 union 的 select 行id。</p>
+<h2 id="8-5-partitions"><a href="#8-5-partitions" class="headerlink" title="8.5 partitions"></a>8.5 partitions</h2><p>使用的哪些分区（对于非分区表值为null）</p>
+<h2 id="8-6-type"><a href="#8-6-type" class="headerlink" title="8.6 type"></a>8.6 type</h2><p>type所显示的是查询使用了哪种类型，type包含的类型包括如下图所示的几种：</p>
+<p>从最好到最差依次是：</p>
+<pre><code>system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; all</code></pre><p>一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
+<ul>
+<li><code>const, system</code>：mysql能对查询的某部分进行优化并将其转化成一个常量。用于 primary key 或 unique key 的所有列与常数比较时，所以表最多有一个匹配行，读取1次，速度比较快。</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_user_info where bigdata_user_id = &#39;B13470427&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_user_info
+   partitions: NULL
+         type: const
+possible_keys: UQ_CUSTOMER_ID
+          key: UQ_CUSTOMER_ID
+      key_len: 130
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+<ul>
+<li><code>eq_ref</code>：primary key 或 unique key 索引的所有部分被连接使用 ，最多只会返回一条符合条件的记录。这可能是在 const 之外最好的<code>联接类型</code>了，简单的 select 查询不会出现这种 type。</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_user_info u left join t_scrm_map m on u.bigdata_user_id = m.bigdata_id where u.bigdata_user_id = &#39;B13470427&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: u
+   partitions: NULL
+         type: const
+possible_keys: UQ_CUSTOMER_ID
+          key: UQ_CUSTOMER_ID
+      key_len: 130
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: m
+   partitions: NULL
+         type: ref
+possible_keys: UQ_ID
+          key: UQ_ID
+      key_len: 258
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: Using where
+2 rows in set, 1 warning (0.00 sec)
+</code></pre>
+<ul>
+<li>ref：相比 eq_ref，不使用唯一索引，而是使用普通索引或者唯一性索引的部分前缀，索引要和某个值相比较，可能会找到多个符合条件的行。</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map where target_id = &#39;11255964&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ref
+possible_keys: IX_TRAGET_ID
+          key: IX_TRAGET_ID
+      key_len: 130
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.00 sec)</code></pre>
+<ul>
+<li><code>ref_or_null</code>：类似ref，但是可以搜索值为NULL的行。</li>
+<li><code>range</code>：范围扫描通常出现在 in(), between ,&gt; ,&lt;, &gt;= 等操作中。使用一个索引来检索给定范围的行。</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map where id &gt; 10 and id  &lt;20\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: range
+possible_keys: PRIMARY
+          key: PRIMARY
+      key_len: 4
+          ref: NULL
+         rows: 9
+     filtered: 100.00
+        Extra: Using where
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+</code></pre>
+<ul>
+<li><code>index</code>：和ALL一样，不同就是mysql只需扫描索引树，这通常比ALL快一些。</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select count(*) from t_scrm_map\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: index
+possible_keys: NULL
+          key: IX_CREATE_TIME
+      key_len: 5
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: Using index
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+</code></pre>
+<ul>
+<li><code>ALL</code>：即全表扫描，意味着mysql需要从头到尾去查找所需要的行。通常情况下这需要增加索引来进行优化了</li>
+</ul>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+</code></pre>
+<h2 id="8-7-possible-keys"><a href="#8-7-possible-keys" class="headerlink" title="8.7  possible_keys"></a>8.7  possible_keys</h2><p>这一列显示查询可能使用哪些索引来查找。 </p>
+<p>explain 时可能出现 possible_keys 有列，而 key 显示 NULL 的情况，这种情况是因为表中数据不多，mysql认为索引对此查询帮助不大，选择了全表查询。 </p>
+<p>如果该列是NULL，则没有相关的索引。在这种情况下，可以通过检查 where 子句看是否可以创造一个适当的索引来提高查询性能，然后用 explain 查看效果。</p>
+<h2 id="8-8-key"><a href="#8-8-key" class="headerlink" title="8.8 key"></a>8.8 key</h2><p>这一列显示mysql实际采用哪个索引来优化对该表的访问。</p>
+<p>如果没有使用索引，则该列是 NULL。如果想强制mysql使用或忽视possible_keys列中的索引，在查询中使用 force index、ignore index。</p>
+<h2 id="8-9-key-len列"><a href="#8-9-key-len列" class="headerlink" title="8.9 key_len列"></a>8.9 key_len列</h2><p>这一列显示了mysql在索引里使用的字节数，通过这个值可以算出具体使用了索引中的哪些列。 </p>
+<pre><code class="mysql">key_len 的计算规则如下:
+
+字符串
+char(n): n 字节长度
+varchar(n): 如果是 utf8 编码, 则是 3 n + 2字节; 如果是 utf8mb4 编码, 则是 4n +2 字节.
+
+数值类型:
+TINYINT: 1字节
+SMALLINT: 2字节
+MEDIUMINT: 3字节
+INT: 4字节
+BIGINT: 8字节
+
+时间类型
+DATE: 3字节
+TIMESTAMP: 4字节
+DATETIME: 8字节
+
+字段属性: 
+NULL 属性 占用一个字节. 如果一个字段是 NOT NULL 的, 则没有此属性.</code></pre>
+<pre><code class="mysql">mysql&gt; explain select count(*) from t_scrm_map where target_id  = &#39;11255964&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ref
+possible_keys: IX_TRAGET_ID
+          key: IX_TRAGET_ID
+      key_len: 130
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: Using index
+1 row in set, 1 warning (0.00 sec)
+
+/**
+| t_scrm_map | CREATE TABLE `t_scrm_map` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bigdata_id` varchar(64) NOT NULL COMMENT &#39;唯一ID&#39;,
+  `type` tinyint(3) NOT NULL COMMENT &#39;关联类型&#39;,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UQ_ID` (`bigdata_id`,`type`),
+  KEY `IX_MAP_ID` (`scrm_id`),
+) ENGINE=InnoDB AUTO_INCREMENT=11962156 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT=&#39;关系表&#39; |
+*/
+
+
+mysql&gt; explain select count(*) from t_scrm_map where bigdata_id  = &#39;11255964&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ref
+possible_keys: UQ_ID
+          key: UQ_ID
+      key_len: 258
+          ref: const
+         rows: 1
+     filtered: 100.00
+        Extra: Using index
+1 row in set, 1 warning (0.04 sec)
+
+可以看到key_len = 258---&gt; 64*4+2;即只使用了索引UQ_ID的bigdata_id部分
+
+
+mysql&gt; explain select * from t_scrm_map where bigdata_id  = &#39;B11255964&#39; and type = 1\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: const
+possible_keys: UQ_ID
+          key: UQ_ID
+      key_len: 259
+          ref: const,const
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+1 row in set, 1 warning (0.04 sec)
+
+可以看到key_len = 258---&gt; 64*4+2+1;即使用了索引UQ_ID的bigdata_id和type部分
+</code></pre>
+<h2 id="8-10-ref列"><a href="#8-10-ref列" class="headerlink" title="8.10 ref列"></a>8.10 ref列</h2><p>这一列显示了在key列记录的索引中，表查找值所用到的列或常量，常见的有：</p>
+<ul>
+<li><p>const（常量）</p>
+</li>
+<li><p>func</p>
+</li>
+<li><p>NULL</p>
+</li>
+<li><p>字段名</p>
+</li>
+</ul>
+<h2 id="8-11-rows列rows"><a href="#8-11-rows列rows" class="headerlink" title="8.11 rows列rows"></a>8.11 rows列rows</h2><p>rows 也是一个重要的字段. MySQL 查询优化器根据统计信息, 估算 SQL 要查找到结果集需要扫描读取的数据行数. 这个值非常直观显示 SQL 的效率好坏, 原则上 rows 越少越好.</p>
+<h2 id="8-12-Extra列"><a href="#8-12-Extra列" class="headerlink" title="8.12 Extra列"></a>8.12 Extra列</h2><p>这一列展示的是额外信息。常见的重要值如下： </p>
+<h3 id="8-12-1-Using-filesort"><a href="#8-12-1-Using-filesort" class="headerlink" title="8.12.1 Using filesort"></a>8.12.1 Using filesort</h3><p>mysql 会对结果使用一个外部索引排序，而不是按索引次序从表里读取行。此时mysql会根据联接类型浏览所有符合条件的记录，并保存排序关键字和行指针，然后排序关键字并按顺序检索行信息。</p>
+<p><code>这种情况是要考虑使用索引来优化的</code></p>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map order by type asc\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: Using filesort
+1 row in set, 1 warning (0.00 sec)</code></pre>
+<h3 id="8-12-2-Using-temporary"><a href="#8-12-2-Using-temporary" class="headerlink" title="8.12.2 Using temporary"></a>8.12.2 Using temporary</h3><p>使用临时表保存中间结果，常用于GROUP BY 和 ORDER BY,DISTINCT操作中。</p>
+<p>出现这种情况一般是要进行优化的，首先是想到用索引来优化。</p>
+<pre><code class="mysql">mysql&gt; explain select distinct(type) from t_scrm_map order by type asc\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: index
+possible_keys: UQ_ID
+          key: UQ_ID
+      key_len: 259
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: Using index; Using temporary; Using filesort
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+<h3 id="8-12-3-Using-where"><a href="#8-12-3-Using-where" class="headerlink" title="8.12.3 Using where"></a>8.12.3 Using where</h3><p>在查找使用索引的情况下，需要回表去查询所需的数据</p>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map where target_id  = &#39;11255964&#39; and type =2\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: ref
+possible_keys: IX_TRAGET_ID
+          key: IX_TRAGET_ID
+      key_len: 130
+          ref: const
+         rows: 1
+     filtered: 10.00
+        Extra: Using where
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+<h3 id="8-12-4-Using-index"><a href="#8-12-4-Using-index" class="headerlink" title="8.12.4 Using index"></a>8.12.4 Using index</h3><p>这发生在对表的请求列都是同一索引的部分的时候，返回的列数据只使用了索引中的信息，而没有再去访问表中的行记录。是性能高的表现。</p>
+<pre><code class="mysql">mysql&gt; explain select count(*) from t_scrm_map\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: index
+possible_keys: NULL
+          key: IX_CREATE_TIME
+      key_len: 5
+          ref: NULL
+         rows: 11271619
+     filtered: 100.00
+        Extra: Using index
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+<h3 id="8-12-5-Using-index-condition"><a href="#8-12-5-Using-index-condition" class="headerlink" title="8.12.5 Using index condition"></a>8.12.5 Using index condition</h3><p>这是MySQL 5.6出来的新特性，叫做“索引条件推送”。</p>
+<p>简单说一点就是MySQL原来在索引上是不能执行如like这样的操作的，但是现在可以了，这样减少了不必要的IO操作，但是只能用在二级索引上。</p>
+<pre><code class="mysql">mysql&gt; explain select * from t_scrm_map where bigdata_id  = &#39;B11255964&#39; or bigdata_id like &#39;B125294%&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_map
+   partitions: NULL
+         type: range
+possible_keys: UQ_ID
+          key: UQ_ID
+      key_len: 258
+          ref: NULL
+         rows: 8
+     filtered: 100.00
+        Extra: Using index condition
+1 row in set, 1 warning (0.00 sec)
+
+</code></pre>
+<h3 id="8-12-6-Using-join-buffer"><a href="#8-12-6-Using-join-buffer" class="headerlink" title="8.12.6 Using join buffer"></a>8.12.6 Using join buffer</h3><p>使用了连接缓存：</p>
+<ul>
+<li>Block Nested Loop，连接算法是块嵌套循环连接;</li>
+<li>Batched Key Access，连接算法是批量索引连接</li>
+</ul>
+<h3 id="8-12-7-Using-MRR"><a href="#8-12-7-Using-MRR" class="headerlink" title="8.12.7 Using MRR"></a>8.12.7 Using MRR</h3><p>使用了MRR优化算法</p>
+<pre><code class="mysql">mysql&gt; explain select *  from t_scrm_user_info where bigdata_user_id &gt; &#39;A1001036&#39; and bigdata_user_id &lt; &#39;A2100000&#39;\G;
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: t_scrm_user_info
+   partitions: NULL
+         type: range
+possible_keys: UQ_CUSTOMER_ID
+          key: UQ_CUSTOMER_ID
+      key_len: 130
+          ref: NULL
+         rows: 168902
+     filtered: 100.00
+        Extra: Using index condition; Using MRR
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>9.MysqlProfile介绍 | KenBetter</title>
+  <meta name="keywords" content=" Mysql ">
+  <meta name="description" content="9.MysqlProfile介绍 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(9)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(9)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(9)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="9">
+<input type="hidden" id="yelog_site_word_count" value="18.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-9-MysqlProfile介绍" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">9.MysqlProfile介绍</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="数据库">数据库</a>/
+            
+                <a  data-rel="Mysql">Mysql</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Mysql</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-16</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:2.1k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈11分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-相关参数"><span class="toc-text">9.1　相关参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-开启profile"><span class="toc-text">9.2 开启profile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-help-profile"><span class="toc-text">9.3 help profile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-type类型"><span class="toc-text">9.4 type类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-profile过程"><span class="toc-text">9.5 profile过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-5-1-重点环节"><span class="toc-text">9.5.1 重点环节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-5-2-不应-减少出现的环节"><span class="toc-text">9.5.2 不应&#x2F;减少出现的环节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-6-日常常用指令"><span class="toc-text">9.6 日常常用指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-使用Performance查看profi"><span class="toc-text">9.7  使用Performance查看profi</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-7-1-查看所有语句"><span class="toc-text">9.7.1 查看所有语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-7-2-查看指定语句"><span class="toc-text">9.7.2 查看指定语句</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="9-1-相关参数"><a href="#9-1-相关参数" class="headerlink" title="9.1　相关参数"></a>9.1　相关参数</h2><pre><code class="mysql">mysql&gt; show variables like &#39;%profil%&#39;;
++------------------------+-------+
+| Variable_name          | Value |
++------------------------+-------+
+| have_profiling         | YES   |
+| profiling              | OFF   |
+| profiling_history_size | 15    |
++------------------------+-------+
+3 rows in set (0.01 sec)
+
+
+have_profiling： 当前版本是否支持profiling功能
+profiling： 是否开启profiling功能
+profiling_history_size： 保留profiling的数目，默认是15，范围为0~100，为0时代表禁用profiling
+</code></pre>
+<h2 id="9-2-开启profile"><a href="#9-2-开启profile" class="headerlink" title="9.2 开启profile"></a>9.2 开启profile</h2><pre><code class="mysql">session级别开启:
+mysql&gt; SET profiling = 1;
+全局开启
+echo &quot;profiling=1&quot; &gt;&gt; my.cnf</code></pre>
+<h2 id="9-3-help-profile"><a href="#9-3-help-profile" class="headerlink" title="9.3 help profile"></a>9.3 help profile</h2><p>我们可以通过help profile查看profile的用法,官方的解释已经很好了</p>
+<pre><code class="mysql">mysql&gt; help profile;
+Name: &#39;SHOW PROFILE&#39;
+Description:
+Syntax:
+SHOW PROFILE [type [, type] ... ]
+    [FOR QUERY n]
+    [LIMIT row_count [OFFSET offset]]
+
+type: {
+    ALL
+  | BLOCK IO
+  | CONTEXT SWITCHES
+  | CPU
+  | IPC
+  | MEMORY
+  | PAGE FAULTS
+  | SOURCE
+  | SWAPS
+}
+
+The SHOW PROFILE and SHOW PROFILES statements display profiling
+information that indicates resource usage for statements executed
+during the course of the current session.
+
+*Note*:
+
+The SHOW PROFILE and SHOW PROFILES statements are deprecated and will
+be removed in a future MySQL release. Use the Performance Schema
+instead; see
+http://dev.mysql.com/doc/refman/5.7/en/performance-schema-query-profili
+ng.html.
+
+To control profiling, use the profiling session variable, which has a
+default value of 0 (OFF). Enable profiling by setting profiling to 1 or
+ON:
+
+mysql&gt; SET profiling = 1;
+
+SHOW PROFILES displays a list of the most recent statements sent to the
+server. The size of the list is controlled by the
+profiling_history_size session variable, which has a default value of
+15. The maximum value is 100. Setting the value to 0 has the practical
+effect of disabling profiling.
+
+All statements are profiled except SHOW PROFILE and SHOW PROFILES, so
+you will find neither of those statements in the profile list.
+Malformed statements are profiled. For example, SHOW PROFILING is an
+illegal statement, and a syntax error occurs if you try to execute it,
+but it will show up in the profiling list.
+
+SHOW PROFILE displays detailed information about a single statement.
+Without the FOR QUERY n clause, the output pertains to the most
+recently executed statement. If FOR QUERY n is included, SHOW PROFILE
+displays information for statement n. The values of n correspond to the
+Query_ID values displayed by SHOW PROFILES.
+
+The LIMIT row_count clause may be given to limit the output to
+row_count rows. If LIMIT is given, OFFSET offset may be added to begin
+the output offset rows into the full set of rows.
+
+By default, SHOW PROFILE displays Status and Duration columns. The
+Status values are like the State values displayed by SHOW PROCESSLIST,
+although there might be some minor differences in interpretion for the
+two statements for some status values (see
+http://dev.mysql.com/doc/refman/5.7/en/thread-information.html).
+
+Optional type values may be specified to display specific additional
+types of information:
+
+o ALL displays all information
+
+o BLOCK IO displays counts for block input and output operations
+
+o CONTEXT SWITCHES displays counts for voluntary and involuntary
+  context switches
+
+o CPU displays user and system CPU usage times
+
+o IPC displays counts for messages sent and received
+
+o MEMORY is not currently implemented
+
+o PAGE FAULTS displays counts for major and minor page faults
+
+o SOURCE displays the names of functions from the source code, together
+  with the name and line number of the file in which the function
+  occurs
+
+o SWAPS displays swap counts
+
+Profiling is enabled per session. When a session ends, its profiling
+information is lost.
+
+URL: http://dev.mysql.com/doc/refman/5.7/en/show-profile.html
+
+Examples:
+mysql&gt; SELECT @@profiling;
++-------------+
+| @@profiling |
++-------------+
+|           0 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql&gt; SET profiling = 1;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql&gt; DROP TABLE IF EXISTS t1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql&gt; CREATE TABLE T1 (id INT);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql&gt; SHOW PROFILES;
++----------+----------+--------------------------+
+| Query_ID | Duration | Query                    |
++----------+----------+--------------------------+
+|        0 | 0.000088 | SET PROFILING = 1        |
+|        1 | 0.000136 | DROP TABLE IF EXISTS t1  |
+|        2 | 0.011947 | CREATE TABLE t1 (id INT) |
++----------+----------+--------------------------+
+3 rows in set (0.00 sec)
+
+mysql&gt; SHOW PROFILE;
++----------------------+----------+
+| Status               | Duration |
++----------------------+----------+
+| checking permissions | 0.000040 |
+| creating table       | 0.000056 |
+| After create         | 0.011363 |
+| query end            | 0.000375 |
+| freeing items        | 0.000089 |
+| logging slow query   | 0.000019 |
+| cleaning up          | 0.000005 |
++----------------------+----------+
+7 rows in set (0.00 sec)
+
+mysql&gt; SHOW PROFILE FOR QUERY 1;
++--------------------+----------+
+| Status             | Duration |
++--------------------+----------+
+| query end          | 0.000107 |
+| freeing items      | 0.000008 |
+| logging slow query | 0.000015 |
+| cleaning up        | 0.000006 |
++--------------------+----------+
+4 rows in set (0.00 sec)
+
+mysql&gt; SHOW PROFILE CPU FOR QUERY 2;
++----------------------+----------+----------+------------+
+| Status               | Duration | CPU_user | CPU_system |
++----------------------+----------+----------+------------+
+| checking permissions | 0.000040 | 0.000038 |   0.000002 |
+| creating table       | 0.000056 | 0.000028 |   0.000028 |
+| After create         | 0.011363 | 0.000217 |   0.001571 |
+| query end            | 0.000375 | 0.000013 |   0.000028 |
+| freeing items        | 0.000089 | 0.000010 |   0.000014 |
+| logging slow query   | 0.000019 | 0.000009 |   0.000010 |
+| cleaning up          | 0.000005 | 0.000003 |   0.000002 |
++----------------------+----------+----------+------------+
+7 rows in set (0.00 sec)
+</code></pre>
+<h2 id="9-4-type类型"><a href="#9-4-type类型" class="headerlink" title="9.4 type类型"></a>9.4 type类型</h2><p>这里我们主要关注两个指标　</p>
+<ul>
+<li><code>ALL</code>:显示所性能信息</li>
+<li><code>BLOCK IO</code>:显示块(页)IO的数量<ul>
+<li>BLOCK_OPS_IN:输入页数量</li>
+<li>BLOCK_OPS_OUT:输出页数量</li>
+</ul>
+</li>
+<li><code>CONTEXT SWITCHES</code>:上下文切换相关开销</li>
+<li><code>CPU</code>:显示CPU相关开销信息<ul>
+<li>CPU_user:用户所用时间,秒单位 </li>
+<li>CPU_system:系统所用时间,秒单位 </li>
+</ul>
+</li>
+<li><code>IPC</code>:显示发送和接收相关开销信息</li>
+<li><code>MEMORY</code>:显示内存相关开销信息</li>
+<li><code>PAGE FAULTS</code> :显示页面错误相关开销信息</li>
+<li><code>SOURCE</code> :显示和Source_function，Source_file，Source_line相关的开销信息</li>
+<li><code>SWAPS</code> :显示交换次数相关开销的信息</li>
+</ul>
+<h2 id="9-5-profile过程"><a href="#9-5-profile过程" class="headerlink" title="9.5 profile过程"></a>9.5 profile过程</h2><pre><code class="mysql">mysql&gt; show profile for query 4;
++----------------------+-----------+
+| Status               | Duration  |
++----------------------+-----------+
+| starting             |  0.000083 |
+| checking permissions |  0.000013 |
+| Opening tables       |  0.000019 |
+| init                 |  0.000036 |
+| System lock          |  0.000014 |
+| optimizing           |  0.000012 |
+| statistics           |  0.000021 |
+| preparing            |  0.000018 |
+| executing            |  0.000006 |
+| Sending data         | 87.327560 |
+| end                  |  0.000016 |
+| query end            |  0.000013 |
+| closing tables       |  0.000011 |
+| freeing items        |  0.000027 |
+| logging slow query   |  0.000057 |
+| cleaning up          |  0.000017 |
++----------------------+-----------+
+16 rows in set, 1 warning (0.00 sec)
+
+starting：开始
+checking permissions：检查权限
+Opening tables：打开表
+init ： 初始化
+System lock ：系统锁
+optimizing ： 优化
+statistics ： 统计
+preparing ：准备
+executing ：执行
+Sending data ：发送数据
+Sorting result ：排序
+end ：结束
+query end ：查询 结束
+closing tables ： 关闭表 ／去除TMP 表
+freeing items ： 释放事件
+cleaning up ：清理
+
+profile只能列出使用到的环节　没有使用的环节不显示</code></pre>
+<h3 id="9-5-1-重点环节"><a href="#9-5-1-重点环节" class="headerlink" title="9.5.1 重点环节"></a>9.5.1 重点环节</h3><ul>
+<li><code>preparing</code> ：准备</li>
+<li><code>executing</code> ：执行</li>
+<li><code>Sending data</code> ：发送数据  一般这个环节时间最长</li>
+<li><code>Sorting result</code> ：排序</li>
+</ul>
+<h3 id="9-5-2-不应-减少出现的环节"><a href="#9-5-2-不应-减少出现的环节" class="headerlink" title="9.5.2 不应/减少出现的环节"></a>9.5.2 不应/减少出现的环节</h3><ul>
+<li><code>converting HEAP to MyISAM</code>： 查询结果太大，内存都不够用了，往磁盘上搬了</li>
+<li><code>creating tmp table</code> ：创建临时表，拷贝数据到临时表，然后再删除</li>
+<li><code>copying to tmp table on disk</code> ：把内存中临时表复制到磁盘</li>
+<li><code>locked</code>: 被锁喉了~</li>
+</ul>
+<h2 id="9-6-日常常用指令"><a href="#9-6-日常常用指令" class="headerlink" title="9.6 日常常用指令"></a>9.6 日常常用指令</h2><pre><code class="mysql">SHOW PROFILE block io,cpu FOR QUERY N;
+多注意CPU和IO
+
+
+mysql&gt; SHOW PROFILE block io,cpu FOR QUERY 4\G;
+*************************** 1. row ***************************
+       Status: starting
+     Duration: 0.000083
+     CPU_user: 0.000049
+   CPU_system: 0.000025
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 2. row ***************************
+       Status: checking permissions
+     Duration: 0.000013
+     CPU_user: 0.000006
+   CPU_system: 0.000003
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 3. row ***************************
+       Status: Opening tables
+     Duration: 0.000019
+     CPU_user: 0.000012
+   CPU_system: 0.000006
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 4. row ***************************
+       Status: init
+     Duration: 0.000036
+     CPU_user: 0.000022
+   CPU_system: 0.000012
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 5. row ***************************
+       Status: System lock
+     Duration: 0.000014
+     CPU_user: 0.000008
+   CPU_system: 0.000004
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 6. row ***************************
+       Status: optimizing
+     Duration: 0.000012
+     CPU_user: 0.000007
+   CPU_system: 0.000003
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 7. row ***************************
+       Status: statistics
+     Duration: 0.000021
+     CPU_user: 0.000013
+   CPU_system: 0.000007
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 8. row ***************************
+       Status: preparing
+     Duration: 0.000018
+     CPU_user: 0.000011
+   CPU_system: 0.000006
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 9. row ***************************
+       Status: executing
+     Duration: 0.000006
+     CPU_user: 0.000003
+   CPU_system: 0.000002
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 10. row ***************************
+       Status: Sending data
+     Duration: 87.327560
+     CPU_user: 37.617680
+   CPU_system: 32.943640
+ Block_ops_in: 2591264
+Block_ops_out: 0
+*************************** 11. row ***************************
+       Status: end
+     Duration: 0.000016
+     CPU_user: 0.000006
+   CPU_system: 0.000004
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 12. row ***************************
+       Status: query end
+     Duration: 0.000013
+     CPU_user: 0.000007
+   CPU_system: 0.000005
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 13. row ***************************
+       Status: closing tables
+     Duration: 0.000011
+     CPU_user: 0.000006
+   CPU_system: 0.000004
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 14. row ***************************
+       Status: freeing items
+     Duration: 0.000027
+     CPU_user: 0.000015
+   CPU_system: 0.000010
+ Block_ops_in: 0
+Block_ops_out: 0
+*************************** 15. row ***************************
+       Status: logging slow query
+     Duration: 0.000057
+     CPU_user: 0.000032
+   CPU_system: 0.000021
+ Block_ops_in: 0
+Block_ops_out: 8
+*************************** 16. row ***************************
+       Status: cleaning up
+     Duration: 0.000017
+     CPU_user: 0.000009
+   CPU_system: 0.000006
+ Block_ops_in: 0
+Block_ops_out: 0
+16 rows in set, 1 warning (0.00 sec)
+
+ERROR: 
+No query specified
+
+</code></pre>
+<h2 id="9-7-使用Performance查看profi"><a href="#9-7-使用Performance查看profi" class="headerlink" title="9.7  使用Performance查看profi"></a>9.7  使用Performance查看profi</h2><p>通过help profile我们知道show proflie相关指令即将废弃,可以使用如下指令进行查询</p>
+<p>在使用以下两个命令前需要做一些设置角色的操作:具体请参考官方文档:</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.7/en/performance-schema-query-profiling.html" target="_blank" rel="noopener">25.19.1 Query Profiling Using Performance Schema</a></p>
+<h3 id="9-7-1-查看所有语句"><a href="#9-7-1-查看所有语句" class="headerlink" title="9.7.1 查看所有语句"></a>9.7.1 查看所有语句</h3><pre><code class="mysql">mysql&gt; SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TEXT        FROM performance_schema.events_statements_history_long\G;
+*************************** 1. row ***************************
+EVENT_ID: 146
+Duration: 0.000842
+SQL_TEXT: UPDATE performance_schema.setup_consumers
+       SET ENABLED = &#39;YES&#39;
+       WHERE NAME LIKE &#39;%events_statements_%&#39;
+*************************** 2. row ***************************
+EVENT_ID: 147
+Duration: 0.000376
+SQL_TEXT: UPDATE performance_schema.setup_consumers
+       SET ENABLED = &#39;YES&#39;
+       WHERE NAME LIKE &#39;%events_stages_%&#39;
+*************************** 3. row ***************************
+EVENT_ID: 154
+Duration: 2.089741
+SQL_TEXT: select count(*) from t_scrm_pet_info where pet_birthday &gt; &#39;2019-01-01 00:00:01&#39; and pet_birthday &lt; &#39;2019-03-01 00:00:01&#39;
+*************************** 4. row ***************************
+EVENT_ID: 171
+Duration: 0.003488
+SQL_TEXT: SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TEXT
+       FROM performance_schema.events_statements_history_long
+*************************** 5. row ***************************
+EVENT_ID: 188
+Duration: 0.000899
+SQL_TEXT: SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration
+       FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=154
+*************************** 6. row ***************************
+EVENT_ID: 205
+Duration: 0.000480
+SQL_TEXT: SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration        FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=154
+*************************** 7. row ***************************
+EVENT_ID: 222
+Duration: 0.000669
+SQL_TEXT: SELECT EVENT_ID, TRUNCATE(TIMER_WAIT/1000000000000,6) as Duration, SQL_TEXT        FROM performance_schema.events_statements_history_long
+7 rows in set (0.00 sec)
+
+ERROR: 
+No query specified
+</code></pre>
+<h3 id="9-7-2-查看指定语句"><a href="#9-7-2-查看指定语句" class="headerlink" title="9.7.2 查看指定语句"></a>9.7.2 查看指定语句</h3><pre><code class="mysql">mysql&gt; SELECT event_name AS Stage, TRUNCATE(TIMER_WAIT/1000000000000,6) AS Duration        FROM performance_schema.events_stages_history_long WHERE NESTING_EVENT_ID=154\G;
+*************************** 1. row ***************************
+   Stage: stage/sql/starting
+Duration: 0.000105
+*************************** 2. row ***************************
+   Stage: stage/sql/checking permissions
+Duration: 0.000008
+*************************** 3. row ***************************
+   Stage: stage/sql/Opening tables
+Duration: 0.000021
+*************************** 4. row ***************************
+   Stage: stage/sql/init
+Duration: 0.000059
+*************************** 5. row ***************************
+   Stage: stage/sql/System lock
+Duration: 0.000016
+*************************** 6. row ***************************
+   Stage: stage/sql/optimizing
+Duration: 0.000014
+*************************** 7. row ***************************
+   Stage: stage/sql/statistics
+Duration: 0.000023
+*************************** 8. row ***************************
+   Stage: stage/sql/preparing
+Duration: 0.000017
+*************************** 9. row ***************************
+   Stage: stage/sql/executing
+Duration: 0.000002
+*************************** 10. row ***************************
+   Stage: stage/sql/Sending data
+Duration: 2.089357
+*************************** 11. row ***************************
+   Stage: stage/sql/end
+Duration: 0.000005
+*************************** 12. row ***************************
+   Stage: stage/sql/query end
+Duration: 0.000012
+*************************** 13. row ***************************
+   Stage: stage/sql/closing tables
+Duration: 0.000009
+*************************** 14. row ***************************
+   Stage: stage/sql/freeing items
+Duration: 0.000027
+*************************** 15. row ***************************
+   Stage: stage/sql/logging slow query
+Duration: 0.000055
+*************************** 16. row ***************************
+   Stage: stage/sql/cleaning up
+Duration: 0.000001
+16 rows in set (0.00 sec)
+
+ERROR: 
+No query specified
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
