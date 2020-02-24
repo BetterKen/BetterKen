@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>10.Redis数据结构——object | KenBetter</title>
+  <meta name="keywords" content=" Redis , 缓存 ">
+  <meta name="description" content="10.Redis数据结构——object | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(31)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(20)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="31">
+<input type="hidden" id="yelog_site_word_count" value="59.4k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-10-Redis数据结构-object" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">10.Redis数据结构——object</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="中间件">中间件</a>/
+            
+                <a  data-rel="Redis">Redis</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Redis</a>
+            
+            <a class="color3">缓存</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-20</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:6.8k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈31分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#10-1-什么是object"><span class="toc-text">10.1 什么是object</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-2-数据结构"><span class="toc-text">10.2 数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-1-type"><span class="toc-text">10.2.1 type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-2-encoding"><span class="toc-text">10.2.2 encoding</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-3-Redis键的底层实现"><span class="toc-text">10.3 Redis键的底层实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-4-Redis值的底层实现"><span class="toc-text">10.4 Redis值的底层实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-1-字符串对象"><span class="toc-text">10.4.1 字符串对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-2-列表对象"><span class="toc-text">10.4.2 列表对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-3-哈希对象"><span class="toc-text">10.4.3 哈希对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-4-集合对象"><span class="toc-text">10.4.4 集合对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-5-有序集合对象"><span class="toc-text">10.4.5 有序集合对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-5-内存回收"><span class="toc-text">10.5 内存回收</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-6-对象共享"><span class="toc-text">10.6 对象共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-7-对象空转时长"><span class="toc-text">10.7 对象空转时长</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="10-1-什么是object"><a href="#10-1-什么是object" class="headerlink" title="10.1 什么是object"></a>10.1 什么是object</h2><p>在前面的数个章节里， 我们陆续介绍了 Redis 用到的所有主要数据结构， 比如简单动态字符串（SDS）、双端链表、字典、压缩列表、整数集合， 等等。</p>
+<p>Redis 并没有直接使用这些数据结构来实现键值对数据库， 而是基于这些数据结构创建了一个<code>对象系统</code>， 这个系统包含字符串对象、列表对象、哈希对象、集合对象和有序集合对象这五种类型的对象， 每种对象都用到了至少一种我们前面所介绍的数据结构。</p>
+<p>通过这五种不同类型的对象， Redis 可以在执行命令之前， 根据对象的类型来判断一个对象是否可以执行给定的命令。 使用对象的另一个好处是， 我们可以针对不同的使用场景， 为对象设置多种不同的数据结构实现， 从而优化对象在不同场景下的使用效率</p>
+<h2 id="10-2-数据结构"><a href="#10-2-数据结构" class="headerlink" title="10.2 数据结构"></a>10.2 数据结构</h2><pre><code class="c">#file : src/redis.c
+typedef struct redisObject {
+    // 类型
+    unsigned type:4;
+    // 编码
+    unsigned encoding:4;
+    // 对象最后一次被访问的时间
+    unsigned lru:REDIS_LRU_BITS; /* lru time (relative to server.lruclock) */
+    // 引用计数
+    int refcount;
+    // 指向实际值的指针
+    void *ptr;
+} robj;</code></pre>
+<p>Redis 使用对象来表示数据库中的键和值， 每次当我们在 Redis 的数据库中新创建一个键值对时， 我们至少会创建两个对象， 一个对象用作键值对的键（键对象）， 另一个对象用作键值对的值（值对象）。</p>
+<h3 id="10-2-1-type"><a href="#10-2-1-type" class="headerlink" title="10.2.1 type"></a>10.2.1 type</h3><p>对象的 type 属性记录了对象的类型:</p>
+<pre><code class="c">#file : src/redis.c
+// 对象类型
+#define REDIS_STRING 0  #字符串对象 &quot;string&quot;
+#define REDIS_LIST 1    #列表对象 &quot;list&quot;
+#define REDIS_SET 2     #哈希对象 &quot;hash&quot;
+#define REDIS_ZSET 3    #集合对象 &quot;set&quot;
+#define REDIS_HASH 4    #有序集合对象 &quot;zset&quot;</code></pre>
+<h3 id="10-2-2-encoding"><a href="#10-2-2-encoding" class="headerlink" title="10.2.2 encoding"></a>10.2.2 encoding</h3><p>对象的 ptr 指针指向对象的底层实现数据结构， 而这些数据结构由对象的 encoding 属性决定。</p>
+<p>encoding 属性记录了对象所使用的编码， 也即是说这个对象使用了什么数据结构作为对象的底层实现:</p>
+<pre><code class="c">#file : src/redis.c
+// 对象编码
+#简单动态字符串
+#define REDIS_ENCODING_RAW 0     /* Raw representation */ #long 类型的整数
+#long 类型的整数
+#define REDIS_ENCODING_INT 1     /* Encoded as integer */
+#字典
+#define REDIS_ENCODING_HT 2      /* Encoded as hash table */
+#压缩字典
+#define REDIS_ENCODING_ZIPMAP 3  /* Encoded as zipmap */
+#双端链表
+#define REDIS_ENCODING_LINKEDLIST 4 /* Encoded as regular linked list */
+#压缩列表
+#define REDIS_ENCODING_ZIPLIST 5 /* Encoded as ziplist */
+#整数集合
+#define REDIS_ENCODING_INTSET 6  /* Encoded as intset */
+#跳表
+#define REDIS_ENCODING_SKIPLIST 7  /* Encoded as skiplist */
+#embstr编码的简单动态字符串
+#define REDIS_ENCODING_EMBSTR 8  /* Embedded sds string encoding */</code></pre>
+<h2 id="10-3-Redis键的底层实现"><a href="#10-3-Redis键的底层实现" class="headerlink" title="10.3 Redis键的底层实现"></a>10.3 Redis键的底层实现</h2><p>对于 Redis 数据库保存的键值对来说， 键总是一个字符串对象， 而值则可以是字符串对象、列表对象、哈希对象、集合对象或者有序集合对象的其中一种</p>
+<h2 id="10-4-Redis值的底层实现"><a href="#10-4-Redis值的底层实现" class="headerlink" title="10.4 Redis值的底层实现"></a>10.4 Redis值的底层实现</h2><h3 id="10-4-1-字符串对象"><a href="#10-4-1-字符串对象" class="headerlink" title="10.4.1 字符串对象"></a>10.4.1 字符串对象</h3><pre><code class="c">#file: src/t_string.c
+
+/* SET key value [NX] [XX] [EX &lt;seconds&gt;] [PX &lt;milliseconds&gt;] */
+void setCommand(redisClient *c) {
+    int j;
+    robj *expire = NULL;
+    int unit = UNIT_SECONDS;
+    int flags = REDIS_SET_NO_FLAGS;
+
+    // 设置选项参数
+    for (j = 3; j &lt; c-&gt;argc; j++) {
+        char *a = c-&gt;argv[j]-&gt;ptr;
+        robj *next = (j == c-&gt;argc-1) ? NULL : c-&gt;argv[j+1];
+
+        if ((a[0] == &#39;n&#39; || a[0] == &#39;N&#39;) &amp;&amp;
+            (a[1] == &#39;x&#39; || a[1] == &#39;X&#39;) &amp;&amp; a[2] == &#39;\0&#39;) {
+            flags |= REDIS_SET_NX;
+        } else if ((a[0] == &#39;x&#39; || a[0] == &#39;X&#39;) &amp;&amp;
+                   (a[1] == &#39;x&#39; || a[1] == &#39;X&#39;) &amp;&amp; a[2] == &#39;\0&#39;) {
+            flags |= REDIS_SET_XX;
+        } else if ((a[0] == &#39;e&#39; || a[0] == &#39;E&#39;) &amp;&amp;
+                   (a[1] == &#39;x&#39; || a[1] == &#39;X&#39;) &amp;&amp; a[2] == &#39;\0&#39; &amp;&amp; next) {
+            unit = UNIT_SECONDS;
+            expire = next;
+            j++;
+        } else if ((a[0] == &#39;p&#39; || a[0] == &#39;P&#39;) &amp;&amp;
+                   (a[1] == &#39;x&#39; || a[1] == &#39;X&#39;) &amp;&amp; a[2] == &#39;\0&#39; &amp;&amp; next) {
+            unit = UNIT_MILLISECONDS;
+            expire = next;
+            j++;
+        } else {
+            addReply(c,shared.syntaxerr);
+            return;
+        }
+    }
+
+    // 尝试对值对象进行编码
+    c-&gt;argv[2] = tryObjectEncoding(c-&gt;argv[2]);
+
+    setGenericCommand(c,flags,c-&gt;argv[1],c-&gt;argv[2],expire,unit,NULL,NULL);
+}
+
+void setnxCommand(redisClient *c) {
+    c-&gt;argv[2] = tryObjectEncoding(c-&gt;argv[2]);
+    setGenericCommand(c,REDIS_SET_NX,c-&gt;argv[1],c-&gt;argv[2],NULL,0,shared.cone,shared.czero);
+}
+
+void setexCommand(redisClient *c) {
+    c-&gt;argv[3] = tryObjectEncoding(c-&gt;argv[3]);
+    setGenericCommand(c,REDIS_SET_NO_FLAGS,c-&gt;argv[1],c-&gt;argv[3],c-&gt;argv[2],UNIT_SECONDS,NULL,NULL);
+}
+
+void psetexCommand(redisClient *c) {
+    c-&gt;argv[3] = tryObjectEncoding(c-&gt;argv[3]);
+    setGenericCommand(c,REDIS_SET_NO_FLAGS,c-&gt;argv[1],c-&gt;argv[3],c-&gt;argv[2],UNIT_MILLISECONDS,NULL,NULL);
+}
+
+
+void setGenericCommand(redisClient *c, int flags, robj *key, robj *val, robj *expire, int unit, robj *ok_reply, robj *abort_reply) {
+
+    long long milliseconds = 0; /* initialized to avoid any harmness warning */
+
+    // 取出过期时间
+    if (expire) {
+
+        // 取出 expire 参数的值
+        // T = O(N)
+        if (getLongLongFromObjectOrReply(c, expire, &amp;milliseconds, NULL) != REDIS_OK)
+            return;
+
+        // expire 参数的值不正确时报错
+        if (milliseconds &lt;= 0) {
+            addReplyError(c,&quot;invalid expire time in SETEX&quot;);
+            return;
+        }
+
+        // 不论输入的过期时间是秒还是毫秒
+        // Redis 实际都以毫秒的形式保存过期时间
+        // 如果输入的过期时间为秒，那么将它转换为毫秒
+        if (unit == UNIT_SECONDS) milliseconds *= 1000;
+    }
+
+    // 如果设置了 NX 或者 XX 参数，那么检查条件是否不符合这两个设置
+    // 在条件不符合时报错，报错的内容由 abort_reply 参数决定
+    if ((flags &amp; REDIS_SET_NX &amp;&amp; lookupKeyWrite(c-&gt;db,key) != NULL) ||
+        (flags &amp; REDIS_SET_XX &amp;&amp; lookupKeyWrite(c-&gt;db,key) == NULL))
+    {
+        addReply(c, abort_reply ? abort_reply : shared.nullbulk);
+        return;
+    }
+
+    // 将键值关联到数据库
+    setKey(c-&gt;db,key,val);
+
+    // 将数据库设为脏
+    server.dirty++;
+
+    // 为键设置过期时间
+    if (expire) setExpire(c-&gt;db,key,mstime()+milliseconds);
+
+    // 发送事件通知
+    notifyKeyspaceEvent(REDIS_NOTIFY_STRING,&quot;set&quot;,key,c-&gt;db-&gt;id);
+
+    // 发送事件通知
+    if (expire) notifyKeyspaceEvent(REDIS_NOTIFY_GENERIC,
+        &quot;expire&quot;,key,c-&gt;db-&gt;id);
+    // 设置成功，向客户端发送回复
+    // 回复的内容由 ok_reply 决定
+    addReply(c, ok_reply ? ok_reply : shared.ok);
+}
+
+#file:src/object
+
+// 尝试对字符串对象进行编码，以节约内存。
+robj *tryObjectEncoding(robj *o) {
+    long value;
+
+    sds s = o-&gt;ptr;
+    size_t len;
+
+    redisAssertWithInfo(NULL,o,o-&gt;type == REDIS_STRING);
+
+    // 只在字符串的编码为 RAW 或者 EMBSTR 时尝试进行编码
+    if (!sdsEncodedObject(o)) return o;
+
+     // 不对共享对象进行编码
+     if (o-&gt;refcount &gt; 1) return o;
+
+    // 对字符串进行检查
+    // 只对长度小于或等于 21 字节，并且可以被解释为整数的字符串进行编码
+    len = sdslen(s);
+    if (len &lt;= 21 &amp;&amp; string2l(s,len,&amp;value)) {
+
+        if (server.maxmemory == 0 &amp;&amp;
+            value &gt;= 0 &amp;&amp;
+            value &lt; REDIS_SHARED_INTEGERS)
+        {
+            decrRefCount(o);
+            incrRefCount(shared.integers[value]);
+            return shared.integers[value];
+        } else {
+            if (o-&gt;encoding == REDIS_ENCODING_RAW) sdsfree(o-&gt;ptr);
+            o-&gt;encoding = REDIS_ENCODING_INT;
+            o-&gt;ptr = (void*) value;
+            return o;
+        }
+    }
+
+    // 尝试将 RAW 编码的字符串编码为 EMBSTR 编码
+    if (len &lt;= REDIS_ENCODING_EMBSTR_SIZE_LIMIT) {
+        robj *emb;
+
+        if (o-&gt;encoding == REDIS_ENCODING_EMBSTR) return o;
+        emb = createEmbeddedStringObject(s,sdslen(s));
+        decrRefCount(o);
+        return emb;
+    }
+
+    // 这个对象没办法进行编码，尝试从 SDS 中移除所有空余空间
+    if (o-&gt;encoding == REDIS_ENCODING_RAW &amp;&amp;
+        sdsavail(s) &gt; len/10)
+    {
+        o-&gt;ptr = sdsRemoveFreeSpace(o-&gt;ptr);
+    }
+
+    /* Return the original object. */
+    return o;
+}</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/stringadd.png" alt=""></p>
+<h3 id="10-4-2-列表对象"><a href="#10-4-2-列表对象" class="headerlink" title="10.4.2 列表对象"></a>10.4.2 列表对象</h3><pre><code class="c"># file : src/t_list.c
+
+void lpushxCommand(redisClient *c) {
+    c-&gt;argv[2] = tryObjectEncoding(c-&gt;argv[2]);
+    pushxGenericCommand(c,NULL,c-&gt;argv[2],REDIS_HEAD);
+}
+
+void rpushxCommand(redisClient *c) {
+    c-&gt;argv[2] = tryObjectEncoding(c-&gt;argv[2]);
+    pushxGenericCommand(c,NULL,c-&gt;argv[2],REDIS_TAIL);
+}
+
+void pushxGenericCommand(redisClient *c, robj *refval, robj *val, int where) {
+    robj *subject;
+    listTypeIterator *iter;
+    listTypeEntry entry;
+    int inserted = 0;
+
+    // 取出列表对象
+    if ((subject = lookupKeyReadOrReply(c,c-&gt;argv[1],shared.czero)) == NULL ||
+        checkType(c,subject,REDIS_LIST)) return;
+
+    // 执行的是 LINSERT 命令
+    if (refval != NULL) {
+        // 看保存值 value 是否需要将列表编码转换为双端链表
+        listTypeTryConversion(subject,val);
+
+        /* Seek refval from head to tail */
+        // 在列表中查找 refval 对象
+        iter = listTypeInitIterator(subject,0,REDIS_TAIL);
+        while (listTypeNext(iter,&amp;entry)) {
+            if (listTypeEqual(&amp;entry,refval)) {
+                // 找到了，将值插入到节点的前面或后面
+                listTypeInsert(&amp;entry,val,where);
+                inserted = 1;
+                break;
+            }
+        }
+        listTypeReleaseIterator(iter);
+
+        if (inserted) {
+            /* Check if the length exceeds the ziplist length threshold. */
+            // 查看插入之后是否需要将编码转换为双端链表
+            if (subject-&gt;encoding == REDIS_ENCODING_ZIPLIST &amp;&amp;
+                ziplistLen(subject-&gt;ptr) &gt; server.list_max_ziplist_entries)
+                    listTypeConvert(subject,REDIS_ENCODING_LINKEDLIST);
+
+            signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+
+            notifyKeyspaceEvent(REDIS_NOTIFY_LIST,&quot;linsert&quot;,
+                                c-&gt;argv[1],c-&gt;db-&gt;id);
+            server.dirty++;
+        } else {
+            /* Notify client of a failed insert */
+            // refval 不存在，插入失败
+            addReply(c,shared.cnegone);
+            return;
+        }
+
+    // 执行的是 LPUSHX 或 RPUSHX 命令
+    } else {
+        char *event = (where == REDIS_HEAD) ? &quot;lpush&quot; : &quot;rpush&quot;;
+
+        listTypePush(subject,val,where);
+
+        signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+
+        notifyKeyspaceEvent(REDIS_NOTIFY_LIST,event,c-&gt;argv[1],c-&gt;db-&gt;id);
+
+        server.dirty++;
+    }
+
+    addReplyLongLong(c,listTypeLength(subject));
+}
+
+
+/*
+ * 将给定元素添加到列表的表头或表尾。
+ *
+ * 参数 where 决定了新元素添加的位置：
+ *
+ *  - REDIS_HEAD 将新元素添加到表头
+ *  - REDIS_TAIL 将新元素添加到表尾
+ *
+ * 调用者无须担心 value 的引用计数，因为这个函数会负责这方面的工作。
+ */
+void listTypePush(robj *subject, robj *value, int where) {
+
+    /* Check if we need to convert the ziplist */
+    // 是否需要转换编码？
+    listTypeTryConversion(subject,value);
+
+    if (subject-&gt;encoding == REDIS_ENCODING_ZIPLIST &amp;&amp;
+        ziplistLen(subject-&gt;ptr) &gt;= server.list_max_ziplist_entries)
+            listTypeConvert(subject,REDIS_ENCODING_LINKEDLIST);
+
+    // ZIPLIST
+    if (subject-&gt;encoding == REDIS_ENCODING_ZIPLIST) {
+        int pos = (where == REDIS_HEAD) ? ZIPLIST_HEAD : ZIPLIST_TAIL;
+        // 取出对象的值，因为 ZIPLIST 只能保存字符串或整数
+        value = getDecodedObject(value);
+        subject-&gt;ptr = ziplistPush(subject-&gt;ptr,value-&gt;ptr,sdslen(value-&gt;ptr),pos);
+        decrRefCount(value);
+
+    // 双端链表
+    } else if (subject-&gt;encoding == REDIS_ENCODING_LINKEDLIST) {
+        if (where == REDIS_HEAD) {
+            listAddNodeHead(subject-&gt;ptr,value);
+        } else {
+            listAddNodeTail(subject-&gt;ptr,value);
+        }
+        incrRefCount(value);
+
+    // 未知编码
+    } else {
+        redisPanic(&quot;Unknown list encoding&quot;);
+    }
+}
+/*
+ * 对输入值 value 进行检查，看是否需要将 subject 从 ziplist 转换为双端链表，
+ * 以便保存值 value 。
+ *
+ * 函数只对 REDIS_ENCODING_RAW 编码的 value 进行检查，
+ * 因为整数编码的值不可能超长。
+ */
+void listTypeTryConversion(robj *subject, robj *value) {
+
+    // 确保 subject 为 ZIPLIST 编码
+    if (subject-&gt;encoding != REDIS_ENCODING_ZIPLIST) return;
+
+    if (sdsEncodedObject(value) &amp;&amp;
+        // 看字符串是否过长
+        sdslen(value-&gt;ptr) &gt; server.list_max_ziplist_value)
+            // 将编码转换为双端链表
+            listTypeConvert(subject,REDIS_ENCODING_LINKEDLIST);
+}
+/*
+ * 将列表的底层编码从 ziplist 转换成双端链表
+ */
+void listTypeConvert(robj *subject, int enc) {
+
+    listTypeIterator *li;
+    listTypeEntry entry;
+    redisAssertWithInfo(NULL,subject,subject-&gt;type == REDIS_LIST);
+
+    // 转换成双端链表
+    if (enc == REDIS_ENCODING_LINKEDLIST) {
+
+        list *l = listCreate();
+
+        listSetFreeMethod(l,decrRefCountVoid);
+
+        // 遍历 ziplist ，并将里面的值全部添加到双端链表中
+        li = listTypeInitIterator(subject,0,REDIS_TAIL);
+        while (listTypeNext(li,&amp;entry)) listAddNodeTail(l,listTypeGet(&amp;entry));
+        listTypeReleaseIterator(li);
+
+        // 更新编码
+        subject-&gt;encoding = REDIS_ENCODING_LINKEDLIST;
+
+        // 释放原来的 ziplist
+        zfree(subject-&gt;ptr);
+
+        // 更新对象值指针
+        subject-&gt;ptr = l;
+
+    } else {
+        redisPanic(&quot;Unsupported list conversion&quot;);
+    }
+}
+
+
+#file : src/object.c
+/*
+ * 创建一个 ZIPLIST 编码的列表对象
+ */
+robj *createZiplistObject(void) {
+
+    unsigned char *zl = ziplistNew();
+
+    robj *o = createObject(REDIS_LIST,zl);
+
+    o-&gt;encoding = REDIS_ENCODING_ZIPLIST;
+
+    return o;
+}
+</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/listadd.png" alt=""></p>
+<h3 id="10-4-3-哈希对象"><a href="#10-4-3-哈希对象" class="headerlink" title="10.4.3 哈希对象"></a>10.4.3 哈希对象</h3><pre><code class="c">#file src/t_hash.c
+
+/*-----------------------------------------------------------------------------
+ * Hash type commands
+ *----------------------------------------------------------------------------*/
+
+void hsetCommand(redisClient *c) {
+    int update;
+    robj *o;
+    // 取出或新创建哈希对象
+    if ((o = hashTypeLookupWriteOrCreate(c,c-&gt;argv[1])) == NULL) return;
+    // 如果需要的话，转换哈希对象的编码
+    hashTypeTryConversion(o,c-&gt;argv,2,3);
+    // 编码 field 和 value 对象以节约空间
+    hashTypeTryObjectEncoding(o,&amp;c-&gt;argv[2], &amp;c-&gt;argv[3]);
+    // 设置 field 和 value 到 hash
+    update = hashTypeSet(o,c-&gt;argv[2],c-&gt;argv[3]);
+    // 返回状态：显示 field-value 对是新添加还是更新
+    addReply(c, update ? shared.czero : shared.cone);
+    // 发送键修改信号
+    signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+    // 发送事件通知
+    notifyKeyspaceEvent(REDIS_NOTIFY_HASH,&quot;hset&quot;,c-&gt;argv[1],c-&gt;db-&gt;id);
+    // 将服务器设为脏
+    server.dirty++;
+}
+
+void hsetnxCommand(redisClient *c) {
+    robj *o;
+    // 取出或新创建哈希对象
+    if ((o = hashTypeLookupWriteOrCreate(c,c-&gt;argv[1])) == NULL) return;
+    // 如果需要的话，转换哈希对象的编码
+    hashTypeTryConversion(o,c-&gt;argv,2,3);
+    // 如果 field-value 对已经存在
+    // 那么回复 0 
+    if (hashTypeExists(o, c-&gt;argv[2])) {
+        addReply(c, shared.czero);
+    // 否则，设置 field-value 对
+    } else {
+        // 对 field 和 value 对象编码，以节省空间
+        hashTypeTryObjectEncoding(o,&amp;c-&gt;argv[2], &amp;c-&gt;argv[3]);
+        // 设置
+        hashTypeSet(o,c-&gt;argv[2],c-&gt;argv[3]);
+        // 回复 1 ，表示设置成功
+        addReply(c, shared.cone);
+        // 发送键修改信号
+        signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+        // 发送事件通知
+        notifyKeyspaceEvent(REDIS_NOTIFY_HASH,&quot;hset&quot;,c-&gt;argv[1],c-&gt;db-&gt;id);
+       // 将数据库设为脏
+        server.dirty++;
+    }
+}
+
+void hmsetCommand(redisClient *c) {
+    int i;
+    robj *o;
+    // field-value 参数必须成对出现
+    if ((c-&gt;argc % 2) == 1) {
+        addReplyError(c,&quot;wrong number of arguments for HMSET&quot;);
+        return;
+    }
+    // 取出或新创建哈希对象
+    if ((o = hashTypeLookupWriteOrCreate(c,c-&gt;argv[1])) == NULL) return;
+    // 如果需要的话，转换哈希对象的编码
+    hashTypeTryConversion(o,c-&gt;argv,2,c-&gt;argc-1);
+    // 遍历并设置所有 field-value 对
+    for (i = 2; i &lt; c-&gt;argc; i += 2) {
+        // 编码 field-value 对，以节约空间
+        hashTypeTryObjectEncoding(o,&amp;c-&gt;argv[i], &amp;c-&gt;argv[i+1]);
+        // 设置
+        hashTypeSet(o,c-&gt;argv[i],c-&gt;argv[i+1]);
+    }
+    // 向客户端发送回复
+    addReply(c, shared.ok);
+    // 发送键修改信号
+    signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+    // 发送事件通知
+    notifyKeyspaceEvent(REDIS_NOTIFY_HASH,&quot;hset&quot;,c-&gt;argv[1],c-&gt;db-&gt;id);
+    // 将数据库设为脏
+    server.dirty++;
+}
+
+/*
+ * 对 argv 数组中的多个对象进行检查，
+ * 看是否需要将对象的编码从 REDIS_ENCODING_ZIPLIST 转换成 REDIS_ENCODING_HT
+ *
+ * 注意程序只检查字符串值，因为它们的长度可以在常数时间内取得。
+ */
+void hashTypeTryConversion(robj *o, robj **argv, int start, int end) {
+    int i;
+
+    // 如果对象不是 ziplist 编码，那么直接返回
+    if (o-&gt;encoding != REDIS_ENCODING_ZIPLIST) return;
+
+    // 检查所有输入对象，看它们的字符串值是否超过了指定长度
+    for (i = start; i &lt;= end; i++) {
+        if (sdsEncodedObject(argv[i]) &amp;&amp;
+            sdslen(argv[i]-&gt;ptr) &gt; server.hash_max_ziplist_value)
+        {
+            // 将对象的编码转换成 REDIS_ENCODING_HT
+            hashTypeConvert(o, REDIS_ENCODING_HT);
+            break;
+        }
+    }
+}
+
+/*
+ * 对哈希对象 o 的编码方式进行转换
+ *
+ * 目前只支持将 ZIPLIST 编码转换成 HT 编码
+ */
+void hashTypeConvert(robj *o, int enc) {
+
+    if (o-&gt;encoding == REDIS_ENCODING_ZIPLIST) {
+        hashTypeConvertZiplist(o, enc);
+
+    } else if (o-&gt;encoding == REDIS_ENCODING_HT) {
+        redisPanic(&quot;Not implemented&quot;);
+
+    } else {
+        redisPanic(&quot;Unknown hash encoding&quot;);
+    }
+}
+/* 
+ * 将给定的 field-value 对添加到 hash 中，
+ * 如果 field 已经存在，那么删除旧的值，并关联新值。
+ * 这个函数负责对 field 和 value 参数进行引用计数自增。
+ *
+ * 返回 0 表示元素已经存在，这次函数调用执行的是更新操作。
+ * 返回 1 则表示函数执行的是新添加操作。
+ */
+int hashTypeSet(robj *o, robj *field, robj *value) {
+    int update = 0;
+
+    // 添加到 ziplist
+    if (o-&gt;encoding == REDIS_ENCODING_ZIPLIST) {
+        unsigned char *zl, *fptr, *vptr;
+
+        // 解码成字符串或者数字
+        field = getDecodedObject(field);
+        value = getDecodedObject(value);
+
+        // 遍历整个 ziplist ，尝试查找并更新 field （如果它已经存在的话）
+        zl = o-&gt;ptr;
+        fptr = ziplistIndex(zl, ZIPLIST_HEAD);
+        if (fptr != NULL) {
+            // 定位到域 field
+            fptr = ziplistFind(fptr, field-&gt;ptr, sdslen(field-&gt;ptr), 1);
+            if (fptr != NULL) {
+                /* Grab pointer to the value (fptr points to the field) */
+                // 定位到域的值
+                vptr = ziplistNext(zl, fptr);
+                redisAssert(vptr != NULL);
+
+                // 标识这次操作为更新操作
+                update = 1;
+
+                /* Delete value */
+                // 删除旧的键值对
+                zl = ziplistDelete(zl, &amp;vptr);
+
+                /* Insert new value */
+                // 添加新的键值对
+                zl = ziplistInsert(zl, vptr, value-&gt;ptr, sdslen(value-&gt;ptr));
+            }
+        }
+
+        // 如果这不是更新操作，那么这就是一个添加操作
+        if (!update) {
+            /* Push new field/value pair onto the tail of the ziplist */
+            // 将新的 field-value 对推入到 ziplist 的末尾
+            zl = ziplistPush(zl, field-&gt;ptr, sdslen(field-&gt;ptr), ZIPLIST_TAIL);
+            zl = ziplistPush(zl, value-&gt;ptr, sdslen(value-&gt;ptr), ZIPLIST_TAIL);
+        }
+
+        // 更新对象指针
+        o-&gt;ptr = zl;
+
+        // 释放临时对象
+        decrRefCount(field);
+        decrRefCount(value);
+
+        // 检查在添加操作完成之后，是否需要将 ZIPLIST 编码转换成 HT 编码
+        if (hashTypeLength(o) &gt; server.hash_max_ziplist_entries)
+            hashTypeConvert(o, REDIS_ENCODING_HT);
+
+    // 添加到字典
+    } else if (o-&gt;encoding == REDIS_ENCODING_HT) {
+
+        // 添加或替换键值对到字典
+        // 添加返回 1 ，替换返回 0
+        if (dictReplace(o-&gt;ptr, field, value)) { /* Insert */
+            incrRefCount(field);
+        } else { /* Update */
+            update = 1;
+        }
+
+        incrRefCount(value);
+    } else {
+        redisPanic(&quot;Unknown hash encoding&quot;);
+    }
+
+    // 更新/添加指示变量
+    return update;
+}
+
+
+#file: src/object.c
+/*
+ * 创建一个 ZIPLIST 编码的哈希对象
+ */
+robj *createHashObject(void) {
+    unsigned char *zl = ziplistNew();
+    robj *o = createObject(REDIS_HASH, zl);
+    o-&gt;encoding = REDIS_ENCODING_ZIPLIST;
+    return o;
+}</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/hashadd.png" alt=""></p>
+<h3 id="10-4-4-集合对象"><a href="#10-4-4-集合对象" class="headerlink" title="10.4.4 集合对象"></a>10.4.4 集合对象</h3><pre><code class="c">#file: src/t_set.c
+void saddCommand(redisClient *c) {
+    robj *set;
+    int j, added = 0;
+
+    // 取出集合对象
+    set = lookupKeyWrite(c-&gt;db,c-&gt;argv[1]);
+
+    // 对象不存在，创建一个新的，并将它关联到数据库
+    if (set == NULL) {
+        set = setTypeCreate(c-&gt;argv[2]);
+        dbAdd(c-&gt;db,c-&gt;argv[1],set);
+
+    // 对象存在，检查类型
+    } else {
+        if (set-&gt;type != REDIS_SET) {
+            addReply(c,shared.wrongtypeerr);
+            return;
+        }
+    }
+
+    // 将所有输入元素添加到集合中
+    for (j = 2; j &lt; c-&gt;argc; j++) {
+        c-&gt;argv[j] = tryObjectEncoding(c-&gt;argv[j]);
+        // 只有元素未存在于集合时，才算一次成功添加
+        if (setTypeAdd(set,c-&gt;argv[j])) added++;
+    }
+
+    // 如果有至少一个元素被成功添加，那么执行以下程序
+    if (added) {
+        // 发送键修改信号
+        signalModifiedKey(c-&gt;db,c-&gt;argv[1]);
+        // 发送事件通知
+        notifyKeyspaceEvent(REDIS_NOTIFY_SET,&quot;sadd&quot;,c-&gt;argv[1],c-&gt;db-&gt;id);
+    }
+
+    // 将数据库设为脏
+    server.dirty += added;
+
+    // 返回添加元素的数量
+    addReplyLongLong(c,added);
+}
+/* 
+ * 返回一个可以保存值 value 的集合。
+ * 当对象的值可以被编码为整数时，返回 intset ，
+ * 否则，返回普通的哈希表。
+ */
+
+robj *setTypeCreate(robj *value) {
+
+    if (isObjectRepresentableAsLongLong(value,NULL) == REDIS_OK)
+        return createIntsetObject();
+
+    return createSetObject();
+}
+/* 
+ * 将集合对象 setobj 的编码转换为 REDIS_ENCODING_HT 。
+ *
+ * 新创建的结果字典会被预先分配为和原来的集合一样大。
+ */
+void setTypeConvert(robj *setobj, int enc) {
+
+    setTypeIterator *si;
+
+    // 确认类型和编码正确
+    redisAssertWithInfo(NULL,setobj,setobj-&gt;type == REDIS_SET &amp;&amp;
+                             setobj-&gt;encoding == REDIS_ENCODING_INTSET);
+
+    if (enc == REDIS_ENCODING_HT) {
+        int64_t intele;
+        // 创建新字典
+        dict *d = dictCreate(&amp;setDictType,NULL);
+        robj *element;
+
+        /* Presize the dict to avoid rehashing */
+        // 预先扩展空间
+        dictExpand(d,intsetLen(setobj-&gt;ptr));
+
+        /* To add the elements we extract integers and create redis objects */
+        // 遍历集合，并将元素添加到字典中
+        si = setTypeInitIterator(setobj);
+        while (setTypeNext(si,NULL,&amp;intele) != -1) {
+            element = createStringObjectFromLongLong(intele);
+            redisAssertWithInfo(NULL,element,dictAdd(d,element,NULL) == DICT_OK);
+        }
+        setTypeReleaseIterator(si);
+
+        // 更新集合的编码
+        setobj-&gt;encoding = REDIS_ENCODING_HT;
+        zfree(setobj-&gt;ptr);
+        // 更新集合的值对象
+        setobj-&gt;ptr = d;
+    } else {
+        redisPanic(&quot;Unsupported set conversion&quot;);
+    }
+}
+/*
+ * 多态 add 操作
+ *
+ * 添加成功返回 1 ，如果元素已经存在，返回 0 。
+ */
+int setTypeAdd(robj *subject, robj *value) {
+    long long llval;
+
+    // 字典
+    if (subject-&gt;encoding == REDIS_ENCODING_HT) {
+        // 将 value 作为键， NULL 作为值，将元素添加到字典中
+        if (dictAdd(subject-&gt;ptr,value,NULL) == DICT_OK) {
+            incrRefCount(value);
+            return 1;
+        }
+
+    // intset
+    } else if (subject-&gt;encoding == REDIS_ENCODING_INTSET) {
+
+        // 如果对象的值可以编码为整数的话，那么将对象的值添加到 intset 中
+        if (isObjectRepresentableAsLongLong(value,&amp;llval) == REDIS_OK) {
+            uint8_t success = 0;
+            subject-&gt;ptr = intsetAdd(subject-&gt;ptr,llval,&amp;success);
+            if (success) {
+                /* Convert to regular set when the intset contains
+                 * too many entries. */
+                // 添加成功
+                // 检查集合在添加新元素之后是否需要转换为字典
+                if (intsetLen(subject-&gt;ptr) &gt; server.set_max_intset_entries)
+                    setTypeConvert(subject,REDIS_ENCODING_HT);
+                return 1;
+            }
+
+        // 如果对象的值不能编码为整数，那么将集合从 intset 编码转换为 HT 编码
+        // 然后再执行添加操作
+        } else {
+            /* Failed to get integer from object, convert to regular set. */
+            setTypeConvert(subject,REDIS_ENCODING_HT);
+
+            /* The set *was* an intset and this value is not integer
+             * encodable, so dictAdd should always work. */
+            redisAssertWithInfo(NULL,value,dictAdd(subject-&gt;ptr,value,NULL) == DICT_OK);
+            incrRefCount(value);
+            return 1;
+        }
+
+    // 未知编码
+    } else {
+        redisPanic(&quot;Unknown set encoding&quot;);
+    }
+
+    // 添加失败，元素已经存在
+    return 0;
+}
+
+#file: src/db.c
+/*
+ * 为执行写入操作而取出键 key 在数据库 db 中的值。
+ * 和 lookupKeyRead 不同，这个函数不会更新服务器的命中/不命中信息。
+ * 找到时返回值对象，没找到返回 NULL 。
+ */
+robj *lookupKeyWrite(redisDb *db, robj *key) {
+
+    // 删除过期键
+    expireIfNeeded(db,key);
+
+    // 查找并返回 key 的值对象
+    return lookupKey(db,key);
+}
+</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/setadd.png" alt=""></p>
+<h3 id="10-4-5-有序集合对象"><a href="#10-4-5-有序集合对象" class="headerlink" title="10.4.5 有序集合对象"></a>10.4.5 有序集合对象</h3><pre><code class="c">#file : src/t_zset.c
+void zaddCommand(redisClient *c) {
+    zaddGenericCommand(c,0);
+}
+
+void zincrbyCommand(redisClient *c) {
+    zaddGenericCommand(c,1);
+}
+
+/* This generic command implements both ZADD and ZINCRBY. */
+void zaddGenericCommand(redisClient *c, int incr) {
+
+    static char *nanerr = &quot;resulting score is not a number (NaN)&quot;;
+
+    robj *key = c-&gt;argv[1];
+    robj *ele;
+    robj *zobj;
+    robj *curobj;
+    double score = 0, *scores = NULL, curscore = 0.0;
+    int j, elements = (c-&gt;argc-2)/2;
+    int added = 0, updated = 0;
+
+    // 输入的 score - member 参数必须是成对出现的
+    if (c-&gt;argc % 2) {
+        addReply(c,shared.syntaxerr);
+        return;
+    }
+
+    // 取出所有输入的 score 分值
+    scores = zmalloc(sizeof(double)*elements);
+    for (j = 0; j &lt; elements; j++) {
+        if (getDoubleFromObjectOrReply(c,c-&gt;argv[2+j*2],&amp;scores[j],NULL)
+            != REDIS_OK) goto cleanup;
+    }
+
+    /* Lookup the key and create the sorted set if does not exist. */
+    // 取出有序集合对象
+    zobj = lookupKeyWrite(c-&gt;db,key);
+    if (zobj == NULL) {
+        // 有序集合不存在，创建新有序集合
+        if (server.zset_max_ziplist_entries == 0 ||
+            server.zset_max_ziplist_value &lt; sdslen(c-&gt;argv[3]-&gt;ptr))
+        {
+            zobj = createZsetObject();
+        } else {
+            zobj = createZsetZiplistObject();
+        }
+        // 关联对象到数据库
+        dbAdd(c-&gt;db,key,zobj);
+    } else {
+        // 对象存在，检查类型
+        if (zobj-&gt;type != REDIS_ZSET) {
+            addReply(c,shared.wrongtypeerr);
+            goto cleanup;
+        }
+    }
+
+    // 处理所有元素
+    for (j = 0; j &lt; elements; j++) {
+        score = scores[j];
+
+        // 有序集合为 ziplist 编码
+        if (zobj-&gt;encoding == REDIS_ENCODING_ZIPLIST) {
+            unsigned char *eptr;
+
+            /* Prefer non-encoded element when dealing with ziplists. */
+            // 查找成员
+            ele = c-&gt;argv[3+j*2];
+            if ((eptr = zzlFind(zobj-&gt;ptr,ele,&amp;curscore)) != NULL) {
+
+                // 成员已存在
+
+                // ZINCRYBY 命令时使用
+                if (incr) {
+                    score += curscore;
+                    if (isnan(score)) {
+                        addReplyError(c,nanerr);
+                        goto cleanup;
+                    }
+                }
+                // 执行 ZINCRYBY 命令时，
+                // 或者用户通过 ZADD 修改成员的分值时执行
+                if (score != curscore) {
+                    // 删除已有元素
+                    zobj-&gt;ptr = zzlDelete(zobj-&gt;ptr,eptr);
+                    // 重新插入元素
+                    zobj-&gt;ptr = zzlInsert(zobj-&gt;ptr,ele,score);
+                    // 计数器
+                    server.dirty++;
+                    updated++;
+                }
+            } else {
+                // 元素不存在，直接添加
+                zobj-&gt;ptr = zzlInsert(zobj-&gt;ptr,ele,score);
+
+                // 查看元素的数量，
+                // 看是否需要将 ZIPLIST 编码转换为有序集合
+                if (zzlLength(zobj-&gt;ptr) &gt; server.zset_max_ziplist_entries)
+                    zsetConvert(zobj,REDIS_ENCODING_SKIPLIST);
+
+                // 查看新添加元素的长度
+                // 看是否需要将 ZIPLIST 编码转换为有序集合
+                if (sdslen(ele-&gt;ptr) &gt; server.zset_max_ziplist_value)
+                    zsetConvert(zobj,REDIS_ENCODING_SKIPLIST);
+
+                server.dirty++;
+                added++;
+            }
+
+        // 有序集合为 SKIPLIST 编码
+        } else if (zobj-&gt;encoding == REDIS_ENCODING_SKIPLIST) {
+            zset *zs = zobj-&gt;ptr;
+            zskiplistNode *znode;
+            dictEntry *de;
+
+            // 编码对象
+            ele = c-&gt;argv[3+j*2] = tryObjectEncoding(c-&gt;argv[3+j*2]);
+
+            // 查看成员是否存在
+            de = dictFind(zs-&gt;dict,ele);
+            if (de != NULL) {
+
+                // 成员存在
+
+                // 取出成员
+                curobj = dictGetKey(de);
+                // 取出分值
+                curscore = *(double*)dictGetVal(de);
+
+                // ZINCRYBY 时执行
+                if (incr) {
+                    score += curscore;
+                    if (isnan(score)) {
+                        addReplyError(c,nanerr);
+                        /* Don&#39;t need to check if the sorted set is empty
+                         * because we know it has at least one element. */
+                        goto cleanup;
+                    }
+                }
+
+                // 执行 ZINCRYBY 命令时，
+                // 或者用户通过 ZADD 修改成员的分值时执行
+                if (score != curscore) {
+                    // 删除原有元素
+                    redisAssertWithInfo(c,curobj,zslDelete(zs-&gt;zsl,curscore,curobj));
+
+                    // 重新插入元素
+                    znode = zslInsert(zs-&gt;zsl,score,curobj);
+                    incrRefCount(curobj); /* Re-inserted in skiplist. */
+
+                    // 更新字典的分值指针
+                    dictGetVal(de) = &amp;znode-&gt;score; /* Update score ptr. */
+
+                    server.dirty++;
+                    updated++;
+                }
+            } else {
+
+                // 元素不存在，直接添加到跳跃表
+                znode = zslInsert(zs-&gt;zsl,score,ele);
+                incrRefCount(ele); /* Inserted in skiplist. */
+
+                // 将元素关联到字典
+                redisAssertWithInfo(c,NULL,dictAdd(zs-&gt;dict,ele,&amp;znode-&gt;score) == DICT_OK);
+                incrRefCount(ele); /* Added to dictionary. */
+
+                server.dirty++;
+                added++;
+            }
+        } else {
+            redisPanic(&quot;Unknown sorted set encoding&quot;);
+        }
+    }
+
+    if (incr) /* ZINCRBY */
+        addReplyDouble(c,score);
+    else /* ZADD */
+        addReplyLongLong(c,added);
+
+cleanup:
+    zfree(scores);
+    if (added || updated) {
+        signalModifiedKey(c-&gt;db,key);
+        notifyKeyspaceEvent(REDIS_NOTIFY_ZSET,
+            incr ? &quot;zincr&quot; : &quot;zadd&quot;, key, c-&gt;db-&gt;id);
+    }
+}
+
+
+/*
+ * 将跳跃表对象 zobj 的底层编码转换为 encoding 。
+ */
+void zsetConvert(robj *zobj, int encoding) {
+    zset *zs;
+    zskiplistNode *node, *next;
+    robj *ele;
+    double score;
+
+    if (zobj-&gt;encoding == encoding) return;
+
+    // 从 ZIPLIST 编码转换为 SKIPLIST 编码
+    if (zobj-&gt;encoding == REDIS_ENCODING_ZIPLIST) {
+        unsigned char *zl = zobj-&gt;ptr;
+        unsigned char *eptr, *sptr;
+        unsigned char *vstr;
+        unsigned int vlen;
+        long long vlong;
+
+        if (encoding != REDIS_ENCODING_SKIPLIST)
+            redisPanic(&quot;Unknown target encoding&quot;);
+
+        // 创建有序集合结构
+        zs = zmalloc(sizeof(*zs));
+        // 字典
+        zs-&gt;dict = dictCreate(&amp;zsetDictType,NULL);
+        // 跳跃表
+        zs-&gt;zsl = zslCreate();
+
+        // 有序集合在 ziplist 中的排列：
+        //
+        // | member-1 | score-1 | member-2 | score-2 | ... |
+        //
+        // 指向 ziplist 中的首个节点（保存着元素成员）
+        eptr = ziplistIndex(zl,0);
+        redisAssertWithInfo(NULL,zobj,eptr != NULL);
+        // 指向 ziplist 中的第二个节点（保存着元素分值）
+        sptr = ziplistNext(zl,eptr);
+        redisAssertWithInfo(NULL,zobj,sptr != NULL);
+
+        // 遍历所有 ziplist 节点，并将元素的成员和分值添加到有序集合中
+        while (eptr != NULL) {
+
+            // 取出分值
+            score = zzlGetScore(sptr);
+
+            // 取出成员
+            redisAssertWithInfo(NULL,zobj,ziplistGet(eptr,&amp;vstr,&amp;vlen,&amp;vlong));
+            if (vstr == NULL)
+                ele = createStringObjectFromLongLong(vlong);
+            else
+                ele = createStringObject((char*)vstr,vlen);
+
+            /* Has incremented refcount since it was just created. */
+            // 将成员和分值分别关联到跳跃表和字典中
+            node = zslInsert(zs-&gt;zsl,score,ele);
+            redisAssertWithInfo(NULL,zobj,dictAdd(zs-&gt;dict,ele,&amp;node-&gt;score) == DICT_OK);
+            incrRefCount(ele); /* Added to dictionary. */
+
+            // 移动指针，指向下个元素
+            zzlNext(zl,&amp;eptr,&amp;sptr);
+        }
+
+        // 释放原来的 ziplist
+        zfree(zobj-&gt;ptr);
+
+        // 更新对象的值，以及编码方式
+        zobj-&gt;ptr = zs;
+        zobj-&gt;encoding = REDIS_ENCODING_SKIPLIST;
+
+    // 从 SKIPLIST 转换为 ZIPLIST 编码
+    } else if (zobj-&gt;encoding == REDIS_ENCODING_SKIPLIST) {
+
+        // 新的 ziplist
+        unsigned char *zl = ziplistNew();
+
+        if (encoding != REDIS_ENCODING_ZIPLIST)
+            redisPanic(&quot;Unknown target encoding&quot;);
+
+        /* Approach similar to zslFree(), since we want to free the skiplist at
+         * the same time as creating the ziplist. */
+        // 指向跳跃表
+        zs = zobj-&gt;ptr;
+
+        // 先释放字典，因为只需要跳跃表就可以遍历整个有序集合了
+        dictRelease(zs-&gt;dict);
+
+        // 指向跳跃表首个节点
+        node = zs-&gt;zsl-&gt;header-&gt;level[0].forward;
+
+        // 释放跳跃表表头
+        zfree(zs-&gt;zsl-&gt;header);
+        zfree(zs-&gt;zsl);
+
+        // 遍历跳跃表，取出里面的元素，并将它们添加到 ziplist
+        while (node) {
+
+            // 取出解码后的值对象
+            ele = getDecodedObject(node-&gt;obj);
+
+            // 添加元素到 ziplist
+            zl = zzlInsertAt(zl,NULL,ele,node-&gt;score);
+            decrRefCount(ele);
+
+            // 沿着跳跃表的第 0 层前进
+            next = node-&gt;level[0].forward;
+            zslFreeNode(node);
+            node = next;
+        }
+
+        // 释放跳跃表
+        zfree(zs);
+
+        // 更新对象的值，以及对象的编码方式
+        zobj-&gt;ptr = zl;
+        zobj-&gt;encoding = REDIS_ENCODING_ZIPLIST;
+    } else {
+        redisPanic(&quot;Unknown sorted set encoding&quot;);
+    }
+}
+</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/zsetadd.png" alt=""></p>
+<h2 id="10-5-内存回收"><a href="#10-5-内存回收" class="headerlink" title="10.5 内存回收"></a>10.5 内存回收</h2><p>因为 C 语言并不具备自动的内存回收功能， 所以 Redis 在自己的对象系统中构建了一个引用计数（reference counting）技术实现的内存回收机制， 通过这一机制， 程序可以通过跟踪对象的引用计数信息， 在适当的时候自动释放对象并进行内存回收。</p>
+<p>每个对象的引用计数信息由 redisObject 结构的 refcount 属性记录</p>
+<p>对象的引用计数信息会随着对象的使用状态而不断变化：</p>
+<ul>
+<li>在创建一个新对象时， 引用计数的值会被初始化为 1 ；</li>
+<li>当对象被一个新程序使用时， 它的引用计数值会被增一；</li>
+<li>当对象不再被一个程序使用时， 它的引用计数值会被减一；</li>
+<li>当对象的引用计数值变为 0 时， 对象所占用的内存会被释放。</li>
+</ul>
+<p>操作refcount的函数:</p>
+<pre><code class="c">#file: src/object.c
+#incrRefCount 将对象的引用计数值增一。
+#decrRefCount 将对象的引用计数值减一，当对象的引用计数值等于0时，释放对象。
+#resetRefCount 将对象的引用计数值设置为0，但并不释放对象，这个函数通常在需要重新设置对象的引用计数值时使用
+
+/*
+ * 为对象的引用计数增一
+ */
+void incrRefCount(robj *o) {
+    o-&gt;refcount++;
+}
+
+/*
+ * 为对象的引用计数减一
+ * 当对象的引用计数降为 0 时，释放对象。
+ */
+void decrRefCount(robj *o) {
+
+    if (o-&gt;refcount &lt;= 0) redisPanic(&quot;decrRefCount against refcount &lt;= 0&quot;);
+
+    // 释放对象
+    if (o-&gt;refcount == 1) {
+        switch(o-&gt;type) {
+        case REDIS_STRING: freeStringObject(o); break;
+        case REDIS_LIST: freeListObject(o); break;
+        case REDIS_SET: freeSetObject(o); break;
+        case REDIS_ZSET: freeZsetObject(o); break;
+        case REDIS_HASH: freeHashObject(o); break;
+        default: redisPanic(&quot;Unknown object type&quot;); break;
+        }
+        zfree(o);
+
+    // 减少计数
+    } else {
+        o-&gt;refcount--;
+    }
+}
+robj *resetRefCount(robj *obj) {
+    obj-&gt;refcount = 0;
+    return obj;
+}</code></pre>
+<h2 id="10-6-对象共享"><a href="#10-6-对象共享" class="headerlink" title="10.6 对象共享"></a>10.6 对象共享</h2><p>除了用于实现引用计数内存回收机制之外， 对象的引用计数属性还带有对象共享的作用。</p>
+<p>在 Redis 中， 让多个键共享同一个值对象需要执行以下两个步骤：</p>
+<ol>
+<li>将数据库键的值指针指向一个现有的值对象；</li>
+<li>将被共享的值对象的引用计数增一。</li>
+</ol>
+<p>目前来说， Redis 会在初始化服务器时， 创建一万个字符串对象， 这些对象包含了<code>从 0 到 9999 的所有整数值</code>， 当服务器需要用到值为 0 到 9999 的字符串对象时， 服务器就会使用这些共享对象， 而不是新创建对象。</p>
+<p><code>【注意】redis只对包含整数值的字符串对象进行共享。</code></p>
+<blockquote>
+<p>尽管共享更复杂的对象可以节约更多的内存，但验证共享对象和目标对象是否相同所需的复杂度就会越高， 消耗的 CPU 时间也会越多</p>
+</blockquote>
+<h2 id="10-7-对象空转时长"><a href="#10-7-对象空转时长" class="headerlink" title="10.7 对象空转时长"></a>10.7 对象空转时长</h2><p>redisObject 结构包含一个属性为 lru 属性， 该属性记录了对象最后一次被命令程序访问的时间：</p>
+<pre><code class="c">redis&gt; SET foo &quot;bar&quot;
+OK
+redis&gt; OBJECT IDLETIME foo
+(integer) 5
+redis&gt; OBJECT IDLETIME foo
+(integer) 15
+redis&gt; GET foo
+&quot;bar&quot;
+redis&gt; OBJECT IDLETIME foo
+(integer) 5</code></pre>
+<p>如果服务器打开了 maxmemory 选项， 并且服务器用于回收内存的算法为 volatile-lru 或者 allkeys-lru ， 那么当服务器占用的内存数超过了 maxmemory 选项所设置的上限值时， 空转时长较高的那部分键会优先被服务器释放， 从而回收内存。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

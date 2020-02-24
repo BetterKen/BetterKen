@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>17.RedisCluster | KenBetter</title>
+  <meta name="keywords" content=" Redis , 缓存 ">
+  <meta name="description" content="17.RedisCluster | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(31)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(20)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="31">
+<input type="hidden" id="yelog_site_word_count" value="59.4k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-17-RedisCluster" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">17.RedisCluster</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="中间件">中间件</a>/
+            
+                <a  data-rel="Redis">Redis</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Redis</a>
+            
+            <a class="color3">缓存</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-22</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:1.9k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈6分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#17-1-redis-cluster介绍"><span class="toc-text">17.1 redis cluster介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-2-分区规则"><span class="toc-text">17.2 分区规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#17-2-1-常见分区规则"><span class="toc-text">17.2.1 常见分区规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-2-2-hash算法"><span class="toc-text">17.2.2 hash算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-2-3-一致性-hash-算法"><span class="toc-text">17.2.3 一致性 hash 算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-2-2-redis使用的hash-slot"><span class="toc-text">17.2.2 redis使用的hash slot</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-3-节点间的通信协议"><span class="toc-text">17.3 节点间的通信协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#17-3-1-基本通信原理"><span class="toc-text">17.3.1 基本通信原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-3-2-集中式协议"><span class="toc-text">17.3.2 集中式协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-3-3-gossip-协议"><span class="toc-text">17.3.3 gossip 协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#17-3-4-Redis中的gossip协议"><span class="toc-text">17.3.4 Redis中的gossip协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-4Redis-cluster功能限制"><span class="toc-text">17.4Redis cluster功能限制</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="17-1-redis-cluster介绍"><a href="#17-1-redis-cluster介绍" class="headerlink" title="17.1 redis cluster介绍"></a>17.1 redis cluster介绍</h2><p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/rediscluster.png" alt=""></p>
+<ul>
+<li>自动将数据进行分片,每个master上放一部分数据</li>
+<li>提供内置的高可用支持,部分master不可用时,还是可以继续工作的，因为每个master都有salve节点，那么如果mater挂掉，redis cluster这套机制，就会自动将某个slave切换成master；</li>
+<li>支持读写分离：对于每个master来说，都负责写请求，写就写到master，然后读就从mater对应的slave去读；</li>
+</ul>
+<p>redisCluster是Redis的官方分布式解决方案,解决了上一章提到的Redis主从模式的1,2,3缺陷</p>
+<p>redisCluster = 多master+读写分离+sentinal</p>
+<h2 id="17-2-分区规则"><a href="#17-2-分区规则" class="headerlink" title="17.2 分区规则"></a>17.2 分区规则</h2><h3 id="17-2-1-常见分区规则"><a href="#17-2-1-常见分区规则" class="headerlink" title="17.2.1 常见分区规则"></a>17.2.1 常见分区规则</h3><p>分布式数据库首要解决把整个数据集按照分区规则映射到多个节点的问题，即把数据集划分到多个节点上，每个节点负责整个数据的一个子集。</p>
+<p>常见的分区规则有<code>哈希分区和顺序分区</code>。Redis Cluster采用哈希分区规则，因此接下来会讨论哈希分区规则。常见的哈希分区有以下几种：</p>
+<ul>
+<li>节点取余分区</li>
+<li>一致性哈希分区</li>
+<li>虚拟槽分区</li>
+</ul>
+<p>Redis Cluster采用虚拟槽分区</p>
+<h3 id="17-2-2-hash算法"><a href="#17-2-2-hash算法" class="headerlink" title="17.2.2 hash算法"></a>17.2.2 hash算法</h3><p>来了一个 key，首先计算 hash 值，然后对节点数取模。然后打在不同的 master 节点上。一旦某一个 master 节点宕机，所有请求过来，都会基于最新的剩余 master 节点数去取模，尝试去取数据。这会<strong>导致大部分的请求过来，全部无法拿到有效的缓存，导致大量的流量涌入数据库</strong></p>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/hash-1.png" alt=""></p>
+<h3 id="17-2-3-一致性-hash-算法"><a href="#17-2-3-一致性-hash-算法" class="headerlink" title="17.2.3 一致性 hash 算法"></a>17.2.3 一致性 hash 算法</h3><p>一致性 hash 算法将整个 hash 值空间组织成一个虚拟的圆环，整个空间按顺时针方向组织，下一步将各个 master 节点（使用服务器的 ip 或主机名）进行 hash。这样就能确定每个节点在其哈希环上的位置。</p>
+<p>来了一个 key，首先计算 hash 值，并确定此数据在环上的位置，从此位置沿环<strong>顺时针“行走”</strong>，遇到的第一个 master 节点就是 key 所在位置。</p>
+<p>在一致性哈希算法中，如果<strong>一个节点挂了，受影响的数据仅仅是此节点到环空间前一个节点（沿着逆时针方向行走遇到的第一个节点）之间的数据，其它不受影响</strong>。增加一个节点也同理。</p>
+<p>燃鹅，一致性哈希算法在节点太少时，容易因为节点分布不均匀而造成<strong>缓存热点</strong>的问题。为了解决这种热点问题，<strong>一致性 hash 算法引入了虚拟节点机制，即对每一个节点计算多个 hash，每个计算结果位置都放置一个虚拟节点</strong>。这样就实现了数据的均匀分布，负载均衡。</p>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/consistent-hashing-algorithm.png" alt=""></p>
+<h3 id="17-2-2-redis使用的hash-slot"><a href="#17-2-2-redis使用的hash-slot" class="headerlink" title="17.2.2 redis使用的hash slot"></a>17.2.2 redis使用的hash slot</h3><p>虚拟槽分区巧妙地使用了哈希空间，使用分散度良好的哈希函数把所有的数据映射到一个固定范围内的整数集合，整数定义为槽（slot）。</p>
+<p>redis cluster有固定的16384个hash slot，对每个key计算CRC16值，然后对16384取模，可以获取key对应的hash slot<br>redis cluster中每个master都会持有部分slot，比如有3个master，那么可能每个master持有5000多个hash slot<br>hash slot让node的增加和移除很简单，增加一个master，就将其他master的hash slot移动部分过去，减少一个master，就将它的hash slot移动到其他master上去<br>移动hash slot的成本是非常低的<br>客户端的api，可以对指定的数据，让他们走同一个hash slot，通过hash tag来实现出处。</p>
+<h2 id="17-3-节点间的通信协议"><a href="#17-3-节点间的通信协议" class="headerlink" title="17.3 节点间的通信协议"></a>17.3 节点间的通信协议</h2><h3 id="17-3-1-基本通信原理"><a href="#17-3-1-基本通信原理" class="headerlink" title="17.3.1 基本通信原理"></a>17.3.1 基本通信原理</h3><p>集群元数据的维护有两种方式：</p>
+<ul>
+<li>集中式协议</li>
+<li>Gossip 协议</li>
+</ul>
+<p>redis cluster 节点间采用 gossip 协议进行通信。</p>
+<h3 id="17-3-2-集中式协议"><a href="#17-3-2-集中式协议" class="headerlink" title="17.3.2 集中式协议"></a>17.3.2 集中式协议</h3><p>集中式是将集群元数据（节点信息、故障等等）几种存储在某个节点上。集中式元数据集中存储的一个典型代表，就是大数据领域的 storm。它是分布式的大数据实时计算引擎，是集中式的元数据存储的结构，底层基于 zookeeper（分布式协调的中间件）对所有元数据进行存储维护。</p>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/zookeeper-centralized-storage.png" alt=""></p>
+<ul>
+<li>集中式的好处: 元数据的读取和更新，时效性非常好，一旦元数据出现了变更，就立即更新到集中式的存储中，其它节点读取的时候就可以感知到</li>
+<li>不好在于，所有的元数据的更新压力全部集中在一个地方，可能会导致元数据的存储有压力。</li>
+</ul>
+<h3 id="17-3-3-gossip-协议"><a href="#17-3-3-gossip-协议" class="headerlink" title="17.3.3 gossip 协议"></a>17.3.3 gossip 协议</h3><p>gossip 协议包含多种消息，包含 ping,pong,meet,fail 等等。</p>
+<ul>
+<li><p>meet：某个节点发送 meet 给新加入的节点，让新节点加入集群中，然后新节点就会开始与其它节点进行通信。</p>
+<pre><code>aredis-trib.rb add-node
+其实内部就是发送了一个 gossip meet 消息给新加入的节点，通知那个节点去加入我们的集群</code></pre></li>
+<li><p>ping：每个节点都会频繁给其它节点发送 ping，其中包含自己的状态还有自己维护的集群元数据，互相通过 ping 交换元数据。</p>
+</li>
+<li><p>pong：返回 ping 和 meeet，包含自己的状态和其它信息，也用于信息广播和更新。</p>
+</li>
+<li><p>fail：某个节点判断另一个节点 fail 之后，就发送 fail 给其它节点，通知其它节点说，某个节点宕机啦。</p>
+</li>
+</ul>
+<p>gossip协议优缺点:</p>
+<ul>
+<li>gossip 好处在于，元数据的更新比较分散，不是集中在一个地方，更新请求会陆陆续续打到所有节点上去更新，降低了压力</li>
+<li>不好在于，元数据的更新有延时，可能导致集群中的一些操作会有一些滞后。</li>
+</ul>
+<h3 id="17-3-4-Redis中的gossip协议"><a href="#17-3-4-Redis中的gossip协议" class="headerlink" title="17.3.4 Redis中的gossip协议"></a>17.3.4 Redis中的gossip协议</h3><p>redis 维护集群元数据采用另一个方式， gossip 协议，所有节点都持有一份元数据，不同的节点如果出现了元数据的变更，就不断将元数据发送给其它的节点，让其它节点也进行元数据的变更。</p>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/redis-gossip.png" alt=""></p>
+<ul>
+<li>10000 端口：每个节点都有一个专门用于节点间通信的端口，就是自己提供服务的端口号+10000，比如 7001，那么用于节点间通信的就是 17001 端口。每个节点每隔一段时间都会往另外几个节点发送 ping 消息，同时其它几个节点接收到 ping 之后返回 pong。</li>
+<li>交换的信息：信息包括故障信息，节点的增加和删除，hash slot 信息等等。</li>
+</ul>
+<h2 id="17-4Redis-cluster功能限制"><a href="#17-4Redis-cluster功能限制" class="headerlink" title="17.4Redis cluster功能限制"></a>17.4Redis cluster功能限制</h2><p>Redis集群相对单机在功能上有一定限制:</p>
+<ul>
+<li>key批量操作支持有限。如：MSET,MGET，目前只支持具有相同slot值的key执行批量操作。</li>
+<li>key事务操作支持有限。支持多key在同一节点上的事务操作，不支持分布在多个节点的事务功能。</li>
+<li>key作为数据分区的最小粒度，因此不能将一个大的键值对象映射到不同的节点。如：hash、list。</li>
+<li>不支持多数据库空间。单机下Redis支持16个数据库，集群模式下只能使用一个数据库空间，即db0。</li>
+<li>复制结构只支持一层，不支持嵌套树状复制结构。</li>
+</ul>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

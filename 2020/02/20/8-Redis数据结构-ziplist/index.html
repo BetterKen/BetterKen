@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>8.Redis数据结构——ziplist | KenBetter</title>
+  <meta name="keywords" content=" Redis , 缓存 ">
+  <meta name="description" content="8.Redis数据结构——ziplist | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(31)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(20)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="31">
+<input type="hidden" id="yelog_site_word_count" value="59.4k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-8-Redis数据结构-ziplist" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">8.Redis数据结构——ziplist</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="中间件">中间件</a>/
+            
+                <a  data-rel="Redis">Redis</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Redis</a>
+            
+            <a class="color3">缓存</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-20</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:3.8k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈16分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-什么是ziplist"><span class="toc-text">8.1 什么是ziplist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-数据结构"><span class="toc-text">8.2 数据结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-3-数据插入"><span class="toc-text">8.3 数据插入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-4-数据删除"><span class="toc-text">8.4 数据删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-5-联级更新"><span class="toc-text">8.5 联级更新</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="8-1-什么是ziplist"><a href="#8-1-什么是ziplist" class="headerlink" title="8.1 什么是ziplist"></a>8.1 什么是ziplist</h2><p>压缩列表（ziplist）是列表键和哈希键的底层实现之一。</p>
+<p>当一个列表键只包含少量列表项， 并且每个列表项要么就是小整数值， 要么就是长度比较短的字符串， 那么 Redis 就会使用压缩列表来做列表键的底层实现。</p>
+<h2 id="8-2-数据结构"><a href="#8-2-数据结构" class="headerlink" title="8.2 数据结构"></a>8.2 数据结构</h2><p>在本质上就是一块连续的内存,逻辑上设计成了特殊编码的双端链表</p>
+<pre><code class="c">#file: src/ziplist.c
+/* 
+ * Ziplist 是为了尽可能地节约内存而设计的特殊编码双端链表。
+ * Ziplist 可以储存字符串值和整数值，
+ * 其中，整数值被保存为实际的整数，而不是字符数组。
+ * Ziplist 允许在列表的两端进行 O(1) 复杂度的 push 和 pop 操作。
+ * 但是，因为这些操作都需要对整个 ziplist 进行内存重分配，
+ * 所以实际的复杂度和 ziplist 占用的内存大小有关。
+ * ----------------------------------------------------------------------------
+ *
+ * ZIPLIST OVERALL LAYOUT:
+ * Ziplist 的整体布局：
+ *
+ * The general layout of the ziplist is as follows:
+ * 以下是 ziplist 的一般布局：
+ *
+ * &lt;zlbytes&gt;&lt;zltail&gt;&lt;zllen&gt;&lt;entry&gt;&lt;entry&gt;&lt;zlend&gt;
+ *
+ * &lt;zlbytes&gt; 是一个无符号整数，保存着 ziplist 使用的内存数量。
+ * 通过这个值，程序可以直接对 ziplist 的内存大小进行调整，
+ * 而无须为了计算 ziplist 的内存大小而遍历整个列表。
+ *
+ * &lt;zltail&gt; 保存着到达列表中最后一个节点的偏移量。
+ * 这个偏移量使得对表尾的 pop 操作可以在无须遍历整个列表的情况下进行。
+ *
+ * &lt;zllen&gt; 保存着列表中的节点数量。
+ * 
+ * 当 zllen 保存的值大于 2**16-2 时，
+ * 程序需要遍历整个列表才能知道列表实际包含了多少个节点。
+ *
+ * &lt;zlend&gt; 的长度为 1 字节，值为 255 ，标识列表的末尾。
+ *
+ * ZIPLIST 节点：
+ *
+ * 每个 ziplist 节点的前面都带有一个 header ，这个 header 包含两部分信息：
+ *
+ * 1)前置节点的长度，在程序从后向前遍历时使用。
+ *
+ * 2)当前节点所保存的值的类型和长度。
+ *
+ * 编码前置节点的长度的方法如下：
+ *
+ * 1) 如果前置节点的长度小于 254 字节，那么程序将使用 1 个字节来保存这个长度值。
+ *
+ * 2) 如果前置节点的长度大于等于 254 字节，那么程序将使用 5 个字节来保存这个长度值：
+ *    a) 第 1 个字节的值将被设为 254 ，用于标识这是一个 5 字节长的长度值。
+ *    b) 之后的 4 个字节则用于保存前置节点的实际长度。
+ *
+ *
+ * header 另一部分的内容和节点所保存的值有关。
+ *
+ * 1) 如果节点保存的是字符串值，
+ *    那么这部分 header 的头 2 个位将保存编码字符串长度所使用的类型，
+ *    而之后跟着的内容则是字符串的实际长度。
+ *
+ * |00pppppp| - 1 byte
+ *      String value with length less than or equal to 63 bytes (6 bits).
+ *      字符串的长度小于或等于 63 字节。
+ * |01pppppp|qqqqqqqq| - 2 bytes
+ *      String value with length less than or equal to 16383 bytes (14 bits).
+ *      字符串的长度小于或等于 16383 字节。
+ * |10______|qqqqqqqq|rrrrrrrr|ssssssss|tttttttt| - 5 bytes
+ *      String value with length greater than or equal to 16384 bytes.
+ *      字符串的长度大于或等于 16384 字节。
+ *
+ * 2) 如果节点保存的是整数值，
+ *    那么这部分 header 的头 2 位都将被设置为 1 ，
+ *    而之后跟着的 2 位则用于标识节点所保存的整数的类型。
+ *
+ * |11000000| - 1 byte
+ *      Integer encoded as int16_t (2 bytes).
+ *      节点的值为 int16_t 类型的整数，长度为 2 字节。
+ * |11010000| - 1 byte
+ *      Integer encoded as int32_t (4 bytes).
+ *      节点的值为 int32_t 类型的整数，长度为 4 字节。
+ * |11100000| - 1 byte
+ *      Integer encoded as int64_t (8 bytes).
+ *      节点的值为 int64_t 类型的整数，长度为 8 字节。
+ * |11110000| - 1 byte
+ *      Integer encoded as 24 bit signed (3 bytes).
+ *      节点的值为 24 位（3 字节）长的整数。
+ * |11111110| - 1 byte
+ *      Integer encoded as 8 bit signed (1 byte).
+ *      节点的值为 8 位（1 字节）长的整数。
+ * |1111xxxx| - (with xxxx between 0000 and 1101) immediate 4 bit integer.
+ *      Unsigned integer from 0 to 12. The encoded value is actually from
+ *      1 to 13 because 0000 and 1111 can not be used, so 1 should be
+ *      subtracted from the encoded 4 bit value to obtain the right value.
+ *      节点的值为介于 0 至 12 之间的无符号整数。
+ *      因为 0000 和 1111 都不能使用，所以位的实际值将是 1 至 13 。
+ *      程序在取得这 4 个位的值之后，还需要减去 1 ，才能计算出正确的值。
+ *      比如说，如果位的值为 0001 = 1 ，那么程序返回的值将是 1 - 1 = 0 。
+ * |11111111| - End of ziplist.
+ *      ziplist 的结尾标识
+ *
+ * All the integers are represented in little endian byte order.
+ *
+ * 所有整数都表示为小端字节序。
+ *</code></pre>
+<p><img src="http://cache410.oss-cn-beijing.aliyuncs.com/ziplist.png" alt=""></p>
+<h2 id="8-3-数据插入"><a href="#8-3-数据插入" class="headerlink" title="8.3 数据插入"></a>8.3 数据插入</h2><pre><code class="c">#file: src/ziplist.c
+/*
+ * 根据指针 p 所指定的位置，将长度为 slen 的字符串 s 插入到 zl 中。
+ * 函数的返回值为完成插入操作之后的 ziplist
+ * T = O(N^2)
+ */
+static unsigned char *__ziplistInsert(unsigned char *zl, unsigned char *p, unsigned char *s, unsigned int slen) {
+    // 记录当前 ziplist 的长度
+    size_t curlen = intrev32ifbe(ZIPLIST_BYTES(zl)), reqlen, prevlen = 0;
+    size_t offset;
+    int nextdiff = 0;
+    unsigned char encoding = 0;
+    long long value = 123456789; /* initialized to avoid warning. Using a value
+                                    that is easy to see if for some reason
+                                    we use it uninitialized. */
+    zlentry entry, tail;
+
+    /* Find out prevlen for the entry that is inserted. */
+    if (p[0] != ZIP_END) {
+        // 如果 p[0] 不指向列表末端，说明列表非空，并且 p 正指向列表的其中一个节点
+        // 那么取出 p 所指向节点的信息，并将它保存到 entry 结构中
+        // 然后用 prevlen 变量记录前置节点的长度
+        // （当插入新节点之后 p 所指向的节点就成了新节点的前置节点）
+        // T = O(1)
+        entry = zipEntry(p);
+        prevlen = entry.prevrawlen;
+    } else {
+        // 如果 p 指向表尾末端，那么程序需要检查列表是否为：
+        // 1)如果 ptail 也指向 ZIP_END ，那么列表为空；
+        // 2)如果列表不为空，那么 ptail 将指向列表的最后一个节点。
+        unsigned char *ptail = ZIPLIST_ENTRY_TAIL(zl);
+        if (ptail[0] != ZIP_END) {
+            // 表尾节点为新节点的前置节点
+            // 取出表尾节点的长度
+            // T = O(1)
+            prevlen = zipRawEntryLength(ptail);
+        }
+    }
+
+    // 尝试看能否将输入字符串转换为整数，如果成功的话：
+    // 1)value 将保存转换后的整数值
+    // 2)encoding 则保存适用于 value 的编码方式
+    // 无论使用什么编码， reqlen 都保存节点值的长度
+    // T = O(N)
+    if (zipTryEncoding(s,slen,&amp;value,&amp;encoding)) {
+        /* &#39;encoding&#39; is set to the appropriate integer encoding */
+        reqlen = zipIntSize(encoding);
+    } else {
+        /* &#39;encoding&#39; is untouched, however zipEncodeLength will use the
+         * string length to figure out how to encode it. */
+        reqlen = slen;
+    }
+    /* We need space for both the length of the previous entry and
+     * the length of the payload. */
+    // 计算编码前置节点的长度所需的大小
+    // T = O(1)
+    reqlen += zipPrevEncodeLength(NULL,prevlen);
+    // 计算编码当前节点值所需的大小
+    // T = O(1)
+    reqlen += zipEncodeLength(NULL,encoding,slen);
+
+    // 只要新节点不是被添加到列表末端，
+    // 那么程序就需要检查看 p 所指向的节点（的 header）能否编码新节点的长度。
+    // nextdiff 保存了新旧编码之间的字节大小差，如果这个值大于 0 
+    // 那么说明需要对 p 所指向的节点（的 header ）进行扩展
+    // T = O(1)
+    nextdiff = (p[0] != ZIP_END) ? zipPrevLenByteDiff(p,reqlen) : 0;
+
+    // 因为重分配空间可能会改变 zl 的地址
+    // 所以在分配之前，需要记录 zl 到 p 的偏移量，然后在分配之后依靠偏移量还原 p 
+    offset = p-zl;
+    // curlen 是 ziplist 原来的长度
+    // reqlen 是整个新节点的长度
+    // nextdiff 是新节点的后继节点扩展 header 的长度（要么 0 字节，要么 4 个字节）
+    // T = O(N)
+    zl = ziplistResize(zl,curlen+reqlen+nextdiff);
+    p = zl+offset;
+
+    /* Apply memory move when necessary and update tail offset. */
+    if (p[0] != ZIP_END) {
+        // 新元素之后还有节点，因为新元素的加入，需要对这些原有节点进行调整
+
+        /* Subtract one because of the ZIP_END bytes */
+        // 移动现有元素，为新元素的插入空间腾出位置
+        // T = O(N)
+        memmove(p+reqlen,p-nextdiff,curlen-offset-1+nextdiff);
+
+        /* Encode this entry&#39;s raw length in the next entry. */
+        // 将新节点的长度编码至后置节点
+        // p+reqlen 定位到后置节点
+        // reqlen 是新节点的长度
+        // T = O(1)
+        zipPrevEncodeLength(p+reqlen,reqlen);
+
+        /* Update offset for tail */
+        // 更新到达表尾的偏移量，将新节点的长度也算上
+        ZIPLIST_TAIL_OFFSET(zl) =
+            intrev32ifbe(intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))+reqlen);
+
+        // 如果新节点的后面有多于一个节点
+        // 那么程序需要将 nextdiff 记录的字节数也计算到表尾偏移量中
+        // 这样才能让表尾偏移量正确对齐表尾节点
+        // T = O(1)
+        tail = zipEntry(p+reqlen);
+        if (p[reqlen+tail.headersize+tail.len] != ZIP_END) {
+            ZIPLIST_TAIL_OFFSET(zl) =
+                intrev32ifbe(intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))+nextdiff);
+        }
+    } else {
+        // 新元素是新的表尾节点
+        ZIPLIST_TAIL_OFFSET(zl) = intrev32ifbe(p-zl);
+    }
+
+    // 当 nextdiff != 0 时，新节点的后继节点的（header 部分）长度已经被改变，
+    // 所以需要级联地更新后续的节点
+    if (nextdiff != 0) {
+        offset = p-zl;
+        // T  = O(N^2)
+        zl = __ziplistCascadeUpdate(zl,p+reqlen);
+        p = zl+offset;
+    }
+
+    // 一切搞定，将前置节点的长度写入新节点的 header
+    p += zipPrevEncodeLength(p,prevlen);
+    // 将节点值的长度写入新节点的 header
+    p += zipEncodeLength(p,encoding,slen);
+    // 写入节点值
+    if (ZIP_IS_STR(encoding)) {
+        // T = O(N)
+        memcpy(p,s,slen);
+    } else {
+        // T = O(1)
+        zipSaveInteger(p,value,encoding);
+    }
+
+    // 更新列表的节点数量计数器
+    // T = O(1)
+    ZIPLIST_INCR_LENGTH(zl,1);
+
+    return zl;
+}
+</code></pre>
+<h2 id="8-4-数据删除"><a href="#8-4-数据删除" class="headerlink" title="8.4 数据删除"></a>8.4 数据删除</h2><pre><code class="c">#file: src/ziplist.c
+/* 
+ * 从位置 p 开始，连续删除 num 个节点。
+ * 函数的返回值为处理删除操作之后的 ziplist 。
+ *
+ * T = O(N^2)
+ */
+static unsigned char *__ziplistDelete(unsigned char *zl, unsigned char *p, unsigned int num) {
+    unsigned int i, totlen, deleted = 0;
+    size_t offset;
+    int nextdiff = 0;
+    zlentry first, tail;
+
+    // 计算被删除节点总共占用的内存字节数
+    // 以及被删除节点的总个数
+    // T = O(N)
+    first = zipEntry(p);
+    for (i = 0; p[0] != ZIP_END &amp;&amp; i &lt; num; i++) {
+        p += zipRawEntryLength(p);
+        deleted++;
+    }
+
+    // totlen 是所有被删除节点总共占用的内存字节数
+    totlen = p-first.p;
+    if (totlen &gt; 0) {
+        if (p[0] != ZIP_END) {
+
+            // 执行这里，表示被删除节点之后仍然有节点存在
+
+            // 因为位于被删除范围之后的第一个节点的 header 部分的大小
+            // 可能容纳不了新的前置节点，所以需要计算新旧前置节点之间的字节数差
+            // T = O(1)
+            nextdiff = zipPrevLenByteDiff(p,first.prevrawlen);
+            // 如果有需要的话，将指针 p 后退 nextdiff 字节，为新 header 空出空间
+            p -= nextdiff;
+            // 将 first 的前置节点的长度编码至 p 中
+            // T = O(1)
+            zipPrevEncodeLength(p,first.prevrawlen);
+
+            // 更新到达表尾的偏移量
+            // T = O(1)
+            ZIPLIST_TAIL_OFFSET(zl) =
+                intrev32ifbe(intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))-totlen);
+
+            // 如果被删除节点之后，有多于一个节点
+            // 那么程序需要将 nextdiff 记录的字节数也计算到表尾偏移量中
+            // 这样才能让表尾偏移量正确对齐表尾节点
+            // T = O(1)
+            tail = zipEntry(p);
+            if (p[tail.headersize+tail.len] != ZIP_END) {
+                ZIPLIST_TAIL_OFFSET(zl) =
+                   intrev32ifbe(intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))+nextdiff);
+            }
+
+            // 从表尾向表头移动数据，覆盖被删除节点的数据
+            // T = O(N)
+            memmove(first.p,p,
+                intrev32ifbe(ZIPLIST_BYTES(zl))-(p-zl)-1);
+        } else {
+
+            // 执行这里，表示被删除节点之后已经没有其他节点了
+            // T = O(1)
+            ZIPLIST_TAIL_OFFSET(zl) =
+                intrev32ifbe((first.p-zl)-first.prevrawlen);
+        }
+
+        // 缩小并更新 ziplist 的长度
+        offset = first.p-zl;
+        zl = ziplistResize(zl, intrev32ifbe(ZIPLIST_BYTES(zl))-totlen+nextdiff);
+        ZIPLIST_INCR_LENGTH(zl,-deleted);
+        p = zl+offset;
+
+        // 如果 p 所指向的节点的大小已经变更，那么进行级联更新
+        // 检查 p 之后的所有节点是否符合 ziplist 的编码要求
+        // T = O(N^2)
+        if (nextdiff != 0)
+            zl = __ziplistCascadeUpdate(zl,p);
+    }
+
+    return zl;
+}</code></pre>
+<h2 id="8-5-联级更新"><a href="#8-5-联级更新" class="headerlink" title="8.5 联级更新"></a>8.5 联级更新</h2><p>我们看到插入和删除的时候都调用了<code>__ziplistCascadeUpdate</code>函数来更新后面节点的大小</p>
+<pre><code class="c">#file: src/ziplist.c
+/*
+
+ * 当将一个新节点添加到某个节点之前的时候，
+ * 如果原节点的 header 空间不足以保存新节点的长度，
+ * 那么就需要对原节点的 header 空间进行扩展（从 1 字节扩展到 5 字节）。
+ *
+ * 但是，当对原节点进行扩展之后，原节点的下一个节点的 prevlen 可能出现空间不足，
+ * 这种情况在多个连续节点的长度都接近 ZIP_BIGLEN 时可能发生。
+ *
+ * 这个函数就用于检查并修复后续节点的空间问题。
+ *
+ * 反过来说，
+ * 因为节点的长度变小而引起的连续缩小也是可能出现的，
+ * 不过，为了避免扩展-缩小-扩展-缩小这样的情况反复出现（flapping，抖动），
+ * 我们不处理这种情况，而是任由 prevlen 比所需的长度更长。
+ *
+ * 注意，程序的检查是针对 p 的后续节点，而不是 p 所指向的节点。
+ * 因为节点 p 在传入之前已经完成了所需的空间扩展工作。
+ *
+ * T = O(N^2)
+ */
+static unsigned char *__ziplistCascadeUpdate(unsigned char *zl, unsigned char *p) {
+    size_t curlen = intrev32ifbe(ZIPLIST_BYTES(zl)), rawlen, rawlensize;
+    size_t offset, noffset, extra;
+    unsigned char *np;
+    zlentry cur, next;
+
+    // T = O(N^2)
+    while (p[0] != ZIP_END) {
+
+        // 将 p 所指向的节点的信息保存到 cur 结构中
+        cur = zipEntry(p);
+        // 当前节点的长度
+        rawlen = cur.headersize + cur.len;
+        // 计算编码当前节点的长度所需的字节数
+        // T = O(1)
+        rawlensize = zipPrevEncodeLength(NULL,rawlen);
+
+        // 如果已经没有后续空间需要更新了，跳出
+        if (p[rawlen] == ZIP_END) break;
+
+        // 取出后续节点的信息，保存到 next 结构中
+        // T = O(1)
+        next = zipEntry(p+rawlen);
+
+        // 后续节点编码当前节点的空间已经足够，无须再进行任何处理，跳出
+        // 可以证明，只要遇到一个空间足够的节点，
+        // 那么这个节点之后的所有节点的空间都是足够的
+        if (next.prevrawlen == rawlen) break;
+
+        if (next.prevrawlensize &lt; rawlensize) {
+
+            // 执行到这里，表示 next 空间的大小不足以编码 cur 的长度
+            // 所以程序需要对 next 节点的（header 部分）空间进行扩展
+
+            // 记录 p 的偏移量
+            offset = p-zl;
+            // 计算需要增加的节点数量
+            extra = rawlensize-next.prevrawlensize;
+            // 扩展 zl 的大小
+            // T = O(N)
+            zl = ziplistResize(zl,curlen+extra);
+            // 还原指针 p
+            p = zl+offset;
+
+            // 记录下一节点的偏移量
+            np = p+rawlen;
+            noffset = np-zl;
+
+            // 当 next 节点不是表尾节点时，更新列表到表尾节点的偏移量
+            // 
+            // 不用更新的情况（next 为表尾节点）：
+            //
+            // |     | next |      ==&gt;    |     | new next          |
+            //       ^                          ^
+            //       |                          |
+            //     tail                        tail
+            //
+            // 需要更新的情况（next 不是表尾节点）：
+            //
+            // | next |     |   ==&gt;     | new next          |     |
+            //        ^                        ^
+            //        |                        |
+            //    old tail                 old tail
+            // 
+            // 更新之后：
+            //
+            // | new next          |     |
+            //                     ^
+            //                     |
+            //                  new tail
+            // T = O(1)
+            if ((zl+intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))) != np) {
+                ZIPLIST_TAIL_OFFSET(zl) =
+                    intrev32ifbe(intrev32ifbe(ZIPLIST_TAIL_OFFSET(zl))+extra);
+            }
+
+            /* Move the tail to the back. */
+            // 向后移动 cur 节点之后的数据，为 cur 的新 header 腾出空间
+            //
+            // 示例：
+            //
+            // | header | value |  ==&gt;  | header |    | value |  ==&gt;  | header      | value |
+            //                                   |&lt;--&gt;|
+            //                            为新 header 腾出的空间
+            // T = O(N)
+            memmove(np+rawlensize,
+                np+next.prevrawlensize,
+                curlen-noffset-next.prevrawlensize-1);
+            // 将新的前一节点长度值编码进新的 next 节点的 header
+            // T = O(1)
+            zipPrevEncodeLength(np,rawlen);
+
+            /* Advance the cursor */
+            // 移动指针，继续处理下个节点
+            p += rawlen;
+            curlen += extra;
+        } else {
+            if (next.prevrawlensize &gt; rawlensize) {
+                /* This would result in shrinking, which we want to avoid.
+                 * So, set &quot;rawlen&quot; in the available bytes. */
+                // 执行到这里，说明 next 节点编码前置节点的 header 空间有 5 字节
+                // 而编码 rawlen 只需要 1 字节
+                // 但是程序不会对 next 进行缩小，
+                // 所以这里只将 rawlen 写入 5 字节的 header 中就算了。
+                // T = O(1)
+                zipPrevEncodeLengthForceLarge(p+rawlen,rawlen);
+            } else {
+                // 运行到这里，
+                // 说明 cur 节点的长度正好可以编码到 next 节点的 header 中
+                // T = O(1)
+                zipPrevEncodeLength(p+rawlen,rawlen);
+            }
+
+            /* Stop here, as the raw length of &quot;next&quot; has not changed. */
+            break;
+        }
+    }
+
+    return zl;
+}
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
