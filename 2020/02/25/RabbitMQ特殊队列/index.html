@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>RabbitMQ特殊队列 | KenBetter</title>
+  <meta name="keywords" content=" 消息队列 , RabbitMQ ">
+  <meta name="description" content="RabbitMQ特殊队列 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(44)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(33)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="消息队列">消息队列<small>(13)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="44">
+<input type="hidden" id="yelog_site_word_count" value="74.6k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Kafka</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">消息队列</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">RabbitMQ</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka可靠性保证">Kafka可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:01:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/Kafka%E5%92%8CRabbitmq%E7%9A%84%E6%AF%94%E8%BE%83/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="Kafka和RabbitMQ的比较">Kafka和RabbitMQ的比较</span>
+                <span class="post-date"
+                      title="2020-02-27 20:40:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E4%BB%8B%E7%BB%8D/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ介绍">RabbitMQ介绍</span>
+                <span class="post-date"
+                      title="2020-02-25 19:41:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka幂等性保证">Kafka幂等性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:02:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ数据可靠性保证">RabbitMQ数据可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ集群模式">RabbitMQ集群模式</span>
+                <span class="post-date"
+                      title="2020-02-25 19:45:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息幂等性保证">消息幂等性保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:43:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E5%A4%84%E7%90%86/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息积压处理">消息积压处理</span>
+                <span class="post-date"
+                      title="2020-03-01 21:42:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列可靠性保证">消息队列可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-27 20:41:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息顺序性的保证">消息顺序性的保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:45:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%9C%E7%94%A8/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列的作用">消息队列的作用</span>
+                <span class="post-date"
+                      title="2020-02-27 20:42:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E4%BB%8B%E7%BB%8D/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka介绍">Kafka介绍</span>
+                <span class="post-date"
+                      title="2020-02-26 20:00:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ特殊队列">RabbitMQ特殊队列</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-RabbitMQ特殊队列" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">RabbitMQ特殊队列</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="中间件">中间件</a>/
+            
+                <a  data-rel="消息队列">消息队列</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color5">消息队列</a>
+            
+            <a class="color4">RabbitMQ</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-02-25</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:2.3k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈8分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-死信队列"><span class="toc-text">1 死信队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-产生情况"><span class="toc-text">1.1 产生情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-特性"><span class="toc-text">1.2 特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-设置"><span class="toc-text">1.3 设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-延时队列"><span class="toc-text">2 延时队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-使用场景"><span class="toc-text">2.1 使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-RabbitMQ中的TTL"><span class="toc-text">2.2 RabbitMQ中的TTL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-实现延时队列"><span class="toc-text">2.3 实现延时队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-通过死信队列实现"><span class="toc-text">2.3.1 通过死信队列实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-通过插件实现"><span class="toc-text">2.3.2 通过插件实现</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-优先级队列"><span class="toc-text">3 优先级队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-实现方式"><span class="toc-text">3.1 实现方式</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>死信队列</li>
+<li>延时队列</li>
+<li>优先级队列</li>
+</ul>
+<h2 id="1-死信队列"><a href="#1-死信队列" class="headerlink" title="1 死信队列"></a>1 死信队列</h2><p>DLX, Dead-Letter-Exchange</p>
+<p>利用DLX, 当消息在一个队列中变成死信（dead message）之后，它能被重新publish到<strong>另一个Exchange</strong>，这个Exchange就是DLX。</p>
+<h3 id="1-1-产生情况"><a href="#1-1-产生情况" class="headerlink" title="1.1 产生情况"></a>1.1 产生情况</h3><p>消息变成死信一向有一下几种情况:</p>
+<ul>
+<li><strong>消息被拒绝（basic.reject/ basic.nack）并且requeue=false</strong></li>
+<li><strong>消息TTL过期</strong></li>
+<li><strong>队列达到最大长度</strong></li>
+</ul>
+<h3 id="1-2-特性"><a href="#1-2-特性" class="headerlink" title="1.2 特性"></a>1.2 特性</h3><ul>
+<li>DLX也是一个<strong>正常的Exchange</strong>,和一般的Exchange没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。</li>
+<li>当这个队列中有死信时，RabbitMQ就会<strong>自动的将这个消息重新发布</strong>到设置的Exchange上去，进而被路由到另一个队列。</li>
+<li><strong>可以监听这个队列中消息</strong>做相应的处理，这个特性可以弥补RabbitMQ3.0以前支持的immediate参数的功能。</li>
+</ul>
+<h3 id="1-3-设置"><a href="#1-3-设置" class="headerlink" title="1.3 设置"></a>1.3 设置</h3><ul>
+<li>首先需要设置死信队列的exchange和queue,然后进行绑定:<ul>
+<li>Exchange: dlx.exchange</li>
+<li>Queue: dlx.queue</li>
+<li>Routing Key: #</li>
+</ul>
+</li>
+<li>然后我们进行正常声明交换机、队列、绑定，只不过我们需要在队列加上一个参数即可：arguments.put(nx-dead-letter-exchange”,”dlx.exchange”)；</li>
+<li>这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列</li>
+</ul>
+<h2 id="2-延时队列"><a href="#2-延时队列" class="headerlink" title="2 延时队列"></a>2 延时队列</h2><p><strong>延时队列</strong>，首先，它是一种队列，队列意味着内部的元素是<strong>有序</strong>的，元素出队和入队是有方向性的，元素从一端进入，从另一端取出。</p>
+<p>其次，<strong>延时队列</strong>，最重要的特性就体现在它的<strong>延时</strong>属性上，跟普通的队列不一样的是，<strong>普通队列中的元素总是等着希望被早点取出处理，而延时队列中的元素则是希望被在指定时间得到取出和处理</strong>，所以延时队列中的元素是都是带时间属性的，通常来说是需要被处理的消息或者任务。</p>
+<p>简单来说，延时队列就是用来存放需要在指定时间被处理的元素的队列。</p>
+<h3 id="2-1-使用场景"><a href="#2-1-使用场景" class="headerlink" title="2.1 使用场景"></a>2.1 使用场景</h3><p>那么什么时候需要用延时队列呢？考虑一下以下场景：</p>
+<ul>
+<li>订单在十分钟之内未支付则自动取消。</li>
+<li>新创建的店铺，如果在十天内都没有上传过商品，则自动发送消息提醒。</li>
+<li>账单在一周内未支付，则自动结算。</li>
+<li>用户注册成功后，如果三天内没有登陆则进行短信提醒。</li>
+<li>用户发起退款，如果三天内没有得到处理则通知相关运营人员。</li>
+<li>预定会议后，需要在预定的时间点前十分钟通知各个与会人员参加会议。</li>
+</ul>
+<p>这些场景都有一个特点，需要在某个事件发生之后或者之前的指定时间点完成某一项任务，如：发生订单生成事件，在十分钟之后检查该订单支付状态，然后将未支付的订单进行关闭；发生店铺创建事件，十天后检查该店铺上新商品数，然后通知上新数为0的商户；发生账单生成事件，检查账单支付状态，然后自动结算未支付的账单；发生新用户注册事件，三天后检查新注册用户的活动数据，然后通知没有任何活动记录的用户；发生退款事件，在三天之后检查该订单是否已被处理，如仍未被处理，则发送消息给相关运营人员；发生预定会议事件，判断离会议开始是否只有十分钟了，如果是，则通知各个与会人员。</p>
+<p>看起来<strong>似乎使用定时任务</strong>，一直轮询数据，每秒查一次，取出需要被处理的数据，然后处理不就完事了吗？如果数据量比较少，确实可以这样做，比如：对于“如果账单一周内未支付则进行自动结算”这样的需求，如果对于时间不是严格限制，而是宽松意义上的一周，那么每天晚上跑个定时任务检查一下所有未支付的账单，确实也是一个可行的方案。但对于数据量比较大，并且时效性较强的场景，如：“订单十分钟内未支付则关闭“，短期内未支付的订单数据可能会有很多，活动期间甚至会达到百万甚至千万级别，对这么庞大的数据量仍旧使用轮询的方式显然是不可取的，很可能在一秒内无法完成所有订单的检查，同时会给数据库带来很大压力，无法满足业务要求而且性能低下。</p>
+<p>这时候，延时队列就可以闪亮登场了，<strong>以上场景，正是延时队列的用武之地</strong>。</p>
+<p>既然延时队列可以解决很多特定场景下，带时间属性的任务需求，那么如何构造一个延时队列呢？接下来，本文将介绍如何用RabbitMQ来实现延时队列。</p>
+<h3 id="2-2-RabbitMQ中的TTL"><a href="#2-2-RabbitMQ中的TTL" class="headerlink" title="2.2 RabbitMQ中的TTL"></a>2.2 RabbitMQ中的TTL</h3><p>在介绍延时队列之前，还需要先介绍一下RabbitMQ中的一个高级特性——<strong>TTL（Time To Live）</strong>。</p>
+<p>TTL是什么呢？TTL是RabbitMQ中一个消息或者队列的属性，表明一条消息或者该队列中的所有消息的最大存活时间，单位是毫秒。换句话说，如果一条消息设置了TTL属性或者进入了设置TTL属性的队列，那么这条消息如果在TTL设置的时间内没有被消费，则会成为“死信”（至于什么是死信，请翻看上一篇）。如果同时配置了队列的TTL和消息的TTL，那么较小的那个值将会被使用。</p>
+<p>那么，如何设置这个TTL值呢？有两种方式，第一种是在创建队列的时候设置队列的“<strong>x-message-ttl</strong>”属性，如下：</p>
+<pre><code class="java">Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
+args.put(&quot;x-message-ttl&quot;, 6000);
+channel.queueDeclare(queueName, durable, exclusive, autoDelete, args);</code></pre>
+<p>这样所有被投递到该队列的消息都最多不会存活超过6s。</p>
+<p>另一种方式便是针对每条消息设置TTL，代码如下：</p>
+<pre><code class="java">AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
+builder.expiration(&quot;6000&quot;);
+AMQP.BasicProperties properties = builder.build();
+channel.basicPublish(exchangeName, routingKey, mandatory, properties, &quot;msg body&quot;.getBytes());
+</code></pre>
+<p>这样这条消息的过期时间也被设置成了6s。</p>
+<p>但这两种方式是有区别的，<strong>如果设置了队列的TTL属性，那么一旦消息过期，就会被队列丢弃，而第二种方式，消息即使过期，也不一定会被马上丢弃，因为消息是否过期是在即将投递到消费者之前判定的，如果当前队列有严重的消息积压情况，则已过期的消息也许还能存活较长时间</strong>。</p>
+<p>另外，还需要注意的一点是，如果不设置TTL，表示消息永远不会过期，如果将TTL设置为0，则表示除非此时可以直接投递该消息到消费者，否则该消息将会被丢弃。</p>
+<h3 id="2-3-实现延时队列"><a href="#2-3-实现延时队列" class="headerlink" title="2.3 实现延时队列"></a>2.3 实现延时队列</h3><h4 id="2-3-1-通过死信队列实现"><a href="#2-3-1-通过死信队列实现" class="headerlink" title="2.3.1 通过死信队列实现"></a>2.3.1 通过死信队列实现</h4><p>延时队列，不就是想要消息延迟多久被处理吗，TTL则刚好能让消息在延迟多久之后成为死信，另一方面，成为死信的消息都会被投递到死信队列里，这样只需要消费者一直消费死信队列里的消息就万事大吉了，因为里面的消息都是希望被立即处理的消息。</p>
+<p>但如果使用在消息属性上设置TTL的方式，消息可能并不会按时“死亡“，因为RabbitMQ只会检查第一个消息是否过期，如果过期则丢到死信队列，索引如果第一个消息的延时时长很长，而第二个消息的延时时长很短，则第二个消息并不会优先得到执行</p>
+<p><strong>所以不推荐使用此种方式!</strong></p>
+<h4 id="2-3-2-通过插件实现"><a href="#2-3-2-通过插件实现" class="headerlink" title="2.3.2 通过插件实现"></a>2.3.2 通过插件实现</h4><p>安装一个插件即可：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">https://www.rabbitmq.com/community-plugins.html</a> ，下载rabbitmq_delayed_message_exchange插件，然后解压放置到RabbitMQ的插件目录。</p>
+<p>接下来，进入RabbitMQ的安装目录下的sbin目录，执行下面命令让该插件生效，然后重启RabbitMQ。</p>
+<h2 id="3-优先级队列"><a href="#3-优先级队列" class="headerlink" title="3 优先级队列"></a>3 优先级队列</h2><p>优先级队列，顾名思义，具有更高优先级的队列具有较高的优先权，优先级高的消息具备优先被消费的特权。</p>
+<h3 id="3-1-实现方式"><a href="#3-1-实现方式" class="headerlink" title="3.1 实现方式"></a>3.1 实现方式</h3><p>可以通过设置<strong>x-max-priority</strong>属性来实现优先级队列</p>
+<p>当然，在消费端速度大于生产端速度，且broker中没有消息堆积的话，对发送的消息设置优先级也没什么实际意义，因为发送端刚发送完一条消息就被消费端消费了，那么就相当于broker至多只有一条消息，那么对于单条消息来说优先级是没有什么意义的。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存','#Kafka','#消息队列','#RabbitMQ',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
