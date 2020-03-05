@@ -4,6 +4,438 @@
   
     
     <entry>
+      <title>16.ES读性能优化</title>
+      <link href="/2020/03/05/16-ES%E8%AF%BB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+      <url>/2020/03/05/16-ES%E8%AF%BB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</url>
+      
+        <content type="html"><![CDATA[<ul><li><strong>加大filesystem cache，写入 es 的数据最好小于等于，或者是略微大于 es 的 filesystem cache 的内存容量。</strong>然后你从 es 检索可能就花费 20ms，然后再根据 es 返回的 id 去 hbase 里查询，查 20 条数据，可能也就耗费个 30ms</li><li><strong>数据预热</strong></li><li><strong>冷热分离</strong>,最好是将冷数据写入一个索引中，然后热数据写入另外一个索引中，这样可以确保热数据在被预热之后，尽量都让他们留在 filesystem os cache 里，别让冷数据给冲刷掉。</li><li><strong>不允许深度分页</strong></li><li><strong>尽量使用 Filter Context，利用缓存机制，减少不必要的算分</strong></li><li><strong>反范式化数据,尽量不要父子文档和nested类型数据</strong></li><li><strong>严禁使用 * 开头通配符 Terms 查询与正则查询</strong></li><li><strong>避免查询是使用脚本,可以在 Index 文档时，使用 Ingest Pipeline，计算并写 入某个字段</strong></li><li><strong>聚合查询会消耗内存，特别是针对很大的数据集进行聚合运算</strong></li><li><strong>避免过度分片,控制单分片尺寸:</strong><ul><li><strong>search类20GB</strong></li><li><strong>Logging类40GB</strong></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>15.ES写性能优化</title>
+      <link href="/2020/03/05/15-ES%E5%86%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+      <url>/2020/03/05/15-ES%E5%86%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</url>
+      
+        <content type="html"><![CDATA[<ul><li><strong>增大写吞吐量（Events Per Second），越高越好</strong></li><li><strong>客户端:多线程,批量写</strong></li><li><strong>建立高质量的数据建模,反范式化</strong></li><li><strong>关闭无关的功能:</strong><ul><li><strong>只需要聚合不需要搜索，Index 设置成 false</strong> </li><li><strong>不需要算分，Norms 设置成 false</strong> </li><li><strong>不要对字符串使用默认的 dynamic mapping。字段 数量过多，会对性能产生比较大的影响</strong> </li><li><strong>Index_options 控制在创建倒排索引时，哪些内容 会被添加到倒排索引中。优化这些设置，一定程度 可以节约 CPU</strong> </li><li><strong>指标型数据关闭 _source，减少 IO 操作</strong></li></ul></li><li><strong>降低refresh频率</strong></li><li><strong>降低translog频率</strong></li><li><strong>副本数可以在写入时设置为0,完成后再增加</strong></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>14.ES的并发控制</title>
+      <link href="/2020/03/04/14-ES%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/"/>
+      <url>/2020/03/04/14-ES%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/</url>
+      
+        <content type="html"><![CDATA[<p>两个 Web 程序同时更新某个⽂档，如果缺乏有效的并发，会导致更改的数据丢失</p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/eslock.png" alt=""></p><h2 id="14-1-锁的选择"><a href="#14-1-锁的选择" class="headerlink" title="14.1 锁的选择"></a>14.1 锁的选择</h2><p>ES采用乐观锁实现并发控制</p><h2 id="14-2-具体实现"><a href="#14-2-具体实现" class="headerlink" title="14.2 具体实现"></a>14.2 具体实现</h2><p>ES 中的⽂档是不可变更的。如果你更新⼀个⽂档，会将就⽂档标记为删除，同时增加⼀个全新的⽂档。同时⽂档的 version 字段加 1</p><p>ES实现用两种方式实现乐观锁的CAS机制:</p><ul><li><strong>内部版本控制</strong>:version</li><li><strong>使⽤外部版本(使⽤其他数据库作为主要数据存储)</strong> :version + version_type=external</li></ul><h3 id="14-2-1-内部版本控制"><a href="#14-2-1-内部版本控制" class="headerlink" title="14.2.1 内部版本控制"></a>14.2.1 内部版本控制</h3><pre><code class="json">GET staffs/base/1#获取结果{  &quot;_index&quot;: &quot;staffs&quot;,  &quot;_type&quot;: &quot;base&quot;,  &quot;_id&quot;: &quot;1&quot;,  &quot;_version&quot;: 7,  &quot;found&quot;: true,  &quot;_source&quot;: {    &quot;firstName&quot;: &quot;Song&quot;,    &quot;lastName&quot;: &quot;Gao&quot;,    &quot;age&quot;: 11,    &quot;mobile&quot;: &quot;13888888888&quot;,    &quot;birthday&quot;: &quot;1999-01-01&quot;,    &quot;died&quot;: false,    &quot;province&quot;: &quot;tj&quot;,    &quot;address&quot;: &quot;tj tanggu daliangzi&quot;,    &quot;tags&quot;: [      &quot;yellow&quot;,      &quot;blue&quot;    ],    &quot;tagsCount&quot;: 2  }}# 根据version值进行更新PUT staffs/base/1?version=7{  &quot;firstName&quot;: &quot;Song&quot;,  &quot;lastName&quot;: &quot;Gao&quot;,  &quot;age&quot;: 11,  &quot;mobile&quot;: &quot;13888888888&quot;,  &quot;birthday&quot;: &quot;1999-01-01&quot;,  &quot;died&quot;: false,  &quot;province&quot;: &quot;tj&quot;,  &quot;address&quot;: &quot;tj tanggu daliangzi&quot;,  &quot;tags&quot;: [    &quot;yellow&quot;,    &quot;blue&quot;  ],  &quot;tagsCount&quot;: 2}#获得结果{  &quot;_index&quot;: &quot;staffs&quot;,  &quot;_type&quot;: &quot;base&quot;,  &quot;_id&quot;: &quot;1&quot;,  &quot;_version&quot;: 8,  &quot;result&quot;: &quot;updated&quot;,  &quot;_shards&quot;: {    &quot;total&quot;: 2,    &quot;successful&quot;: 2,    &quot;failed&quot;: 0  },  &quot;_seq_no&quot;: 10,  &quot;_primary_term&quot;: 1}#同版本再次更新PUT staffs/base/1?version=7{  &quot;firstName&quot;: &quot;Song&quot;,  &quot;lastName&quot;: &quot;Gao&quot;,  &quot;age&quot;: 11,  &quot;mobile&quot;: &quot;13888888888&quot;,  &quot;birthday&quot;: &quot;1999-01-01&quot;,  &quot;died&quot;: false,  &quot;province&quot;: &quot;tj&quot;,  &quot;address&quot;: &quot;tj tanggu daliangzi&quot;,  &quot;tags&quot;: [    &quot;yellow&quot;,    &quot;blue&quot;  ],  &quot;tagsCount&quot;: 2}#获得结果{  &quot;error&quot;: {    &quot;root_cause&quot;: [      {        &quot;type&quot;: &quot;version_conflict_engine_exception&quot;,        &quot;reason&quot;: &quot;[base][1]: version conflict, current version [8] is different than the one provided [7]&quot;,        &quot;index_uuid&quot;: &quot;R3L64DNzQjWcdoUo8mLJNw&quot;,        &quot;shard&quot;: &quot;3&quot;,        &quot;index&quot;: &quot;staffs&quot;      }    ],    &quot;type&quot;: &quot;version_conflict_engine_exception&quot;,    &quot;reason&quot;: &quot;[base][1]: version conflict, current version [8] is different than the one provided [7]&quot;,    &quot;index_uuid&quot;: &quot;R3L64DNzQjWcdoUo8mLJNw&quot;,    &quot;shard&quot;: &quot;3&quot;,    &quot;index&quot;: &quot;staffs&quot;  },  &quot;status&quot;: 409}</code></pre><h3 id="14-2-2-外部版本控制"><a href="#14-2-2-外部版本控制" class="headerlink" title="14.2.2 外部版本控制"></a>14.2.2 外部版本控制</h3><ul><li><strong>GET传参多加入version_type=external参数</strong></li><li><strong>此时的version等于外部的版本号</strong></li></ul><pre><code class="json">PUT staffs/base/1?version=3000&amp;version_type=external{  &quot;firstName&quot;: &quot;Song&quot;,  &quot;lastName&quot;: &quot;Gao&quot;,  &quot;age&quot;: 11,  &quot;mobile&quot;: &quot;13888888888&quot;,  &quot;birthday&quot;: &quot;1999-01-01&quot;,  &quot;died&quot;: false,  &quot;province&quot;: &quot;tj&quot;,  &quot;address&quot;: &quot;tj tanggu daliangzi&quot;,  &quot;tags&quot;: [    &quot;yellow&quot;,    &quot;blue&quot;  ],  &quot;tagsCount&quot;: 2}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>13.ES分布式查询及相关性算分</title>
+      <link href="/2020/03/04/13-ES%E5%88%86%E5%B8%83%E5%BC%8F%E6%9F%A5%E8%AF%A2%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%80%A7%E7%AE%97%E5%88%86/"/>
+      <url>/2020/03/04/13-ES%E5%88%86%E5%B8%83%E5%BC%8F%E6%9F%A5%E8%AF%A2%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%80%A7%E7%AE%97%E5%88%86/</url>
+      
+        <content type="html"><![CDATA[<h2 id="13-1-分布式搜索的运行机制"><a href="#13-1-分布式搜索的运行机制" class="headerlink" title="13.1 分布式搜索的运行机制"></a>13.1 分布式搜索的运行机制</h2><p>ES的搜索会分两个阶段进行:</p><ul><li>第一阶段－－Query</li><li>第二阶段－－Fetch</li></ul><p>因此我们称ES的搜索运行机制为 <strong>Query-Then-Fetch</strong></p><h2 id="13-2-Query阶段"><a href="#13-2-Query阶段" class="headerlink" title="13.2 Query阶段"></a>13.2 Query阶段</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esquery.png" alt=""></p><h2 id="13-3-Fetch阶段"><a href="#13-3-Fetch阶段" class="headerlink" title="13.3  Fetch阶段"></a>13.3  Fetch阶段</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esfetch.png" alt=""></p><h2 id="13-4-Query-Then-Fetch-潜在的问题"><a href="#13-4-Query-Then-Fetch-潜在的问题" class="headerlink" title="13.4 Query Then Fetch 潜在的问题"></a>13.4 Query Then Fetch 潜在的问题</h2><h3 id="13-4-1-深度分页"><a href="#13-4-1-深度分页" class="headerlink" title="13.4.1 深度分页"></a>13.4.1 深度分页</h3><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esfromsize.png" alt=""></p><ul><li><strong>每个分片上需要查的文档个数=from + size</strong></li><li><strong>最终协调节点需要处理：number_of_shard * ( from+size )</strong></li><li><strong>导致深度分页</strong></li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esdeep.png" alt=""></p><h3 id="13-4-2-相关性算分"><a href="#13-4-2-相关性算分" class="headerlink" title="13.4.2 相关性算分"></a>13.4.2 相关性算分</h3><p><strong>每个分片都基于自己的分片上的数据进行相关度计算</strong>。</p><p>这会导致打分偏离的情况，特别是数据量很少时。相关性算分在分片之间是相互独立。当文档总数很少的情况下，如果主分片大于1,主分片数越多，相关性算分会越不准</p><h2 id="13-5-解决问题"><a href="#13-5-解决问题" class="headerlink" title="13.5 解决问题"></a>13.5 解决问题</h2><h3 id="13-4-1-深度分页-1"><a href="#13-4-1-深度分页-1" class="headerlink" title="13.4.1 深度分页"></a>13.4.1 深度分页</h3><p>使用search_after或scroll api来避免深度分页问题</p><p>思想都是:</p><ul><li><strong>可以实时获取下⼀⻚⽂档信息</strong></li><li><strong>不⽀持指定⻚数（From）</strong></li><li><strong>只能往下翻</strong></li></ul><h4 id="13-4-1-1-search-after"><a href="#13-4-1-1-search-after" class="headerlink" title="13.4.1.1 search after"></a>13.4.1.1 search after</h4><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearchafter.png" alt=""></p><pre><code class="json">#第一次取GET staffs/base/_search{  &quot;query&quot;: {      &quot;match_all&quot;: {}  },  &quot;size&quot;: 1,  &quot;sort&quot;: [    {      &quot;age&quot;: {        &quot;order&quot;: &quot;desc&quot;      },      &quot;_id&quot;:{        &quot;order&quot;: &quot;desc&quot;      }    }  ]}## 获取到sort数组{  &quot;took&quot;: 3,  &quot;timed_out&quot;: false,  &quot;_shards&quot;: {    &quot;total&quot;: 5,    &quot;successful&quot;: 5,    &quot;skipped&quot;: 0,    &quot;failed&quot;: 0  },  &quot;hits&quot;: {    &quot;total&quot;: 8,    &quot;max_score&quot;: null,    &quot;hits&quot;: [      {        &quot;_index&quot;: &quot;staffs&quot;,        &quot;_type&quot;: &quot;base&quot;,        &quot;_id&quot;: &quot;6&quot;,        &quot;_score&quot;: null,        &quot;_source&quot;: {          &quot;firstName&quot;: &quot;MML&quot;,          &quot;lastName&quot;: &quot;ZLA&quot;,          &quot;age&quot;: 88,          &quot;mobile&quot;: &quot;23688885589&quot;,          &quot;birthday&quot;: &quot;1944-01-02&quot;,          &quot;died&quot;: false,          &quot;province&quot;: &quot;sh&quot;,          &quot;address&quot;: &quot;zn minghanglu  aaa  daliangzi&quot;        },        &quot;sort&quot;: [          88,          &quot;6&quot;        ]      }    ]  }}## 根据sort数组里面的值　使用search after查询GET staffs/base/_search{  &quot;query&quot;: {      &quot;match_all&quot;: {}  },  &quot;size&quot;: 1,  &quot;search_after&quot;:[88,&quot;6&quot;],  &quot;sort&quot;: [    {      &quot;age&quot;: {        &quot;order&quot;: &quot;desc&quot;      },      &quot;_id&quot;:{        &quot;order&quot;: &quot;desc&quot;      }    }  ]}</code></pre><h4 id="13-4-1-2-scroll-API"><a href="#13-4-1-2-scroll-API" class="headerlink" title="13.4.1.2 scroll API"></a>13.4.1.2 scroll API</h4><ul><li><strong>创建一个快照，有新的数据写入以后，无法被查到</strong></li><li>每次查询后，输入上一次的Scroll Id</li></ul><pre><code class="json">#先获取到scroll_id#scroll=5m含义:将快照保留5minGET staffs/base/_search?scroll=5m{  &quot;size&quot;: 2,  &quot;query&quot;: {    &quot;match_all&quot;: {}  }}#根据scroll_id获取信息#注意每次返回的size等于第一次查询的时候指定的size#scroll:1m 表明快照再延续保留1minGET _search/scroll{  &quot;scroll&quot;:&quot;1m&quot;,  &quot;scroll_id&quot;: &quot;DnF1ZXJ5VGhlbkZldGNoBQAAAAAAAKo3Fk1mWktWa0ViVHh1OEcyZTE1eVF2MUEAAAAAAACqNhZNZlpLVmtFYlR4dThHMmUxNXlRdjFBAAAAAAAAqjkWTWZaS1ZrRWJUeHU4RzJlMTV5UXYxQQAAAAAAAKo4Fk1mWktWa0ViVHh1OEcyZTE1eVF2MUEAAAAAAACqOhZNZlpLVmtFYlR4dThHMmUxNXlRdjFB&quot;}</code></pre><h4 id="13-4-1-3-scroll-api和search-after的区别"><a href="#13-4-1-3-scroll-api和search-after的区别" class="headerlink" title="13.4.1.3 scroll api和search after的区别"></a>13.4.1.3 scroll api和search after的区别</h4><ul><li><strong>search after可以实时获取下一页文档信息</strong></li><li><strong>scroll 是从快照信息中获取数据</strong></li></ul><h3 id="13-4-2-相关性算分-1"><a href="#13-4-2-相关性算分-1" class="headerlink" title="13.4.2 相关性算分"></a>13.4.2 相关性算分</h3><ul><li>数据量不⼤的时候，可以将<strong>主分⽚数设置为 1</strong> </li><li>当数据量⾜够⼤时候，<strong>只要保证⽂档均匀分散在各个分⽚上</strong>，结果⼀般就不会出现偏差</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>12.ES查询</title>
+      <link href="/2020/03/04/12-ES%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2%E7%B1%BB%E5%9E%8B/"/>
+      <url>/2020/03/04/12-ES%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2%E7%B1%BB%E5%9E%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="12-1-检索和过滤"><a href="#12-1-检索和过滤" class="headerlink" title="12.1 检索和过滤"></a>12.1 检索和过滤</h2><h3 id="12-1-1-检索和过滤的区别"><a href="#12-1-1-检索和过滤的区别" class="headerlink" title="12.1.1 检索和过滤的区别"></a>12.1.1 检索和过滤的区别</h3><ul><li><strong>query</strong>：查询操作不仅仅会进行查询，还会计算分值，用于确定相关度；</li><li><strong>filter</strong>：查询操作仅判断是否满足查询条件，不会计算得分，查询的结果可以被缓存。</li></ul><h3 id="12-1-2-检索和过滤的适用场景"><a href="#12-1-2-检索和过滤的适用场景" class="headerlink" title="12.1.2 检索和过滤的适用场景"></a>12.1.2 检索和过滤的适用场景</h3><ul><li>全文检索以及任何使用相关性评分的场景使用query检索。</li><li>除此之外的其他使用filter过滤器过滤。</li></ul><h2 id="12-2-结构化检索"><a href="#12-2-结构化检索" class="headerlink" title="12.2 结构化检索"></a>12.2 结构化检索</h2><h3 id="12-2-1-精确匹配检索"><a href="#12-2-1-精确匹配检索" class="headerlink" title="12.2.1 精确匹配检索"></a>12.2.1 精确匹配检索</h3><ul><li><strong>term 单值精确匹配</strong></li><li><strong>terms多值精确匹配</strong></li></ul><p>Term 查询，对输⼊不做分词。会将输⼊作为⼀个整体，在倒排索引中查找准确的词项，并且使⽤相关度算分公式为<strong>每个包含该词项的⽂档</strong>进⾏相关度算分</p><pre><code class="json">#search address contains &quot;zn&quot;GET staffs/base/_search{  &quot;query&quot;: {    &quot;term&quot;: {      &quot;address&quot;: {        &quot;value&quot;: &quot;zn&quot;      }    }  }}#search tags contains &quot;yellow&quot; or &quot;red&quot;GET staffs/base/_search{  &quot;query&quot;: {    &quot;constant_score&quot;: {      &quot;filter&quot;: {        &quot;terms&quot;: {          &quot;tags&quot;: [            &quot;yellow&quot;,            &quot;red&quot;          ]        }      }    }  }}</code></pre><h3 id="12-2-2-范围检索"><a href="#12-2-2-范围检索" class="headerlink" title="12.2.2 范围检索"></a>12.2.2 范围检索</h3><ul><li><strong>关键字 range</strong></li><li>gt大于,lt小于,gte大于等于,Ite小于等于</li></ul><pre><code class="json">GET  staffs/base/_search{  &quot;query&quot;: {    &quot;constant_score&quot;: {      &quot;filter&quot;: {        &quot;range&quot;: {          &quot;age&quot;: {            &quot;gte&quot;: 10,            &quot;lte&quot;: 20          }        }      }    }  }}</code></pre><h3 id="12-2-3-存在与否检索"><a href="#12-2-3-存在与否检索" class="headerlink" title="12.2.3 存在与否检索"></a>12.2.3 存在与否检索</h3><ul><li><strong>关键字 exist</strong></li></ul><pre><code class="json"># existGET staffs/base/_search{  &quot;query&quot;: {    &quot;constant_score&quot;: {      &quot;filter&quot;: {        &quot;exists&quot;: {          &quot;field&quot;: &quot;mobile&quot;        }      }    }  }}# not exist#注意是返回mobile字段不存在的doc#不包含doc中mobile为空的GET staffs/base/_search{  &quot;query&quot;: {    &quot;constant_score&quot;: {      &quot;filter&quot;: {        &quot;bool&quot;: {          &quot;must_not&quot;:{            &quot;exists&quot;:{              &quot;field&quot;:&quot;mobile&quot;            }          }        }      }    }  }}</code></pre><h3 id="12-2-4-前缀检索"><a href="#12-2-4-前缀检索" class="headerlink" title="12.2.4 前缀检索"></a>12.2.4 前缀检索</h3><ul><li><strong>关键字prefix</strong></li></ul><pre><code class="json">#查询address以zn开头的数据GET staffs/base/_search{  &quot;query&quot;: {    &quot;prefix&quot;: {      &quot;address&quot;: {        &quot;value&quot;: &quot;zn&quot;      }    }  }}</code></pre><h3 id="12-2-5-通配符模糊检索"><a href="#12-2-5-通配符模糊检索" class="headerlink" title="12.2.5 通配符模糊检索"></a>12.2.5 通配符模糊检索</h3><ul><li><strong>关键字wildcard</strong></li><li>通配符*匹配任意字符（包含空字符）,通配符？匹配任何单个字符。</li><li><strong>注意这个査询可能会比较缓慢，需要在许多索引词上面重复执行。为了避免极端缓慢的通配符査询，通配符索引词不应该以一个通配符开头</strong></li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;wildcard&quot;: {      &quot;mobile&quot;: {        &quot;value&quot;: &quot;138*8&quot;      }    }  }}</code></pre><h3 id="12-2-6-正则检索"><a href="#12-2-6-正则检索" class="headerlink" title="12.2.6 正则检索"></a>12.2.6 正则检索</h3><ul><li><strong>关键字regexp</strong></li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;regexp&quot;:{      &quot;mobile&quot;:&quot;13[0-9]{9}&quot;    }  }}</code></pre><h3 id="12-2-7-模糊检索"><a href="#12-2-7-模糊检索" class="headerlink" title="12.2.7 模糊检索"></a>12.2.7 模糊检索</h3><ul><li><strong>关键字fuzzy</strong></li></ul><pre><code class="jso">GET staffs/base/_search{  &quot;query&quot;: {    &quot;fuzzy&quot;: {      &quot;address&quot;: {        &quot;value&quot;: &quot;aaa&quot;,        &quot;fuzziness&quot;: 0.5,        &quot;prefix_length&quot;: 0,        &quot;max_expansions&quot;:10      }    }  }}</code></pre><h3 id="12-2-8-主键检索"><a href="#12-2-8-主键检索" class="headerlink" title="12.2.8 主键检索"></a>12.2.8 主键检索</h3><ul><li><strong>关键字ids</strong></li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;ids&quot;:{      &quot;values&quot;:[&quot;1&quot;,&quot;2&quot;]    }  }}</code></pre><h2 id="12-3-全文检索"><a href="#12-3-全文检索" class="headerlink" title="12.3 全文检索"></a>12.3 全文检索</h2><h3 id="12-3-1-分词全文检索"><a href="#12-3-1-分词全文检索" class="headerlink" title="12.3.1 分词全文检索"></a>12.3.1 分词全文检索</h3><ul><li><strong>关键字match</strong></li><li>会将query里面的单词进行分词,然后默认or操作搜索</li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;match&quot;: {      &quot;address&quot;: {        &quot;query&quot;: &quot;zn daliangzi aaa&quot;      }    }  }}#address中最少应该包含&quot;zn&quot;,&quot;daliangzi&quot;,&quot;aaa&quot;中的两个GET staffs/base/_search{  &quot;query&quot;: {    &quot;match&quot;: {      &quot;address&quot;: {        &quot;query&quot;: &quot;zn daliangzi aaa&quot;,        &quot;minimum_should_match&quot;:2      }    }  }}#change match query operator to andGET staffs/base/_search{  &quot;query&quot;: {    &quot;match&quot;: {      &quot;address&quot;:{         &quot;query&quot;: &quot;zn daliangzi&quot;,        &quot;operator&quot;: &quot;AND&quot;      }    }  }}</code></pre><h3 id="12-3-2-短语检索"><a href="#12-3-2-短语检索" class="headerlink" title="12.3.2 短语检索"></a>12.3.2 短语检索</h3><ul><li><strong>关键字match_phrase</strong></li><li>不将query中的单词进行分词,按照一个整体进行搜索</li><li><strong>slop</strong> 搜索的单词之间最多可以隔几个单词</li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;match_phrase&quot;: {      &quot;address&quot;:{        &quot;query&quot;: &quot;zn aaa&quot;      }    }  }}GET staffs/base/_search{  &quot;query&quot;: {    &quot;match_phrase&quot;: {      &quot;address&quot;:{        &quot;query&quot;: &quot;zn aaa&quot;,        &quot;slop&quot;:1      }    }  }}</code></pre><h3 id="12-3-3-短语前缀检索"><a href="#12-3-3-短语前缀检索" class="headerlink" title="12.3.3 短语前缀检索"></a>12.3.3 短语前缀检索</h3><ul><li><strong>关键字match_phrase_prefix</strong></li></ul><pre><code class="json"># 可以匹配:# zn minaaa# zn minbbb# zn mincccGET staffs/base/_search{  &quot;query&quot;: {    &quot;match_phrase_prefix&quot;: {      &quot;address&quot;: &quot;zn min&quot;    }  }}</code></pre><h3 id="12-3-4-多字段匹配检索"><a href="#12-3-4-多字段匹配检索" class="headerlink" title="12.3.4 多字段匹配检索"></a>12.3.4 多字段匹配检索</h3><ul><li><strong>关键字multi_match</strong></li></ul><h4 id="12-3-4-1-三种场景"><a href="#12-3-4-1-三种场景" class="headerlink" title="12.3.4.1 三种场景"></a>12.3.4.1 三种场景</h4><ol><li><strong>最佳字段(Best Fields)</strong>:当字段之间相互竞争，又相互关联。例如title和body这样的字段。评分来自最匹配字段</li><li><strong>多数字段(Most Fields)</strong>:处理英文内容时：一种常见的手段是，在主字English Analyzer),抽取词干，加入同义词，以匹配更多的文档。相同的文本，加入子字段(Standard Analyzer),以提供更加精确的匹配。其他字段作为匹配文档提高相关度的信号。匹配字段越多则越好</li><li><strong>混合字段(Cross Field)</strong>:对于某些实体，例如人名，地址，图书信息。需要在多个字段中确定信息，单个字段只能作为整体的一部分。希望在任何这些列出的字段中找到尽可能多的词</li></ol><h4 id="12-3-4-2-demo"><a href="#12-3-4-2-demo" class="headerlink" title="12.3.4.2 demo"></a>12.3.4.2 demo</h4><pre><code class="json">//adress或者province里包含zn 按照这两个字段中分数高的一个字段排序GET staffs/base/_search{  &quot;query&quot;: {    &quot;multi_match&quot;: {      &quot;query&quot;: &quot;zn&quot;,      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],      &quot;type&quot;:&quot;best_fields&quot;    }  }}//adress或者province里包含zn或sh 按照这两个字段的分数和排序GET staffs/base/_search{  &quot;query&quot;: {    &quot;multi_match&quot;: {      &quot;query&quot;: &quot;zn sh&quot;,      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],      &quot;type&quot;:&quot;most_fields&quot;    }  }}//adress和province里　总共包含zn和sh//按照这两个字段的分数和排序GET staffs/base/_search{  &quot;query&quot;: {    &quot;multi_match&quot;: {      &quot;query&quot;: &quot;zn sh&quot;,      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],      &quot;type&quot;:&quot;cross_fields&quot;,      &quot;operator&quot;:&quot;AND&quot;    }  }}</code></pre><h3 id="12-3-5-支持与或非字符串检索"><a href="#12-3-5-支持与或非字符串检索" class="headerlink" title="12.3.5 支持与或非字符串检索"></a>12.3.5 支持与或非字符串检索</h3><ul><li><strong>关键字query string</strong></li><li>可以添加 AND/OR查询条件</li><li>支持多字段查询</li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;query_string&quot;: {      &quot;query&quot;: &quot;MML OR Song&quot;,      &quot;fields&quot;: [&quot;firstName&quot;,&quot;lastName&quot;]    }  }}</code></pre><h3 id="12-3-6-简化的字符串检索"><a href="#12-3-6-简化的字符串检索" class="headerlink" title="12.3.6 简化的字符串检索"></a>12.3.6 简化的字符串检索</h3><ul><li><strong>关键字simple_query_string</strong></li><li>类似 Query String , 但是会忽略错误的语法同时只支持部分查询语句</li><li>不支持 AND OR NOT , 但会当作字符串处理</li><li>Term 之间默认的关系是 OR, 可以指定 default_operator</li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;simple_query_string&quot;: {      &quot;query&quot;: &quot;MML Song&quot;,      &quot;default_operator&quot;: &quot;AND&quot;,       &quot;fields&quot;: [&quot;firstName&quot;,&quot;lastName&quot;]    }  }}</code></pre><h2 id="12-4-复合检索"><a href="#12-4-复合检索" class="headerlink" title="12.4 复合检索"></a>12.4 复合检索</h2><h3 id="12-4-1-固定得分检索"><a href="#12-4-1-固定得分检索" class="headerlink" title="12.4.1 固定得分检索"></a>12.4.1 固定得分检索</h3><ul><li><strong>关键字constant_score</strong> </li><li>Wraps a filter query and returns every matching document with a relevance score equal to the boost parameter value.</li></ul><pre><code class="json">GET /_search{    &quot;query&quot;: {        &quot;constant_score&quot; : {            &quot;filter&quot; : {                &quot;term&quot; : { &quot;user&quot; : &quot;kimchy&quot;}            },            &quot;boost&quot; : 1.2        }    }}</code></pre><h3 id="12-4-2-bool组合检索"><a href="#12-4-2-bool组合检索" class="headerlink" title="12.4.2 bool组合检索"></a>12.4.2 bool组合检索</h3><p>一个bool查询，是一个或者多个查询子句的组合,总共包括4种子句</p><ul><li><strong>must</strong>:必须匹配。贡献算</li><li><strong>should</strong>:选择性匹配。贡献算分</li><li><strong>must_not</strong>:Filter Context 查询字句，必须不能匹配</li><li><strong>filter</strong>:Filter Context 必须匹配，但是不贡献算分</li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;bool&quot;: {      &quot;should&quot;: [        {&quot;term&quot;:{&quot;age&quot;: {&quot;value&quot;: &quot;18&quot;}}},        {&quot;term&quot;: {&quot;age&quot;: {&quot;value&quot;: &quot;88&quot;}}}      ],      &quot;must&quot;: [        {&quot;term&quot;: {&quot;tags&quot;: &quot;yellow&quot;}},        {&quot;term&quot;: {&quot;tagsCount&quot;:1}}      ]    }  }}GET staffs/base/_search{    &quot;query&quot;: {    &quot;bool&quot;: {      &quot;should&quot;: [        {&quot;term&quot;:{&quot;age&quot;: {&quot;value&quot;: &quot;18&quot;}}},        {&quot;term&quot;: {&quot;age&quot;: {&quot;value&quot;: &quot;88&quot;}}}      ],      &quot;must_not&quot;: [        {&quot;term&quot;: {&quot;tags&quot;: &quot;yellow&quot;}},        {&quot;term&quot;: {&quot;tagsCount&quot;:2}}      ],      &quot;filter&quot;: {        &quot;term&quot;: {          &quot;province&quot;: &quot;sh&quot;        }      }    }  }}GET staffs/base/_search{  &quot;query&quot;: {    &quot;bool&quot;: {      &quot;should&quot;: [        {&quot;term&quot;: {          &quot;province&quot;: {            &quot;value&quot;: &quot;zn&quot;          }        }},        {          &quot;term&quot;: {            &quot;address&quot;: {              &quot;value&quot;: &quot;zn&quot;            }          }        }      ]    }  }}#将评分最⾼的字段评分作为结果返回，满⾜两个字段是竞争关系的场景GET staffs/base/_search{  &quot;query&quot;: {    &quot;dis_max&quot;: {      &quot;queries&quot;: [        {&quot;match&quot;: {&quot;province&quot;: &quot;zn&quot;}},        {&quot;match&quot;: {&quot;address&quot;: &quot;zn&quot;}}      ],      &quot;tie_breaker&quot;: 0.2    }  }}</code></pre><h3 id="12-4-3-改变评分检索"><a href="#12-4-3-改变评分检索" class="headerlink" title="12.4.3 改变评分检索"></a>12.4.3 改变评分检索</h3><h4 id="12-4-3-1-boosting-query"><a href="#12-4-3-1-boosting-query" class="headerlink" title="12.4.3.1 boosting query"></a>12.4.3.1 boosting query</h4><ul><li><p><strong>关键字boosting</strong></p></li><li><p><strong>positive</strong>:(Required, query object) Query you wish to run. Any returned documents must match this query.</p></li><li><p><strong>negative</strong>:(Required, query object) Query used to decrease the relevance score of matching documents.If a returned document matches the positive query and this query, the boosting query calculates the final relevance score for the document as follows:</p><ul><li><p>Take the original relevance score from the positive query.</p></li><li><p>Multiply the score by the negative_boost value.</p></li></ul></li><li><p><strong>negative_boost</strong>:(Required, float) Floating point number between 0 and 1.0 used to decrease the relevance scores of documents matching the negative query.</p></li></ul><pre><code class="demo">GET /_search{    &quot;query&quot;: {        &quot;boosting&quot; : {            &quot;positive&quot; : {                &quot;term&quot; : {                    &quot;text&quot; : &quot;apple&quot;                }            },            &quot;negative&quot; : {                 &quot;term&quot; : {                     &quot;text&quot; : &quot;pie tart fruit crumble tree&quot;                }            },            &quot;negative_boost&quot; : 0.5        }    }}</code></pre><h4 id="12-4-3-2-dis-max-query"><a href="#12-4-3-2-dis-max-query" class="headerlink" title="12.4.3.2 dis max query"></a>12.4.3.2 dis max query</h4><ul><li><strong>关键字dis_max</strong></li><li>获得<strong>最佳匹配语句的评分</strong></li><li>将<strong>其他匹配语句的评分与tie_breaker相乘</strong></li><li>对以上评分<strong>求和</strong></li></ul><pre><code class="json">GET staffs/base/_search{  &quot;query&quot;: {    &quot;dis_max&quot;: {      &quot;tie_breaker&quot;: 0.7,      &quot;boost&quot;: 1.2,      &quot;queries&quot;: [        {&quot;match&quot;: {&quot;address&quot;: &quot;zn&quot;}},        {&quot;match&quot;: {&quot;province&quot;: &quot;zn&quot;}}      ]    }  }}</code></pre><h4 id="12-4-3-3-function-scoring-query"><a href="#12-4-3-3-function-scoring-query" class="headerlink" title="12.4.3.3 function scoring query"></a>12.4.3.3 function scoring query</h4><ul><li><strong>Function Score Query</strong>:可以在查询结束后，对每⼀个匹配的⽂档进⾏⼀系列的重新算分，根据新⽣成的分数进⾏排序。</li><li>提供了⼏种默认的计算分值的函<ul><li>Weight ：为每⼀个⽂档设置⼀个简单⽽不被规范化的权重</li><li>Field Value Factor：使⽤该数值来修改 _score，例如将 “热度”和“点赞数”作为算分的参考因素</li><li>Random Score：为每⼀个⽤户使⽤⼀个不同的，随机算分结果</li><li>衰减函数： 以某个字段的值为标准，距离某个值越近，得分越⾼</li><li>Script Score：⾃定义脚本完全控制所需逻辑</li></ul></li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch1.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch2.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch3.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch4.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>11.ES集群规划</title>
+      <link href="/2020/03/04/11-ES%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92/"/>
+      <url>/2020/03/04/11-ES%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92/</url>
+      
+        <content type="html"><![CDATA[<h2 id="11-1-分片"><a href="#11-1-分片" class="headerlink" title="11.1 分片"></a>11.1 分片</h2><h3 id="11-1-1-如何确定主分片数"><a href="#11-1-1-如何确定主分片数" class="headerlink" title="11.1.1 如何确定主分片数"></a>11.1.1 如何确定主分片数</h3><ul><li><p>从存储的物理角度看</p><ul><li><p>日志类应用，单个分片不要大于50 GB</p></li><li><p>搜索类应用，单个分片不要超过20 GB</p></li></ul></li><li><p>为什么要控制分片存储大小</p><ul><li>提高Update的性能</li><li>Merge时，减少所需的资源</li><li>丢失节点后，具备更快的恢复速度/便于分片在集群内Rebalancing</li></ul></li></ul><h3 id="11-1-2-如何确定副本分片数"><a href="#11-1-2-如何确定副本分片数" class="headerlink" title="11.1.2 如何确定副本分片数"></a>11.1.2 如何确定副本分片数</h3><ul><li><p>副本是主分片的拷贝</p><ul><li><p>提高系统可用性：相应査询请求，防止数据丢失</p></li><li><p>需要占用和主分片一样的资源</p></li></ul></li><li><p>对性能的影响</p><ul><li>副本会降低数据的索引速度：有几份副本就会有几倍的CPU资源消耗在索引上</li><li>会减缓对主分片的査询压力，但是会消耗同样的内存资源<ul><li>如果机器资源充分，提高副本数，可以提高整体的査询QPS</li></ul></li></ul></li></ul><h2 id="11-2-硬件配置"><a href="#11-2-硬件配置" class="headerlink" title="11.2 硬件配置"></a>11.2 硬件配置</h2><ul><li><p>选择合理的硬件，数据节点尽可能使用SSD</p></li><li><p>搜索等性能要求高的场景，建议SSD</p><ul><li><strong>按照1 ： 10的比例配置内存和硬盘</strong></li></ul></li><li><p>日志类和查询并发低的场景，可以考虑使用机械硬盘存储</p><ul><li><strong>按照1： 50的比例配置内存和硬盘</strong></li></ul></li><li><p>单节点数据建议控制在2TB以内，最大不建议超过5TB</p></li><li><p>JVM配置机器内存的一半，JVM内存配置不建议超过32G</p></li></ul><h2 id="11-3-部署方式"><a href="#11-3-部署方式" class="headerlink" title="11.3 部署方式"></a>11.3 部署方式</h2><ul><li>按需选择合理的部署方式，线上定要选择集群模式</li><li>如果需要考虑可靠性高可用，建议<strong>部署3台以上的dedicated的Master节点</strong></li><li>如果有复杂的查询和聚合，建议设置Coordinating节点</li></ul><h2 id="11-4-JVM设定"><a href="#11-4-JVM设定" class="headerlink" title="11.4 JVM设定"></a>11.4 JVM设定</h2><ul><li><p>从ES 6开始，只支持64位的JVM</p><ul><li>配置 config / jvm. options</li></ul></li><li><p>避免修改默认配置</p><ul><li>将内存Xms和Xmx设置成一样，避免heap resize时引发停顿</li><li>Xmx设置不要超过物理内存的50%；单个节点上，最大内存建议不要超过32 G内存</li><li>生产环境，JVM必须使用Server模式</li><li>关闭 JVM Swapping</li></ul></li></ul><h2 id="11-5-内存设定计算实例"><a href="#11-5-内存设定计算实例" class="headerlink" title="11.5 内存设定计算实例"></a>11.5 内存设定计算实例</h2><ul><li><p>内存大小要根据 Node 需要存储的数据来进行估算  </p><ul><li><p>搜索类的比例建议：1:16 </p></li><li><p>日志类： 1:48 - 1:96 之间 </p></li></ul></li><li><p>总数据量 1T， 设置一个副本 = 2T 总数据量 </p><ul><li>一台机器假设总内存为32G,可用内存为31G</li><li>如果搜索类的项目，每个节点 <code>31 *16 = 496G</code>，加上预留空间。所以每个节点最多 400 G 数据，至少需 要 5 个数据节点 </li><li>如果是日志类项目，每个节点 <code>31*50 = 1550GB</code>，2 个数据节点 即可</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>10.ES集群再进阶</title>
+      <link href="/2020/03/04/10-ES%E9%9B%86%E7%BE%A4%E5%86%8D%E8%BF%9B%E9%98%B6/"/>
+      <url>/2020/03/04/10-ES%E9%9B%86%E7%BE%A4%E5%86%8D%E8%BF%9B%E9%98%B6/</url>
+      
+        <content type="html"><![CDATA[<h2 id="10-1-Hot-amp-Warm-Architecture"><a href="#10-1-Hot-amp-Warm-Architecture" class="headerlink" title="10.1 Hot &amp; Warm Architecture"></a>10.1 Hot &amp; Warm Architecture</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/eshotwarm.png" alt=""></p><h3 id="10-1-1-什么是-Hot-amp-Warm-Architecture"><a href="#10-1-1-什么是-Hot-amp-Warm-Architecture" class="headerlink" title="10.1.1 什么是 Hot &amp; Warm Architecture"></a>10.1.1 什么是 Hot &amp; Warm Architecture</h3><p>传统的Elasticsearch集群中所有节点均采用相同的配置，然而Elasticsearch并没有对节点的规格一致性做要求，换而言之就是每个节点可以是任意规格，当然这样做会导致集群各节点性能不一致，影响集群稳定性。但是如果有规则的将集群的节点分成不同类型，部分是高性能的节点用于存储热点数据，部分是性能相对差些的大容量节点用于存储冷数据，却可以一方面保证热数据的性能，另一方面保证冷数据的存储，降低存储成本，这也是Elasticsearch冷热分离架构的基本思想</p><h2 id="10-1-2-Node分类"><a href="#10-1-2-Node分类" class="headerlink" title="10.1.2 Node分类"></a>10.1.2 Node分类</h2><ul><li><strong>Hot节点</strong>（通常使用SSD）:索引有不断有新文档写入。通常使用SSD</li><li><strong>Wann节点</strong>（通常使用HDD）:索引不存在新数据的写入；同时也不存在大量的数据査询</li></ul><h3 id="10-1-3-配置"><a href="#10-1-3-配置" class="headerlink" title="10.1.3 配置"></a>10.1.3 配置</h3><p><strong>使用Shard Filtering</strong>,步骤分为以下几步</p><ol><li>标记节点（Tagging）</li><li>配置索引到Hot Node</li><li>配置索引到Warm节点</li></ol><h4 id="10-1-3-1-标记节点"><a href="#10-1-3-1-标记节点" class="headerlink" title="10.1.3.1 标记节点"></a>10.1.3.1 标记节点</h4><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essign.png" alt=""></p><h4 id="10-1-3-2-配置索引到Hot-Node"><a href="#10-1-3-2-配置索引到Hot-Node" class="headerlink" title="10.1.3.2 配置索引到Hot Node"></a>10.1.3.2 配置索引到Hot Node</h4><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essignhot.png" alt=""></p><h4 id="10-1-3-3-配置索引到Warm节点"><a href="#10-1-3-3-配置索引到Warm节点" class="headerlink" title="10.1.3.3 配置索引到Warm节点"></a>10.1.3.3 配置索引到Warm节点</h4><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essignwarm.png" alt=""></p><h2 id="10-2-Rack-Awareness"><a href="#10-2-Rack-Awareness" class="headerlink" title="10.2 Rack Awareness"></a>10.2 Rack Awareness</h2><ul><li>ES的节点可能分布在不同的机架</li><li>当一个机架断电，可能会同时丢失几个节点</li><li>如果一个索引相同的主分片和副本分片，同时在这个机架上，就有可能导致数据的丢失</li><li>通过Rack Awareness的机制，就可以尽可能避免将同一个索引的主副分片同时分配在一个机架的节点上</li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esrock.png" alt=""></p><h3 id="10-2-1标记-Rack-节点-配置集群"><a href="#10-2-1标记-Rack-节点-配置集群" class="headerlink" title="10.2.1标记 Rack 节点 + 配置集群"></a>10.2.1标记 Rack 节点 + 配置集群</h3><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esrocksign.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>9.ES集群进阶</title>
+      <link href="/2020/03/04/9-ES%E9%9B%86%E7%BE%A4%E8%BF%9B%E9%98%B6/"/>
+      <url>/2020/03/04/9-ES%E9%9B%86%E7%BE%A4%E8%BF%9B%E9%98%B6/</url>
+      
+        <content type="html"><![CDATA[<h2 id="9-1-设置单一职责节点"><a href="#9-1-设置单一职责节点" class="headerlink" title="9.1 设置单一职责节点"></a>9.1 设置单一职责节点</h2><p>一个节点只承担一个角色</p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esclusterdy.png" alt=""></p><p>好处可以使用不同的配置:</p><ul><li>Dedicated master eligible nodes：负责集群状态(cluster state)的管理<ul><li>使用低配置的CPU, RAM和磁盘</li></ul></li><li>Dedicated data nodes：负责数据存储及处理客户端请求<ul><li>使用高配置的CPU, RAM和磁盘</li></ul></li><li>Dedicated ingest nodes：负责数据处理<ul><li>使用高配置CPU；中等配置的RAM；低配置的磁盘</li></ul></li><li>Dedicate Coordinating Only Node (Client Node)<ul><li>配置：将 Master, Data, Ingest 都配置成 False</li><li>Medium/High CUP； Medium/High RAM； Low Disk</li></ul></li></ul><h2 id="9-2-Coordinating-Only-Nodes"><a href="#9-2-Coordinating-Only-Nodes" class="headerlink" title="9.2 Coordinating Only Nodes"></a>9.2 Coordinating Only Nodes</h2><ul><li>扮演 Load Balancers。降低 Master 和 Data Nodes 的负载</li><li>负责搜索结果的 Gather/Reduce </li><li>有时候无法预知客户端会发送怎么样的请求 <ul><li>大量占用内存的结合操作，一个深度聚合可能会引发 OOM</li></ul></li></ul><h2 id="9-3-Dedicate-Master-Node"><a href="#9-3-Dedicate-Master-Node" class="headerlink" title="9.3 Dedicate Master Node"></a>9.3 Dedicate Master Node</h2><ul><li>从高可用&amp;避免脑裂的角度出发</li><li>一般在生产环境中配置3台</li><li>一个集群只有1台活跃的主节点<ul><li>负责分片管理，索引创建，集群管理等操作</li></ul></li><li>如果和数据节点或者Coordinate节点混合部署<ul><li>数据节点相对有比较大的内存占用</li><li>Coordinate节点有时候可能会有开销很高的査询，导致OOM</li><li>这些都有可能影响Master节点，导致集群的不稳定</li></ul></li></ul><h2 id="9-4-基本部署"><a href="#9-4-基本部署" class="headerlink" title="9.4 基本部署"></a>9.4 基本部署</h2><p>当磁盘容量无法满足需求时，可以增加数据节点；</p><p>磁盘读写压力大时，增加数据节点</p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esclusterbase.png" alt=""></p><h2 id="9-5-水平扩展"><a href="#9-5-水平扩展" class="headerlink" title="9.5 水平扩展"></a>9.5 水平扩展</h2><p>当系统中有大量的复杂查询及聚合时候，增加 Coordinating 节点，增加查询的性能</p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esclustersp.png" alt=""></p><h2 id="9-6-读写分离"><a href="#9-6-读写分离" class="headerlink" title="9.6 读写分离"></a>9.6 读写分离</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esclusterrw.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>8.ES集群分片与文档存储</title>
+      <link href="/2020/03/03/8-ES%E9%9B%86%E7%BE%A4%E5%88%86%E7%89%87%E4%B8%8E%E6%96%87%E6%A1%A3%E5%AD%98%E5%82%A8/"/>
+      <url>/2020/03/03/8-ES%E9%9B%86%E7%BE%A4%E5%88%86%E7%89%87%E4%B8%8E%E6%96%87%E6%A1%A3%E5%AD%98%E5%82%A8/</url>
+      
+        <content type="html"><![CDATA[<h2 id="8-1-分片类型"><a href="#8-1-分片类型" class="headerlink" title="8.1 分片类型"></a>8.1 分片类型</h2><ul><li>主分片</li><li>副本分片</li></ul><h3 id="8-1-1-Primary-Shard"><a href="#8-1-1-Primary-Shard" class="headerlink" title="8.1.1 Primary Shard"></a>8.1.1 Primary Shard</h3><ul><li>通过主分⽚，将数据分布在所有节点上,<strong>用来提升系统存储容量</strong></li><li>可以将⼀份索引的数据，分散在多个 Data Node 上，<strong>实现存储的⽔平扩展</strong></li><li>主分⽚(Primary Shard)数在索引<strong>创建时候指定，后续默认不能修改，如要修改，需重建索引</strong></li></ul><h3 id="8-1-2-Replica-Shard"><a href="#8-1-2-Replica-Shard" class="headerlink" title="8.1.2 Replica Shard"></a>8.1.2 Replica Shard</h3><ul><li>通过引⼊副本分⽚ (Replica Shard) <strong>提⾼数据的可⽤性</strong>。⼀旦主分⽚丢失，副本分⽚可以 Promote 成主分⽚。副本分⽚数可以动态调整。每个节点上都有完备的数据。如果不设置副本分⽚，⼀旦出现节点硬件故障，就有可能造成数据丢失提升系统的读取性能</li><li>副本分⽚由主分⽚(Primary Shard)同步。通过⽀持增加 Replica 个数，⼀定程度可以<strong>提⾼读取的吞吐量</strong></li></ul><h2 id="8-2-分片数设定"><a href="#8-2-分片数设定" class="headerlink" title="8.2 分片数设定"></a>8.2 分片数设定</h2><ul><li>主分⽚数过⼩：例如创建了 1 个 Primary Shard 的 Index</li><li>如果该索引增⻓很快，集群⽆法通过增加节点实现对这个索引的数据扩展</li><li>主分⽚数设置过⼤：导致单个 Shard 容量很⼩，引发⼀个节点上有过多分⽚，影响性能</li><li>副本分⽚数设置过多，会降低集群整体的写⼊性能</li></ul><p><strong>总结</strong>: 实在有太多相关的因素了：你使用的硬件、文档的大小和复杂度、文档的索引分析方式、运行的查询类型、执行的聚合以及你的数据模型等等。<br><strong>建议设置Primary Shard数量为master node的数量的倍数,Primary Shard数量不能为0</strong></p><h2 id="8-3-新增节点分片转移过程"><a href="#8-3-新增节点分片转移过程" class="headerlink" title="8.3 新增节点分片转移过程"></a>8.3 新增节点分片转移过程</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esshardzy.png" alt=""></p><h2 id="8-5-故障转移"><a href="#8-5-故障转移" class="headerlink" title="8.5 故障转移"></a>8.5 故障转移</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esfailover.png" alt=""></p><h2 id="8-6-文档分布式储存"><a href="#8-6-文档分布式储存" class="headerlink" title="8.6 文档分布式储存"></a>8.6 文档分布式储存</h2><p><strong>⽂档会存储在具体的某个主分⽚和副本分⽚上：例如 ⽂档 1， 会存储在 P0 和 R0 分⽚上</strong></p><p>每个shard都是一个最小工作单元，承载部分数据，lucene实例，完整的建立索引和处理请求的能力</p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esfenpian.png" alt=""></p><h2 id="8-7-⽂档到分⽚的路由算法"><a href="#8-7-⽂档到分⽚的路由算法" class="headerlink" title="8.7 ⽂档到分⽚的路由算法"></a>8.7 ⽂档到分⽚的路由算法</h2><blockquote><p>shard = hash(_routing) % number_of_primary_shards</p></blockquote><ul><li>Hash 算法确保⽂档均匀分散到分⽚中</li><li>默认的 _routing 值是⽂档 id</li><li>可以⾃⾏制定 routing数值，例如⽤相同国家的商品，都分配到指定的shard</li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/eshashrouting.png" alt=""></p><ul><li>设置 Index Settings 后， <strong>Primary 数不能随意修改的根本原因</strong></li></ul><h2 id="8-8-更新一个文档"><a href="#8-8-更新一个文档" class="headerlink" title="8.8 更新一个文档"></a>8.8 更新一个文档</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esdocupdate.png" alt=""></p><ol><li>打到一台Coordinating node节点</li><li>根据路由算法找到存储文档的Primary shard</li><li>路由到指定shard</li><li>删除文档</li><li>新建文档</li><li>同步到replica shard成功</li><li>返回</li></ol><h2 id="8-9-删除一个文档"><a href="#8-9-删除一个文档" class="headerlink" title="8.9 删除一个文档"></a>8.9 删除一个文档</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esdocdel.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>7.ES分布式集群</title>
+      <link href="/2020/03/03/7-ES%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4/"/>
+      <url>/2020/03/03/7-ES%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4/</url>
+      
+        <content type="html"><![CDATA[<h2 id="7-1-分布式特性"><a href="#7-1-分布式特性" class="headerlink" title="7.1 分布式特性"></a>7.1 分布式特性</h2><p>Elasticsearch 的分布式架构带来的好处:</p><ul><li>存储的⽔平扩容，⽀持 PB 级数据</li><li>提⾼系统的可⽤性，部分节点停⽌服务，整个集群的服务不受影响</li></ul><h2 id="7-2-集群节点类型"><a href="#7-2-集群节点类型" class="headerlink" title="7.2 集群节点类型"></a>7.2 集群节点类型</h2><ul><li><p><strong>Master Eligible Node</strong>:可以被选为主节点的节点</p></li><li><p><strong>Voting-only master-eligible node</strong>:只能投票选择主节点的节点</p></li><li><p><strong>Data nodes:</strong>数据节点</p></li><li><p><strong>Coordinating node</strong>:协调调度节点</p></li><li><p><strong>Ingest nodes</strong>: 流水线节点</p></li><li><p><strong>Machine learning node</strong>:机器学习节点</p></li></ul><h3 id="7-2-1-Master-Node"><a href="#7-2-1-Master-Node" class="headerlink" title="7.2.1 Master Node"></a>7.2.1 Master Node</h3><ul><li>Master Node 的职责:<ul><li><strong>处理创建，删除索引等请求 /决定分⽚被分配到哪个节点 / 负责索引的创建与删除</strong></li><li><strong>维护并且更新 Cluster State</strong></li></ul></li></ul><ul><li>Master Node 的最佳实践:<ul><li>Master 节点⾮常重要，在部署上需要考虑解决单点的问题</li><li>为⼀个集群设置多个 Master 节点 / 每个节点只承担 Master 的单⼀⻆⾊</li></ul></li></ul><h3 id="7-2-2-Master-Eligible-Nodes"><a href="#7-2-2-Master-Eligible-Nodes" class="headerlink" title="7.2.2 Master Eligible Nodes"></a>7.2.2 Master Eligible Nodes</h3><ul><li>⼀个集群，⽀持配置多个 Master Eligible 节点。这些节点可以在必要时(如 Master 节点出</li></ul><p>现故障，⽹络故障时)参与选主流程，成为 Master 节点</p><ul><li>每个节点启动后，默认就是⼀个 Master eligible 节点<ul><li>可以设置 node.master: false 禁⽌</li></ul></li><li>当集群内第⼀个 Master eligible 节点启动时候，它会将⾃⼰选举成 Master 节点</li></ul><h3 id="7-2-3-Data-Node"><a href="#7-2-3-Data-Node" class="headerlink" title="7.2.3 Data Node"></a>7.2.3 Data Node</h3><ul><li>可以保存数据的节点，叫做 Data Node,节点启动后，默认就是数据节点。可以设置 node.data: false 禁⽌</li><li>Data Node的职责:保存分⽚数据。在数据扩展上起到了⾄关重要的作⽤（由 Master Node 决定如何把分⽚分发到数据节点上）</li><li>通过增加数据节点可以解决数据⽔平扩展和解决数据单点问题</li></ul><h2 id="7-3-集群架构图"><a href="#7-3-集群架构图" class="headerlink" title="7.3 集群架构图"></a>7.3 集群架构图</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/escluster.png" alt=""></p><h2 id="7-4-集群健康状态"><a href="#7-4-集群健康状态" class="headerlink" title="7.4 集群健康状态"></a>7.4 集群健康状态</h2><p>健康状态针对一个索引，Elasticsearch 中其实有专门的衡量索引健康状况的标志，分为三个等级：</p><ul><li><strong>green，绿色</strong>。<strong>这代表所有的主分片和副本分片都已分配。你的集群是 100% 可用的</strong></li><li><strong>yellow，黄色</strong>。<strong>所有的主分片已经分片了，但至少还有一个副本是缺失的</strong>。不会有数据丢失，所以搜索结果依然是完整的。不过，你的高可用性在某种程度上被弱化。如果更多的分片消失，你就会丢数据了。所以可把 yellow 想象成一个需要及时调查的警告。</li><li><strong>red，红色</strong>。<strong>至少一个主分片以及它的全部副本都在缺失中</strong>。这意味着你在缺少数据：搜索只能返回部分数据，而分配到这个分片上的写入请求会返回一个异常。</li></ul><h2 id="7-5-集群选主过程"><a href="#7-5-集群选主过程" class="headerlink" title="7.5 集群选主过程"></a>7.5 集群选主过程</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esmaster.png" alt=""></p><h2 id="7-6-如何避免脑裂问题"><a href="#7-6-如何避免脑裂问题" class="headerlink" title="7.6 如何避免脑裂问题"></a>7.6 如何避免脑裂问题</h2><ul><li><p>限定⼀个选举条件，设置 quorum(仲裁)，只有在 Master eligible 节点数⼤于 quorum 时，才能进⾏选举</p><ul><li>Quorum = （master 节点总数 /2）+ 1 </li><li>当 3 个 master eligible 时，设置 discovery.zen.minimum_master_nodes 为 2，即可避免脑裂</li></ul></li><li><p>从 7.0 开始，⽆需这个配置</p><ul><li>移除 minimum_master_nodes 参数，让Elasticsearch⾃⼰选择可以形成仲裁的节点。</li><li>典型的主节点选举现在只需要很短的时间就可以完成。集群的伸缩变得更安全、更容易，并且可能造成丢失数据的系统配置选项更少了。</li><li>节点更清楚地记录它们的状态，有助于诊断为什么它们不能加⼊集群或为什么⽆法选举出主节点</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>6.ES算法</title>
+      <link href="/2020/03/03/6-ES%E7%AE%97%E6%B3%95/"/>
+      <url>/2020/03/03/6-ES%E7%AE%97%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<h2 id="6-1-相关性"><a href="#6-1-相关性" class="headerlink" title="6.1 相关性"></a>6.1 相关性</h2><p>搜索的相关性算分，描述了一个<strong>文档和査询语句匹配的程度</strong>。ES会对每个匹配查询条件的结果进行算分_score</p><p><strong>打分的本质是排序，需要把最符合用户需求的文档排在前面。</strong></p><p><strong>ES5之前，默认的相关性算分采用TF-IDF,现在采用BM 25</strong></p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esrele.png" alt=""></p><h2 id="6-2-词频-TF"><a href="#6-2-词频-TF" class="headerlink" title="6.2 词频 TF"></a>6.2 词频 TF</h2><ul><li><strong>Term Frequency：检索词在一篇文档中出现的频率</strong><ul><li><strong>检索词出现的次数除以文档的总字数</strong></li></ul></li><li>度量一条查询和结果文档相关性的简单方法：简单将搜索中<strong>每一个词的TF进行相加</strong><ul><li>TF（区块链）+ TF（的）+ TF（应用）</li></ul></li><li>Stop Word<ul><li>“的”在文档中出现了很多次，但是对贡献相关度几乎没有用处，不应该考虑他们的TF</li></ul></li></ul><h2 id="6-3-逆⽂档频率-IDF"><a href="#6-3-逆⽂档频率-IDF" class="headerlink" title="6.3     逆⽂档频率 IDF"></a>6.3     逆⽂档频率 IDF</h2><ul><li>DF：检索词索词在所有文档中出现的频率<ul><li>“区块链”在相对比较少的文档中出现</li><li>“应用”在相对比较多的文档中出现</li><li>“Stop Word”在大量的文档中出现</li></ul></li><li>Inverse Document Frequency :<strong>简单说=log（全部文档数/検索词出现过的文档总数）</strong></li><li>TF-IDF本质上就是将TF求和变成了加权求和<ul><li><code>TF（区块链）*IDF（区块链）+ TF（的）*IDF（的）+ TF（应用）*IDF（应用）</code></li></ul></li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esidf.png" alt=""></p><h2 id="6-4-TF-IDF-评分公式"><a href="#6-4-TF-IDF-评分公式" class="headerlink" title="6.4 TF-IDF 评分公式"></a>6.4 TF-IDF 评分公式</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/estf-idf.png" alt=""></p><h2 id="6-5-BM25"><a href="#6-5-BM25" class="headerlink" title="6.5 BM25"></a>6.5 BM25</h2><ul><li>从ES5开始，默认算法改为BM 25</li><li>和经典的TF-IDF相比，当TF无限增加时,BM 25算分会趋于一个数值</li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esbm25.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>5.ESMapping介绍</title>
+      <link href="/2020/03/03/5-ESMaping%E4%BB%8B%E7%BB%8D/"/>
+      <url>/2020/03/03/5-ESMaping%E4%BB%8B%E7%BB%8D/</url>
+      
+        <content type="html"><![CDATA[<h2 id="5-1-什么是Mapping"><a href="#5-1-什么是Mapping" class="headerlink" title="5.1 什么是Mapping"></a>5.1 什么是Mapping</h2><ul><li>Mapping类似数据库中的schema的定义，作用如下<ul><li>定义索引中的字段的名称</li><li>定义字段的数据类型，例如字符串，数字，布尔……<ul><li>字段，倒排索引的相关配置，(Analyzed r Nt Analyzed,Analyzer)</li></ul></li></ul></li><li>Mapping会把JSN文档映射成Lucene所需要的扁平格式</li><li>—个Mapping属于一个索引的Type<ul><li>每个文档都属于一个Type</li><li>—个Type有一个Mapping定义</li><li>7.0开始，不需要在Mapping定义中指定type信息</li></ul></li></ul><h2 id="5-2-字段的数据类型"><a href="#5-2-字段的数据类型" class="headerlink" title="5.2 字段的数据类型"></a>5.2 字段的数据类型</h2><ul><li><p>简单类型</p><ul><li><p>Text / Keyword</p></li><li><p>Date</p></li><li><p>Integer / Floating</p></li><li><p>Boolean</p></li><li><p>IPv4 &amp; IPv6</p></li></ul></li><li><p>复杂类型-对象和嵌套对象</p><ul><li>对象类型/嵌套类型</li></ul></li><li><p>特殊类型</p><ul><li>geo_point &amp; geo_shape / percolator</li></ul></li></ul><h2 id="5-3-什么是Dynamic-Mapping"><a href="#5-3-什么是Dynamic-Mapping" class="headerlink" title="5.3 什么是Dynamic Mapping"></a>5.3 什么是Dynamic Mapping</h2><ul><li>在写入文档时候，如果索引不存在,会自动创建索引</li><li>Dynamic Mapping的机制，使得我们无需手动定义Mappings</li><li>Elasticsearch会自动根据文档信息，推算出字段的类型</li><li>但是有时候会推算的不对，例如地理位置信息</li><li>当类型如果设置不对时，会导致一些功能无法正常运行，例如Range查询</li></ul><h2 id="5-4-类型的自动识别"><a href="#5-4-类型的自动识别" class="headerlink" title="5.4 类型的自动识别"></a>5.4 类型的自动识别</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esmapping.png" alt=""></p><h2 id="5-5-能否更改Mapping的字段类型"><a href="#5-5-能否更改Mapping的字段类型" class="headerlink" title="5.5 能否更改Mapping的字段类型"></a>5.5 能否更改Mapping的字段类型</h2><h3 id="5-5-1-新增加字段"><a href="#5-5-1-新增加字段" class="headerlink" title="5.5.1 新增加字段"></a>5.5.1 新增加字段</h3><ul><li>Dynamic设为true时，一旦有新增字段的文档写入，Mapping也同时被</li><li>Dynamic设为false, Mapping不会被更新，新增字段的数据无法被索引,但是信息会出现在_source中</li><li>Dynamic设置成Strict,文档写入失败</li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esdynamic.png" alt=""></p><h3 id="5-5-2-对已有字段"><a href="#5-5-2-对已有字段" class="headerlink" title="5.5.2 对已有字段"></a>5.5.2 对已有字段</h3><p><strong>一旦已经有数据写入，就不再支持修改字段定义</strong><br><strong>Lucene实现的倒排索引，一旦生成后，就不允许修改!如果希望改变字段类型，必须Reindex API,重建索引</strong></p><p>原因</p><ul><li>如果修改了字段的数据类型，会导致已被索引的属于无法被搜索</li><li>但是如果是增加新的字段，就不会有这样的影响</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>4.ES分词器</title>
+      <link href="/2020/03/02/4-ES%E5%88%86%E8%AF%8D%E5%99%A8/"/>
+      <url>/2020/03/02/4-ES%E5%88%86%E8%AF%8D%E5%99%A8/</url>
+      
+        <content type="html"><![CDATA[<h2 id="4-1-Analysis"><a href="#4-1-Analysis" class="headerlink" title="4.1 Analysis"></a>4.1 Analysis</h2><p><strong>文本分析,把全文本转换一系列单词(term/token)的过程,也叫作分词</strong></p><h2 id="4-2-Analyzer"><a href="#4-2-Analyzer" class="headerlink" title="4.2 Analyzer"></a>4.2 Analyzer</h2><p><strong>分词通过分词器来实现,可以使用ES内置的分词器,也可以按需定制化分词器</strong></p><h3 id="4-2-1-Analyzer组成"><a href="#4-2-1-Analyzer组成" class="headerlink" title="4.2.1 Analyzer组成"></a>4.2.1 Analyzer组成</h3><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esalsis.png" alt=""></p><ul><li>Character Filters （针对原始文本处理，例如去除html）</li><li>Tokenizer （按照规则切分为单词）</li><li>Token Filter（将切分的的单词进行加工，小写，删除stopwords,增加同义词）</li></ul><h3 id="4-2-2-Character-Filters"><a href="#4-2-2-Character-Filters" class="headerlink" title="4.2.2 Character Filters"></a>4.2.2 Character Filters</h3><ul><li>在Tokenizer之前对文本进行处理，例如增加删除及替换字符。可以配置多个 Character Filters。会影响 Tokenizer的 position 和 offset 信息</li><li>—些自带的 Character Filters<ul><li>HTML strip —出除 html 标签</li><li>Mapping 一字符串替换</li><li>Pattern replace —正则匹配替换</li></ul></li></ul><h3 id="4-2-3-Tokenizer"><a href="#4-2-3-Tokenizer" class="headerlink" title="4.2.3 Tokenizer"></a>4.2.3 Tokenizer</h3><ul><li><p>将原始的文本按照一定的规则，切分为词(term or token)</p></li><li><p>Elasticsearch 内置的 Tokenizers</p><ul><li>whitespace / standard / uax_url_email / pattern / keyword / path hierarchy</li></ul></li><li><p>可以用Java开发插件，实现自己的Tokenizer</p></li></ul><h3 id="4-2-4-Token-Filters"><a href="#4-2-4-Token-Filters" class="headerlink" title="4.2.4 Token Filters"></a>4.2.4 Token Filters</h3><ul><li>将Tokenizer输出的单词（term ）,进行增加，修改，删除</li><li>自带的 Token Filters<ul><li>Lowercase / stop / synonym （添加近义词）</li></ul></li></ul><h3 id="4-2-2-ES内置分词器"><a href="#4-2-2-ES内置分词器" class="headerlink" title="4.2.2 ES内置分词器"></a>4.2.2 ES内置分词器</h3><ul><li><strong>Standard Analyzer</strong> 一默认分词器，按词切分，小写处理</li><li><strong>Simple Analyzer</strong> 一按照非字母切分（符号被过滤），小写处理</li><li><strong>Stop Analyzer</strong> —小写处理，停用词过滤（the, a, is）</li><li><strong>Whitespace Analyzer</strong> —按照空格切分，不转小写</li><li><strong>Keyword Analyzer</strong> 一不分词，直接将输入当作输出</li><li><strong>Patter Analyzer</strong> -正则表达式，默认\W+ （非字符分隔）</li><li><strong>Language</strong> 一提供了30多种常见语言的分词器</li><li><strong>Customer Analyzer</strong>自定义分词器</li></ul><h2 id="4-3-中文分词"><a href="#4-3-中文分词" class="headerlink" title="4.3 中文分词"></a>4.3 中文分词</h2><p>常用的中文分词器如下:</p><ul><li><strong><a href="https://github.com/medcl/elasticsearch-analysis-ik" target="_blank" rel="noopener">IK</a></strong>:支持自定义词库，支持热更新分词字典</li><li><strong><a href="https://github.com/microbun/elasticsearch-thulac-plugin" target="_blank" rel="noopener">THULAC</a></strong>:清华大学自然语言处理和社会人文计算实验室的一套中文分词器 </li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>3.Lucene倒排索引</title>
+      <link href="/2020/03/02/3-Lucene%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95/"/>
+      <url>/2020/03/02/3-Lucene%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95/</url>
+      
+        <content type="html"><![CDATA[<h2 id="3-1-介绍"><a href="#3-1-介绍" class="headerlink" title="3.1 介绍"></a>3.1 介绍</h2><p><strong>Lucene是Apache软件基金会中一个开放源代码的全文搜索引擎工具包，是一个全文搜索引擎的架构，提供了完整的查询引擎和索引引擎，部分文本分析引擎</strong>。Lucene的目的是为软件开发人员提供一个简单易用的工具包，以方便在目标系统中实现全文检索的功能，或者是以此为基础建立起完整的全文搜索引擎。</p><h2 id="3-2-倒排索引"><a href="#3-2-倒排索引" class="headerlink" title="3.2 倒排索引"></a>3.2 倒排索引</h2><p>倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括一个属性值和具有该属性值的各记录的地址。<strong>由于不是由记录来确定属性值，而是由属性值来确定记录的位置，因而称为倒排索引(inverted index)</strong>。带有倒排索引的文件我们称为倒排索引文件，简称倒排文件(inverted file)</p><p><strong>倒排索引中的索引对象是文档或者文档集合中的单词等</strong>，用来存储这些单词在一个文档或者一组文档中的存储位置，是对文档或者文档集合的一种最常用的索引机制.</p><p><strong>搜索引擎的关键步骤就是建立倒排索引，倒排索引一般表示为一个关键词，然后是它的频度(出现的次数)、位置</strong>(出现在哪一篇文章或网页中，及有关的日期，作者等信息)，好比一本书的目录、标签一般，读者想看哪一个主题相关的章节，直接根据目录即可找到相关的页面.不必再从书的第一页到最后一页，一页一页地查找.</p><p>下面用例子介绍该结构及相应的生成算法° 假设有两篇文章1和文章2.</p><p>文章 1 的内容为：Tom lives in Guangzhou,! live in Guangzhou too.</p><p>文章 2 的内容为：He once lived in Shanghai.</p><h2 id="3-3-取得关键字"><a href="#3-3-取得关键字" class="headerlink" title="3.3 取得关键字"></a>3.3 取得关键字</h2><p>首先会进行一遍过滤,一般过滤的方式如下:</p><ul><li><strong>时态的转换</strong></li><li><strong>单复数的转换</strong></li><li><strong>同义词的转换</strong></li><li><strong>大小写的转换</strong></li><li><strong>删除没有实际意义的词</strong></li></ul><p>最后得到的处理结果如下:</p><pre><code>文章1的所有关键词为：[tom] [live] [guangzhou] [i] [live] [guangzhou]文章2的所有关键词为：[he] [live] [shanghai]</code></pre><h2 id="3-4-建立倒排索引"><a href="#3-4-建立倒排索引" class="headerlink" title="3.4 建立倒排索引"></a>3.4 建立倒排索引</h2><p><strong>我们注意到关键字是按字符顺序排列的（Lucene没有使用B树结构），因此Lucene可以用二元搜索算法快速定位关键词。</strong></p><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essort.png" alt=""></p><h2 id="3-5-实现"><a href="#3-5-实现" class="headerlink" title="3.5 实现"></a>3.5 实现</h2><p>实现时,Lucene将上面三列分别作为<strong>词典文件(TermDictionary),频率文件(frequencies)、位置文件(positions)</strong>保存。其中词典文件不仅保存了每个关键词，还保留了指向频率文件和位置文件的指针，通过指针可以找到该关键字的频率信息和位置信息。</p><h2 id="3-6-压缩算法"><a href="#3-6-压缩算法" class="headerlink" title="3.6 压缩算法"></a>3.6 压缩算法</h2><p>为了减小索引文件的大小，Lucene对索引还使用了压缩技术</p><p>首先，<strong>对词典文件中的关键词进行了压缩</strong>，关键词压缩为＜前缀长度.后缀＞，例如:当前词为“阿拉伯语”，上一个词为“阿拉伯”，那么“阿拉伯语”压缩为＜3,语＞<br>其次大量用到的是对数字的压缩，数字只保存与上一个值的差值（这样可以减少数字的长度，进而减少保存该数字需要的字节数）。例如当前文章号是16389 （不压缩要用3个字节保存）.上一文章号是16382,压缩后保存7（只用一个字节）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>2.ES核心概念及基本操作</title>
+      <link href="/2020/03/02/2-ES%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"/>
+      <url>/2020/03/02/2-ES%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/</url>
+      
+        <content type="html"><![CDATA[<h2 id="2-1-核心概念"><a href="#2-1-核心概念" class="headerlink" title="2.1 核心概念"></a>2.1 核心概念</h2><ul><li><strong>Near Realtime（NRT）</strong>：近实时，两个意思，从写入数据到数据可以被搜索到有一个小延迟（大概1秒）；基于es执行搜索和分析可以达到秒级</li><li><strong>Cluster</strong>：集群，包含多个节点，每个节点属于哪个集群是通过一个配置（集群名称，默认是elasticsearch）来决定的，对于中小型应用来说，刚开始一个集群就一个节点很正常</li><li><strong>Node</strong>：节点，集群中的一个节点，节点也有一个名称（默认是随机分配的），节点名称很重要（在执行运维管理操作的时候），默认节点会去加入一个名称为“elasticsearch”的集群，如果直接启动一堆节点，那么它们会自动组成一个elasticsearch集群，当然一个节点也可以组成一个elasticsearch集群</li><li><strong>Document&amp;field</strong>：文档，<strong>es中的最小数据单元</strong>，一个document可以是一条客户数据，一条商品分类数据，一条订单数据，通常用JSON数据结构表示，每个index下的type中，都可以去存储多个document。一个document里面有多个field，每个field就是一个数据字段。</li><li><strong>Index</strong>：索引，包含一堆有相似结构的文档数据，比如可以有一个客户索引，商品分类索引，订单索引，索引有一个名称。一个index包含很多document，一个index就代表了一类类似的或者相同的document。比如说建立一个product index，商品索引，里面可能就存放了所有的商品数据，所有的商品document。</li><li><strong>Type</strong>：类型，每个索引里都可以有一个或多个type，type是index中的一个逻辑数据分类，一个type下的document，都有相同的field，比如博客系统，有一个索引，可以定义用户数据type，博客数据type，评论数据type。</li></ul><pre><code>举例商品index，里面存放了所有的商品数据，商品document但是商品分很多种类，每个种类的document的field可能不太一样，比如说电器商品，可能还包含一些诸如售后时间范围这样的特殊field；生鲜商品，还包含一些诸如生鲜保质期之类的特殊fieldtype，日化商品type，电器商品type，生鲜商品type日化商品type：product_id，product_name，product_desc，category_id，category_name电器商品type：product_id，product_name，product_desc，category_id，category_name，service_period生鲜商品type：product_id，product_name，product_desc，category_id，category_name，eat_period每一个type里面，都会包含一堆document</code></pre><ul><li><strong>shard</strong>：单台机器无法存储大量数据，es可以将一个索引中的数据切分为多个shard，分布在多台服务器上存储。<strong>有了shard就可以横向扩展</strong>，存储更多数据，<strong>让搜索和分析等操作分布到多台服务器上去执行，提升吞吐量和性能</strong>。每个shard都是一个lucene index。</li><li><strong>replica</strong>：任何一个服务器随时可能故障或宕机，此时shard可能就会丢失，因此可以为每个shard创建多个replica副本。replica可以在shard故障时提供备用服务，保证数据不丢失，多个replica还可以提升搜索操作的吞吐量和性能。primary shard（建立索引时一次设置，不能修改，默认5个），replica shard（随时修改数量，默认1个），<strong>默认每个索引10个shard，5个primary shard，5个replica shard，最小的高可用配置，是2台服务器</strong>。</li></ul><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/Es-cluster.png" alt=""></p><h2 id="2-2-elasticsearch-vs-数据库核心概念"><a href="#2-2-elasticsearch-vs-数据库核心概念" class="headerlink" title="2.2 elasticsearch vs. 数据库核心概念"></a>2.2 elasticsearch vs. 数据库核心概念</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/esandrdbms.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>1.ES简介</title>
+      <link href="/2020/03/02/1-ES%E7%AE%80%E4%BB%8B/"/>
+      <url>/2020/03/02/1-ES%E7%AE%80%E4%BB%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1 介绍"></a>1.1 介绍</h2><p>Elaticsearch，简称为es， es是一个开源的<strong>高扩展的分布式全文检索引擎</strong>，它可以近<strong>乎实时的存储、检索数据</strong>；本身扩展性很好，可以扩展到上百台服务器，处理PB级别（大数据时代）的数据。es也使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单<strong>RESTful API</strong>来隐藏Lucene的复杂性，从而让全文搜索变得简单。<br>据国际权威的数据库产品评测机构DB Engines的统计，在2016年1月，ElasticSearch已超过Solr等，<strong>成为排名第一的搜索引擎类应用</strong></p><h2 id="1-2-功能"><a href="#1-2-功能" class="headerlink" title="1.2 功能"></a>1.2 功能</h2><h3 id="1-2-1-分布式的搜索引擎和数据分析引擎"><a href="#1-2-1-分布式的搜索引擎和数据分析引擎" class="headerlink" title="1.2.1 分布式的搜索引擎和数据分析引擎"></a>1.2.1 分布式的搜索引擎和数据分析引擎</h3><p>搜索：百度，网站的站内搜索，IT系统的检索<br>数据分析：电商网站，最近7天牙膏这种商品销量排名前10的商家有哪些；新闻网站，最近1个月访问量排名前3的新闻版块是哪些<br>分布式，搜索，数据分析</p><h3 id="1-2-2-全文检索，结构化检索，数据分析"><a href="#1-2-2-全文检索，结构化检索，数据分析" class="headerlink" title="1.2.2 全文检索，结构化检索，数据分析"></a>1.2.2 全文检索，结构化检索，数据分析</h3><p><strong>全文检索</strong>：我想搜索商品名称包含牙膏的商品，select * from products where product_name like “%牙膏%”<br><strong>结构化检索</strong>：我想搜索商品分类为日化用品的商品都有哪些，<code>select * from products where category_id=&#39;日化用品&#39;</code></p><p>部分匹配、自动完成、搜索纠错、搜索推荐</p><p><strong>数据分析</strong>：我们分析每一个商品分类下有多少个商品，select category_id,count(*) from products group by category_id</p><h3 id="1-2-3-对海量数据进行近实时的处理"><a href="#1-2-3-对海量数据进行近实时的处理" class="headerlink" title="1.2.3 对海量数据进行近实时的处理"></a>1.2.3 对海量数据进行近实时的处理</h3><p><strong>分布式</strong>：ES自动可以将海量数据分散到多台服务器上去存储和检索<br>海联数据的处理：分布式以后，就可以采用大量的服务器去存储和检索数据，自然而然就可以实现海量数据的处理了<br><strong>近实时</strong>：检索个数据要花费1小时（这就不要近实时，离线批处理，batch-processing）；在秒级别对数据进行搜索和分析</p><p>跟分布式/海量数据相反的：lucene，单机应用，只能在单台服务器上使用，最多只能处理单台服务器可以处理的数据量</p><h2 id="1-3-主要概念"><a href="#1-3-主要概念" class="headerlink" title="1.3 主要概念"></a>1.3 主要概念</h2><p>Elasticsearch的主要概念如下:</p><ul><li><strong>节点</strong> - 它指的是Elasticsearch的单个正在运行的实例。单个物理和虚拟服务器容纳多个节点，这取决于其物理资源的能力，如RAM，存储和处理能力。</li><li><strong>集群</strong> - 它是一个或多个节点的集合。 集群为整个数据提供跨所有节点的集合索引和搜索功能。</li><li><strong>索引</strong> - 它是不同类型的文档和文档属性的集合。索引还使用分片的概念来提高性能。 例如，一组文档包含社交网络应用的数据。</li><li><strong>类型/映射</strong> - 它是共享同一索引中存在的一组公共字段的文档的集合。 例如，索引包含社交网络应用的数据，然后它可以存在用于用户简档数据的特定类型，另一类型可用于消息的数据，以及另一类型可用于评论的数据。</li><li><strong>文档</strong> - 它是以JSON格式定义的特定方式的字段集合。每个文档都属于一个类型并驻留在索引中。每个文档都与唯一标识符(称为UID)相关联。</li><li><strong>碎片</strong> - 索引被水平细分为碎片。这意味着每个碎片包含文档的所有属性，但包含的数量比索引少。水平分隔使碎片成为一个独立的节点，可以存储在任何节点中。主碎片是索引的原始水平部分，然后这些主碎片被复制到副本碎片中。</li><li><strong>副本</strong> - Elasticsearch允许用户创建其索引和分片的副本。 复制不仅有助于在故障情况下增加数据的可用性，而且还通过在这些副本中执行并行搜索操作来提高搜索的性能。</li></ul><h2 id="1-4-优点"><a href="#1-4-优点" class="headerlink" title="1.4 优点"></a>1.4 优点</h2><p>Elasticsearch的优点:</p><ul><li>Elasticsearch是基于Java开发的，这使得它在几乎每个平台上都兼容。</li><li>Elasticsearch是实时的，换句话说，一秒钟后，添加的文档可以在这个引擎中搜索得到</li><li>Elasticsearch是分布式的，这使得它易于在任何大型组织中扩展和集成。</li><li>通过使用Elasticsearch中的网关概念，创建完整备份很容易。</li><li>与Apache Solr相比，在Elasticsearch中处理多租户非常容易。</li><li>Elasticsearch使用JSON对象作为响应，这使得可以使用不同的编程语言调用Elasticsearch服务器</li><li>Elasticsearch支持几乎大部分文档类型，但不支持文本呈现的文档类型。</li></ul><h2 id="1-5-缺点"><a href="#1-5-缺点" class="headerlink" title="1.5 缺点"></a>1.5 缺点</h2><p>Elasticsearch的缺点:</p><ul><li>Elasticsearch在处理请求和响应数据方面没有多语言和数据格式支持(仅在JSON中可用)，与Apache Solr不同，Elasticsearch不可以使用CSV，XML等格式</li></ul><h2 id="1-6-特点"><a href="#1-6-特点" class="headerlink" title="1.6 特点"></a>1.6 特点</h2><ul><li>可以作为一个大型分布式集群（数百台服务器）技术，处理PB级数据，服务大公司；也可以运行在单机上，服务小公司</li><li>Elasticsearch不是什么新技术，主要是将全文检索、数据分析以及分布式技术，合并在了一起，才形成了独一无二的ES；lucene（全文检索），商用的数据分析软件（也是有的），分布式数据库（mycat）</li><li>对用户而言，是开箱即用的，非常简单，作为中小型的应用，直接3分钟部署一下ES，就可以作为生产环境的系统来使用了，数据量不大，操作不是太复杂</li><li>数据库的功能面对很多领域是不够用的（事务，还有各种联机事务型的操作）；特殊的功能，比如全文检索，同义词处理，相关度排名，复杂数据分析，海量数据的近实时处理；Elasticsearch作为传统数据库的一个补充，提供了数据库所不不能提供的很多功能</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 中间件 </category>
+          
+          <category> Elaticsearch </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Elaticsearch </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>消息顺序性的保证</title>
       <link href="/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/"/>
       <url>/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/</url>
@@ -294,11 +726,11 @@
     
     
     <entry>
-      <title>RabbitMQ数据可靠性保证</title>
-      <link href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"/>
-      <url>/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/</url>
+      <title>RabbitMQ特殊队列</title>
+      <link href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"/>
+      <url>/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/</url>
       
-        <content type="html"><![CDATA[<h2 id="1-生产者可靠性保证"><a href="#1-生产者可靠性保证" class="headerlink" title="1 生产者可靠性保证"></a>1 生产者可靠性保证</h2><p>在使用RabbitMQ的时候，我们可以通过消息持久化操作来解决因为服务器的异常奔溃导致的消息丢失，除此之外我们还会遇到一个问题，当消息的发布者在将消息发送出去之后，消息到底有没有正确到达broker代理服务器</p><p>如果不进行特殊配置的话，默认情况下发布操作<strong>是不会返回任何信息给生产者的</strong>，也就是默认情况下我们的生产者是不知道消息有没有正确到达broker的，如果在消息到达broker之前已经丢失的话，持久化操作也解决不了这个问题，因为消息根本就没到达代理服务器，你怎么进行持久化，那么这个问题该怎么解决呢？</p><p>RabbitMQ为我们提供了两种方式：</p><ul><li>通过AMQP<strong>事务机制</strong>实现，这也是AMQP协议层面提供的解决方案；</li><li>通过将channel设置成<strong>confirm模式</strong>来实现；</li></ul><h3 id="1-1-事务机制"><a href="#1-1-事务机制" class="headerlink" title="1.1 事务机制"></a>1.1 事务机制</h3><p>选择用 RabbitMQ 提供的事务功能，就是生产者发送数据之前开启 RabbitMQ 事务channel.txSelect，然后发送消息，如果消息没有成功被 RabbitMQ 接收到，那么生产者会收到异常报错，此时就可以回滚事务channel.txRollback，然后重试发送消息；如果收到了消息，那么可以提交事务channel.txCommit。</p><pre><code class="java">// 开启事务channel.txSelecttry {    // 这里发送消息} catch (Exception e) {    channel.txRollback    // 这里再次重发这条消息}// 提交事务channel.txCommit</code></pre><p>但是问题是，RabbitMQ 事务机制（同步）一搞，基本上<strong>吞吐量会下来，因为太耗性能</strong>。</p><h3 id="1-2-Comfirm机制"><a href="#1-2-Comfirm机制" class="headerlink" title="1.2 Comfirm机制"></a>1.2 Comfirm机制</h3><p>生产者将信道设置成confirm模式，一旦信道进入confirm模式，所有在该信道上面发布的消息都会被指派一个唯一的ID(从1开始)，一旦消息被投递到所有匹配的队列之后，broker就会发送一个确认给生产者（包含消息的唯一ID）,这就使得生产者知道消息已经正确到达目的队列了，如果消息和队列是可持久化的，那么确认消息会将消息写入磁盘之后发出，broker回传给生产者的确认消息中deliver-tag域包含了确认消息的序列号，此外broker也可以设置basic.ack的multiple域，表示到这个序列号之前的所有消息都已经得到了处理。</p><p>confirm模式最大的好处在于他是<strong>异步的</strong>，一旦发布一条消息，生产者应用程序就可以在等信道返回确认的同时继续发送下一条消息，当消息最终得到确认之后，生产者应用便可以通过回调方法来处理该确认消息，如果RabbitMQ因为自身内部错误导致消息丢失，就会发送一条nack消息，生产者应用程序同样可以在回调方法中处理该nack消息。</p><p>在channel 被设置成 confirm 模式之后，所有被 publish 的后续消息都将被 confirm（即 ack） 或者被nack一次。但是没有对消息被 confirm 的快慢做任何保证，并且同一条消息不会既被 confirm又被nack 。</p><h4 id="1-2-1-编程模式"><a href="#1-2-1-编程模式" class="headerlink" title="1.2.1 编程模式"></a>1.2.1 编程模式</h4><p>confirm有三种编程方式：</p><ul><li><strong>批量confirm模式</strong>：每发送一批消息后，调用waitForConfirms()方法，等待服务器端confirm。</li><li><strong>异步confirm模式</strong>：提供一个回调方法，服务端confirm了一条或者多条消息后Client端会回调这个方法(推荐使用的)</li></ul><h2 id="2-消费者可靠性保证"><a href="#2-消费者可靠性保证" class="headerlink" title="2 消费者可靠性保证"></a>2 消费者可靠性保证</h2><p>在Consumer中Confirm模式中分为</p><ul><li>手动确认</li><li>自动确认</li></ul><h3 id="2-1-自动确认"><a href="#2-1-自动确认" class="headerlink" title="2.1 自动确认"></a>2.1 自动确认</h3><p>默认模式是自动确认模式:消息在发送后立即被认为是发送成功。 这种模式可以提高吞吐量（只要消费者能够跟上），不过会降低投递和消费者处理的安全性。 这种模式通常被称为“发后即忘”。 与手动确认模式不同，如果消费者的TCP连接或信道在成功投递之前关闭，该消息则会丢失。</p><h3 id="2-２-手动确认"><a href="#2-２-手动确认" class="headerlink" title="2.２ 手动确认"></a>2.２ 手动确认</h3><p>为了保证消息从队列可靠地到达消费者，RabbitMQ提供消息确认机制(message acknowledgment)。消费者在声明队列时，可以指定noAck参数，当<strong>noAck=false时，RabbitMQ会等待消费者显式发回ack信号后才从内存(和磁盘，如果是持久化消息的话)中移去消息</strong>。否则，RabbitMQ会在队列中消息被消费后<strong>立即删除</strong>它。</p><p>采用消息确认机制后，只要令noAck=false，消费者就有足够的时间处理消息(任务)，不用担心处理消息过程中消费者进程挂掉后消息丢失的问题，因为RabbitMQ会一直持有消息直到消费者显式调用basicAck为止。</p><p>当noAck=false时，对于RabbitMQ服务器端而言，队列中的消息分成了两部分：</p><ul><li><p>一部分是等待投递给消费者的消息；</p></li><li><p>一部分是已经投递给消费者，但是还没有收到消费者ack信号的消息。</p></li></ul><p>RabbitMQ<strong>不会为没有ack确认的消息设置超时时间</strong>，它判断此消息是否需要重新投递给消费者的唯一依据是消费该消息的消费者连接是否已经断开。这么设计的原因是RabbitMQ允许消费者消费一条消息的时间可以很久很久。</p><p><strong>建议使用手动模式</strong></p><ul><li>如果服务器端<strong>一直没有收到消费者的ack信号，并且消费此消息的消费者已经断开连接</strong>，则服务器端会<strong>安排该消息重新进入队列，靠近队列头位置</strong>，等待投递给下一个消费者（也可能还是原来的那个消费者）。</li><li>如果收到了<strong>nack/reject信号且requeue为true</strong>,服务器端也会<strong>安排该消息重新进入队列，靠近队列头位置</strong>，等待投递给下一个消费者（也可能还是原来的那个消费者）。</li><li>如果收到了<strong>nack/reject信号且requeue为false</strong>,则<strong>进入死信队列</strong></li></ul><h2 id="3-broke可靠性保证"><a href="#3-broke可靠性保证" class="headerlink" title="3 broke可靠性保证"></a>3 broke可靠性保证</h2><p>broke可靠性需要两方面保证:</p><ul><li>持久化保证</li><li>集群高可用保证</li></ul><h3 id="3-1-持久化保证"><a href="#3-1-持久化保证" class="headerlink" title="3.1 持久化保证"></a>3.1 持久化保证</h3><p>就是 RabbitMQ 自己弄丢了数据，这个你必须<strong>开启 RabbitMQ 的持久化</strong>，就是消息写入之后会持久化到磁盘，哪怕是 RabbitMQ 自己挂了，恢复之后会自动读取之前存储的数据，一般数据不会丢。除非极其罕见的是，RabbitMQ 还没持久化，自己就挂了，可能导致少量数据丢失，但是这个概率较小。</p><p>设置持久化有两个步骤：</p><ul><li><strong>创建 queue 的时候将其设置为持久化</strong>,这样就可以保证 RabbitMQ 持久化 queue 的元数据，但是它是不会持久化 queue 里的数据的</li><li>发送消息的时候将消息的 <strong>deliveryMode 设置为 2</strong>就是将消息设置为持久化的，此时 RabbitMQ 就会将消息持久化到磁盘上去。</li></ul><p><strong>必须要同时设置这两个持久化才行</strong>，RabbitMQ 哪怕是挂了，再次重启，也会从磁盘上重启恢复 queue，恢复这个 queue 里的数据。</p><p>注意，哪怕是你给 RabbitMQ 开启了持久化机制，也有一种可能，就是这个消息写到了 RabbitMQ 中，但是还没来得及持久化到磁盘上，结果不巧，此时 RabbitMQ 挂了，就会导致内存里的一点点数据丢失。</p><p>所以，持久化可以跟生产者那边的 confirm 机制配合起来，只有消息被持久化到磁盘之后，才会通知生产者 ack 了，所以哪怕是在持久化到磁盘之前，RabbitMQ 挂了，数据丢了，生产者收不到 ack，你也是可以自己重发的。</p><h3 id="3-2-集群高可用"><a href="#3-2-集群高可用" class="headerlink" title="3.2 集群高可用"></a>3.2 集群高可用</h3><p><strong>开启镜像高可用模式</strong>。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会存在于多个实例上，就是说，<strong>每个 RabbitMQ 节点都有这个 queue 的一个完整镜像</strong>，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把消息同步到多个实例的 queue 上。</p><h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/rmqsis.png" alt=""></p>]]></content>
+        <content type="html"><![CDATA[<ul><li>死信队列</li><li>延时队列</li><li>优先级队列</li></ul><h2 id="1-死信队列"><a href="#1-死信队列" class="headerlink" title="1 死信队列"></a>1 死信队列</h2><p>DLX, Dead-Letter-Exchange</p><p>利用DLX, 当消息在一个队列中变成死信（dead message）之后，它能被重新publish到<strong>另一个Exchange</strong>，这个Exchange就是DLX。</p><h3 id="1-1-产生情况"><a href="#1-1-产生情况" class="headerlink" title="1.1 产生情况"></a>1.1 产生情况</h3><p>消息变成死信一向有一下几种情况:</p><ul><li><strong>消息被拒绝（basic.reject/ basic.nack）并且requeue=false</strong></li><li><strong>消息TTL过期</strong></li><li><strong>队列达到最大长度</strong></li></ul><h3 id="1-2-特性"><a href="#1-2-特性" class="headerlink" title="1.2 特性"></a>1.2 特性</h3><ul><li>DLX也是一个<strong>正常的Exchange</strong>,和一般的Exchange没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。</li><li>当这个队列中有死信时，RabbitMQ就会<strong>自动的将这个消息重新发布</strong>到设置的Exchange上去，进而被路由到另一个队列。</li><li><strong>可以监听这个队列中消息</strong>做相应的处理，这个特性可以弥补RabbitMQ3.0以前支持的immediate参数的功能。</li></ul><h3 id="1-3-设置"><a href="#1-3-设置" class="headerlink" title="1.3 设置"></a>1.3 设置</h3><ul><li>首先需要设置死信队列的exchange和queue,然后进行绑定:<ul><li>Exchange: dlx.exchange</li><li>Queue: dlx.queue</li><li>Routing Key: #</li></ul></li><li>然后我们进行正常声明交换机、队列、绑定，只不过我们需要在队列加上一个参数即可：arguments.put(nx-dead-letter-exchange”,”dlx.exchange”)；</li><li>这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列</li></ul><h2 id="2-延时队列"><a href="#2-延时队列" class="headerlink" title="2 延时队列"></a>2 延时队列</h2><p><strong>延时队列</strong>，首先，它是一种队列，队列意味着内部的元素是<strong>有序</strong>的，元素出队和入队是有方向性的，元素从一端进入，从另一端取出。</p><p>其次，<strong>延时队列</strong>，最重要的特性就体现在它的<strong>延时</strong>属性上，跟普通的队列不一样的是，<strong>普通队列中的元素总是等着希望被早点取出处理，而延时队列中的元素则是希望被在指定时间得到取出和处理</strong>，所以延时队列中的元素是都是带时间属性的，通常来说是需要被处理的消息或者任务。</p><p>简单来说，延时队列就是用来存放需要在指定时间被处理的元素的队列。</p><h3 id="2-1-使用场景"><a href="#2-1-使用场景" class="headerlink" title="2.1 使用场景"></a>2.1 使用场景</h3><p>那么什么时候需要用延时队列呢？考虑一下以下场景：</p><ul><li>订单在十分钟之内未支付则自动取消。</li><li>新创建的店铺，如果在十天内都没有上传过商品，则自动发送消息提醒。</li><li>账单在一周内未支付，则自动结算。</li><li>用户注册成功后，如果三天内没有登陆则进行短信提醒。</li><li>用户发起退款，如果三天内没有得到处理则通知相关运营人员。</li><li>预定会议后，需要在预定的时间点前十分钟通知各个与会人员参加会议。</li></ul><p>这些场景都有一个特点，需要在某个事件发生之后或者之前的指定时间点完成某一项任务，如：发生订单生成事件，在十分钟之后检查该订单支付状态，然后将未支付的订单进行关闭；发生店铺创建事件，十天后检查该店铺上新商品数，然后通知上新数为0的商户；发生账单生成事件，检查账单支付状态，然后自动结算未支付的账单；发生新用户注册事件，三天后检查新注册用户的活动数据，然后通知没有任何活动记录的用户；发生退款事件，在三天之后检查该订单是否已被处理，如仍未被处理，则发送消息给相关运营人员；发生预定会议事件，判断离会议开始是否只有十分钟了，如果是，则通知各个与会人员。</p><p>看起来<strong>似乎使用定时任务</strong>，一直轮询数据，每秒查一次，取出需要被处理的数据，然后处理不就完事了吗？如果数据量比较少，确实可以这样做，比如：对于“如果账单一周内未支付则进行自动结算”这样的需求，如果对于时间不是严格限制，而是宽松意义上的一周，那么每天晚上跑个定时任务检查一下所有未支付的账单，确实也是一个可行的方案。但对于数据量比较大，并且时效性较强的场景，如：“订单十分钟内未支付则关闭“，短期内未支付的订单数据可能会有很多，活动期间甚至会达到百万甚至千万级别，对这么庞大的数据量仍旧使用轮询的方式显然是不可取的，很可能在一秒内无法完成所有订单的检查，同时会给数据库带来很大压力，无法满足业务要求而且性能低下。</p><p>这时候，延时队列就可以闪亮登场了，<strong>以上场景，正是延时队列的用武之地</strong>。</p><p>既然延时队列可以解决很多特定场景下，带时间属性的任务需求，那么如何构造一个延时队列呢？接下来，本文将介绍如何用RabbitMQ来实现延时队列。</p><h3 id="2-2-RabbitMQ中的TTL"><a href="#2-2-RabbitMQ中的TTL" class="headerlink" title="2.2 RabbitMQ中的TTL"></a>2.2 RabbitMQ中的TTL</h3><p>在介绍延时队列之前，还需要先介绍一下RabbitMQ中的一个高级特性——<strong>TTL（Time To Live）</strong>。</p><p>TTL是什么呢？TTL是RabbitMQ中一个消息或者队列的属性，表明一条消息或者该队列中的所有消息的最大存活时间，单位是毫秒。换句话说，如果一条消息设置了TTL属性或者进入了设置TTL属性的队列，那么这条消息如果在TTL设置的时间内没有被消费，则会成为“死信”（至于什么是死信，请翻看上一篇）。如果同时配置了队列的TTL和消息的TTL，那么较小的那个值将会被使用。</p><p>那么，如何设置这个TTL值呢？有两种方式，第一种是在创建队列的时候设置队列的“<strong>x-message-ttl</strong>”属性，如下：</p><pre><code class="java">Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();args.put(&quot;x-message-ttl&quot;, 6000);channel.queueDeclare(queueName, durable, exclusive, autoDelete, args);</code></pre><p>这样所有被投递到该队列的消息都最多不会存活超过6s。</p><p>另一种方式便是针对每条消息设置TTL，代码如下：</p><pre><code class="java">AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();builder.expiration(&quot;6000&quot;);AMQP.BasicProperties properties = builder.build();channel.basicPublish(exchangeName, routingKey, mandatory, properties, &quot;msg body&quot;.getBytes());</code></pre><p>这样这条消息的过期时间也被设置成了6s。</p><p>但这两种方式是有区别的，<strong>如果设置了队列的TTL属性，那么一旦消息过期，就会被队列丢弃，而第二种方式，消息即使过期，也不一定会被马上丢弃，因为消息是否过期是在即将投递到消费者之前判定的，如果当前队列有严重的消息积压情况，则已过期的消息也许还能存活较长时间</strong>。</p><p>另外，还需要注意的一点是，如果不设置TTL，表示消息永远不会过期，如果将TTL设置为0，则表示除非此时可以直接投递该消息到消费者，否则该消息将会被丢弃。</p><h3 id="2-3-实现延时队列"><a href="#2-3-实现延时队列" class="headerlink" title="2.3 实现延时队列"></a>2.3 实现延时队列</h3><h4 id="2-3-1-通过死信队列实现"><a href="#2-3-1-通过死信队列实现" class="headerlink" title="2.3.1 通过死信队列实现"></a>2.3.1 通过死信队列实现</h4><p>延时队列，不就是想要消息延迟多久被处理吗，TTL则刚好能让消息在延迟多久之后成为死信，另一方面，成为死信的消息都会被投递到死信队列里，这样只需要消费者一直消费死信队列里的消息就万事大吉了，因为里面的消息都是希望被立即处理的消息。</p><p>但如果使用在消息属性上设置TTL的方式，消息可能并不会按时“死亡“，因为RabbitMQ只会检查第一个消息是否过期，如果过期则丢到死信队列，索引如果第一个消息的延时时长很长，而第二个消息的延时时长很短，则第二个消息并不会优先得到执行</p><p><strong>所以不推荐使用此种方式!</strong></p><h4 id="2-3-2-通过插件实现"><a href="#2-3-2-通过插件实现" class="headerlink" title="2.3.2 通过插件实现"></a>2.3.2 通过插件实现</h4><p>安装一个插件即可：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">https://www.rabbitmq.com/community-plugins.html</a> ，下载rabbitmq_delayed_message_exchange插件，然后解压放置到RabbitMQ的插件目录。</p><p>接下来，进入RabbitMQ的安装目录下的sbin目录，执行下面命令让该插件生效，然后重启RabbitMQ。</p><h2 id="3-优先级队列"><a href="#3-优先级队列" class="headerlink" title="3 优先级队列"></a>3 优先级队列</h2><p>优先级队列，顾名思义，具有更高优先级的队列具有较高的优先权，优先级高的消息具备优先被消费的特权。</p><h3 id="3-1-实现方式"><a href="#3-1-实现方式" class="headerlink" title="3.1 实现方式"></a>3.1 实现方式</h3><p>可以通过设置<strong>x-max-priority</strong>属性来实现优先级队列</p><p>当然，在消费端速度大于生产端速度，且broker中没有消息堆积的话，对发送的消息设置优先级也没什么实际意义，因为发送端刚发送完一条消息就被消费端消费了，那么就相当于broker至多只有一条消息，那么对于单条消息来说优先级是没有什么意义的。</p>]]></content>
       
       
       <categories>
@@ -323,11 +755,11 @@
     
     
     <entry>
-      <title>RabbitMQ特殊队列</title>
-      <link href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"/>
-      <url>/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/</url>
+      <title>RabbitMQ数据可靠性保证</title>
+      <link href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"/>
+      <url>/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/</url>
       
-        <content type="html"><![CDATA[<ul><li>死信队列</li><li>延时队列</li><li>优先级队列</li></ul><h2 id="1-死信队列"><a href="#1-死信队列" class="headerlink" title="1 死信队列"></a>1 死信队列</h2><p>DLX, Dead-Letter-Exchange</p><p>利用DLX, 当消息在一个队列中变成死信（dead message）之后，它能被重新publish到<strong>另一个Exchange</strong>，这个Exchange就是DLX。</p><h3 id="1-1-产生情况"><a href="#1-1-产生情况" class="headerlink" title="1.1 产生情况"></a>1.1 产生情况</h3><p>消息变成死信一向有一下几种情况:</p><ul><li><strong>消息被拒绝（basic.reject/ basic.nack）并且requeue=false</strong></li><li><strong>消息TTL过期</strong></li><li><strong>队列达到最大长度</strong></li></ul><h3 id="1-2-特性"><a href="#1-2-特性" class="headerlink" title="1.2 特性"></a>1.2 特性</h3><ul><li>DLX也是一个<strong>正常的Exchange</strong>,和一般的Exchange没有区别，它能在任何的队列上被指定，实际上就是设置某个队列的属性。</li><li>当这个队列中有死信时，RabbitMQ就会<strong>自动的将这个消息重新发布</strong>到设置的Exchange上去，进而被路由到另一个队列。</li><li><strong>可以监听这个队列中消息</strong>做相应的处理，这个特性可以弥补RabbitMQ3.0以前支持的immediate参数的功能。</li></ul><h3 id="1-3-设置"><a href="#1-3-设置" class="headerlink" title="1.3 设置"></a>1.3 设置</h3><ul><li>首先需要设置死信队列的exchange和queue,然后进行绑定:<ul><li>Exchange: dlx.exchange</li><li>Queue: dlx.queue</li><li>Routing Key: #</li></ul></li><li>然后我们进行正常声明交换机、队列、绑定，只不过我们需要在队列加上一个参数即可：arguments.put(nx-dead-letter-exchange”,”dlx.exchange”)；</li><li>这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列</li></ul><h2 id="2-延时队列"><a href="#2-延时队列" class="headerlink" title="2 延时队列"></a>2 延时队列</h2><p><strong>延时队列</strong>，首先，它是一种队列，队列意味着内部的元素是<strong>有序</strong>的，元素出队和入队是有方向性的，元素从一端进入，从另一端取出。</p><p>其次，<strong>延时队列</strong>，最重要的特性就体现在它的<strong>延时</strong>属性上，跟普通的队列不一样的是，<strong>普通队列中的元素总是等着希望被早点取出处理，而延时队列中的元素则是希望被在指定时间得到取出和处理</strong>，所以延时队列中的元素是都是带时间属性的，通常来说是需要被处理的消息或者任务。</p><p>简单来说，延时队列就是用来存放需要在指定时间被处理的元素的队列。</p><h3 id="2-1-使用场景"><a href="#2-1-使用场景" class="headerlink" title="2.1 使用场景"></a>2.1 使用场景</h3><p>那么什么时候需要用延时队列呢？考虑一下以下场景：</p><ul><li>订单在十分钟之内未支付则自动取消。</li><li>新创建的店铺，如果在十天内都没有上传过商品，则自动发送消息提醒。</li><li>账单在一周内未支付，则自动结算。</li><li>用户注册成功后，如果三天内没有登陆则进行短信提醒。</li><li>用户发起退款，如果三天内没有得到处理则通知相关运营人员。</li><li>预定会议后，需要在预定的时间点前十分钟通知各个与会人员参加会议。</li></ul><p>这些场景都有一个特点，需要在某个事件发生之后或者之前的指定时间点完成某一项任务，如：发生订单生成事件，在十分钟之后检查该订单支付状态，然后将未支付的订单进行关闭；发生店铺创建事件，十天后检查该店铺上新商品数，然后通知上新数为0的商户；发生账单生成事件，检查账单支付状态，然后自动结算未支付的账单；发生新用户注册事件，三天后检查新注册用户的活动数据，然后通知没有任何活动记录的用户；发生退款事件，在三天之后检查该订单是否已被处理，如仍未被处理，则发送消息给相关运营人员；发生预定会议事件，判断离会议开始是否只有十分钟了，如果是，则通知各个与会人员。</p><p>看起来<strong>似乎使用定时任务</strong>，一直轮询数据，每秒查一次，取出需要被处理的数据，然后处理不就完事了吗？如果数据量比较少，确实可以这样做，比如：对于“如果账单一周内未支付则进行自动结算”这样的需求，如果对于时间不是严格限制，而是宽松意义上的一周，那么每天晚上跑个定时任务检查一下所有未支付的账单，确实也是一个可行的方案。但对于数据量比较大，并且时效性较强的场景，如：“订单十分钟内未支付则关闭“，短期内未支付的订单数据可能会有很多，活动期间甚至会达到百万甚至千万级别，对这么庞大的数据量仍旧使用轮询的方式显然是不可取的，很可能在一秒内无法完成所有订单的检查，同时会给数据库带来很大压力，无法满足业务要求而且性能低下。</p><p>这时候，延时队列就可以闪亮登场了，<strong>以上场景，正是延时队列的用武之地</strong>。</p><p>既然延时队列可以解决很多特定场景下，带时间属性的任务需求，那么如何构造一个延时队列呢？接下来，本文将介绍如何用RabbitMQ来实现延时队列。</p><h3 id="2-2-RabbitMQ中的TTL"><a href="#2-2-RabbitMQ中的TTL" class="headerlink" title="2.2 RabbitMQ中的TTL"></a>2.2 RabbitMQ中的TTL</h3><p>在介绍延时队列之前，还需要先介绍一下RabbitMQ中的一个高级特性——<strong>TTL（Time To Live）</strong>。</p><p>TTL是什么呢？TTL是RabbitMQ中一个消息或者队列的属性，表明一条消息或者该队列中的所有消息的最大存活时间，单位是毫秒。换句话说，如果一条消息设置了TTL属性或者进入了设置TTL属性的队列，那么这条消息如果在TTL设置的时间内没有被消费，则会成为“死信”（至于什么是死信，请翻看上一篇）。如果同时配置了队列的TTL和消息的TTL，那么较小的那个值将会被使用。</p><p>那么，如何设置这个TTL值呢？有两种方式，第一种是在创建队列的时候设置队列的“<strong>x-message-ttl</strong>”属性，如下：</p><pre><code class="java">Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();args.put(&quot;x-message-ttl&quot;, 6000);channel.queueDeclare(queueName, durable, exclusive, autoDelete, args);</code></pre><p>这样所有被投递到该队列的消息都最多不会存活超过6s。</p><p>另一种方式便是针对每条消息设置TTL，代码如下：</p><pre><code class="java">AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();builder.expiration(&quot;6000&quot;);AMQP.BasicProperties properties = builder.build();channel.basicPublish(exchangeName, routingKey, mandatory, properties, &quot;msg body&quot;.getBytes());</code></pre><p>这样这条消息的过期时间也被设置成了6s。</p><p>但这两种方式是有区别的，<strong>如果设置了队列的TTL属性，那么一旦消息过期，就会被队列丢弃，而第二种方式，消息即使过期，也不一定会被马上丢弃，因为消息是否过期是在即将投递到消费者之前判定的，如果当前队列有严重的消息积压情况，则已过期的消息也许还能存活较长时间</strong>。</p><p>另外，还需要注意的一点是，如果不设置TTL，表示消息永远不会过期，如果将TTL设置为0，则表示除非此时可以直接投递该消息到消费者，否则该消息将会被丢弃。</p><h3 id="2-3-实现延时队列"><a href="#2-3-实现延时队列" class="headerlink" title="2.3 实现延时队列"></a>2.3 实现延时队列</h3><h4 id="2-3-1-通过死信队列实现"><a href="#2-3-1-通过死信队列实现" class="headerlink" title="2.3.1 通过死信队列实现"></a>2.3.1 通过死信队列实现</h4><p>延时队列，不就是想要消息延迟多久被处理吗，TTL则刚好能让消息在延迟多久之后成为死信，另一方面，成为死信的消息都会被投递到死信队列里，这样只需要消费者一直消费死信队列里的消息就万事大吉了，因为里面的消息都是希望被立即处理的消息。</p><p>但如果使用在消息属性上设置TTL的方式，消息可能并不会按时“死亡“，因为RabbitMQ只会检查第一个消息是否过期，如果过期则丢到死信队列，索引如果第一个消息的延时时长很长，而第二个消息的延时时长很短，则第二个消息并不会优先得到执行</p><p><strong>所以不推荐使用此种方式!</strong></p><h4 id="2-3-2-通过插件实现"><a href="#2-3-2-通过插件实现" class="headerlink" title="2.3.2 通过插件实现"></a>2.3.2 通过插件实现</h4><p>安装一个插件即可：<a href="https://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">https://www.rabbitmq.com/community-plugins.html</a> ，下载rabbitmq_delayed_message_exchange插件，然后解压放置到RabbitMQ的插件目录。</p><p>接下来，进入RabbitMQ的安装目录下的sbin目录，执行下面命令让该插件生效，然后重启RabbitMQ。</p><h2 id="3-优先级队列"><a href="#3-优先级队列" class="headerlink" title="3 优先级队列"></a>3 优先级队列</h2><p>优先级队列，顾名思义，具有更高优先级的队列具有较高的优先权，优先级高的消息具备优先被消费的特权。</p><h3 id="3-1-实现方式"><a href="#3-1-实现方式" class="headerlink" title="3.1 实现方式"></a>3.1 实现方式</h3><p>可以通过设置<strong>x-max-priority</strong>属性来实现优先级队列</p><p>当然，在消费端速度大于生产端速度，且broker中没有消息堆积的话，对发送的消息设置优先级也没什么实际意义，因为发送端刚发送完一条消息就被消费端消费了，那么就相当于broker至多只有一条消息，那么对于单条消息来说优先级是没有什么意义的。</p>]]></content>
+        <content type="html"><![CDATA[<h2 id="1-生产者可靠性保证"><a href="#1-生产者可靠性保证" class="headerlink" title="1 生产者可靠性保证"></a>1 生产者可靠性保证</h2><p>在使用RabbitMQ的时候，我们可以通过消息持久化操作来解决因为服务器的异常奔溃导致的消息丢失，除此之外我们还会遇到一个问题，当消息的发布者在将消息发送出去之后，消息到底有没有正确到达broker代理服务器</p><p>如果不进行特殊配置的话，默认情况下发布操作<strong>是不会返回任何信息给生产者的</strong>，也就是默认情况下我们的生产者是不知道消息有没有正确到达broker的，如果在消息到达broker之前已经丢失的话，持久化操作也解决不了这个问题，因为消息根本就没到达代理服务器，你怎么进行持久化，那么这个问题该怎么解决呢？</p><p>RabbitMQ为我们提供了两种方式：</p><ul><li>通过AMQP<strong>事务机制</strong>实现，这也是AMQP协议层面提供的解决方案；</li><li>通过将channel设置成<strong>confirm模式</strong>来实现；</li></ul><h3 id="1-1-事务机制"><a href="#1-1-事务机制" class="headerlink" title="1.1 事务机制"></a>1.1 事务机制</h3><p>选择用 RabbitMQ 提供的事务功能，就是生产者发送数据之前开启 RabbitMQ 事务channel.txSelect，然后发送消息，如果消息没有成功被 RabbitMQ 接收到，那么生产者会收到异常报错，此时就可以回滚事务channel.txRollback，然后重试发送消息；如果收到了消息，那么可以提交事务channel.txCommit。</p><pre><code class="java">// 开启事务channel.txSelecttry {    // 这里发送消息} catch (Exception e) {    channel.txRollback    // 这里再次重发这条消息}// 提交事务channel.txCommit</code></pre><p>但是问题是，RabbitMQ 事务机制（同步）一搞，基本上<strong>吞吐量会下来，因为太耗性能</strong>。</p><h3 id="1-2-Comfirm机制"><a href="#1-2-Comfirm机制" class="headerlink" title="1.2 Comfirm机制"></a>1.2 Comfirm机制</h3><p>生产者将信道设置成confirm模式，一旦信道进入confirm模式，所有在该信道上面发布的消息都会被指派一个唯一的ID(从1开始)，一旦消息被投递到所有匹配的队列之后，broker就会发送一个确认给生产者（包含消息的唯一ID）,这就使得生产者知道消息已经正确到达目的队列了，如果消息和队列是可持久化的，那么确认消息会将消息写入磁盘之后发出，broker回传给生产者的确认消息中deliver-tag域包含了确认消息的序列号，此外broker也可以设置basic.ack的multiple域，表示到这个序列号之前的所有消息都已经得到了处理。</p><p>confirm模式最大的好处在于他是<strong>异步的</strong>，一旦发布一条消息，生产者应用程序就可以在等信道返回确认的同时继续发送下一条消息，当消息最终得到确认之后，生产者应用便可以通过回调方法来处理该确认消息，如果RabbitMQ因为自身内部错误导致消息丢失，就会发送一条nack消息，生产者应用程序同样可以在回调方法中处理该nack消息。</p><p>在channel 被设置成 confirm 模式之后，所有被 publish 的后续消息都将被 confirm（即 ack） 或者被nack一次。但是没有对消息被 confirm 的快慢做任何保证，并且同一条消息不会既被 confirm又被nack 。</p><h4 id="1-2-1-编程模式"><a href="#1-2-1-编程模式" class="headerlink" title="1.2.1 编程模式"></a>1.2.1 编程模式</h4><p>confirm有三种编程方式：</p><ul><li><strong>批量confirm模式</strong>：每发送一批消息后，调用waitForConfirms()方法，等待服务器端confirm。</li><li><strong>异步confirm模式</strong>：提供一个回调方法，服务端confirm了一条或者多条消息后Client端会回调这个方法(推荐使用的)</li></ul><h2 id="2-消费者可靠性保证"><a href="#2-消费者可靠性保证" class="headerlink" title="2 消费者可靠性保证"></a>2 消费者可靠性保证</h2><p>在Consumer中Confirm模式中分为</p><ul><li>手动确认</li><li>自动确认</li></ul><h3 id="2-1-自动确认"><a href="#2-1-自动确认" class="headerlink" title="2.1 自动确认"></a>2.1 自动确认</h3><p>默认模式是自动确认模式:消息在发送后立即被认为是发送成功。 这种模式可以提高吞吐量（只要消费者能够跟上），不过会降低投递和消费者处理的安全性。 这种模式通常被称为“发后即忘”。 与手动确认模式不同，如果消费者的TCP连接或信道在成功投递之前关闭，该消息则会丢失。</p><h3 id="2-２-手动确认"><a href="#2-２-手动确认" class="headerlink" title="2.２ 手动确认"></a>2.２ 手动确认</h3><p>为了保证消息从队列可靠地到达消费者，RabbitMQ提供消息确认机制(message acknowledgment)。消费者在声明队列时，可以指定noAck参数，当<strong>noAck=false时，RabbitMQ会等待消费者显式发回ack信号后才从内存(和磁盘，如果是持久化消息的话)中移去消息</strong>。否则，RabbitMQ会在队列中消息被消费后<strong>立即删除</strong>它。</p><p>采用消息确认机制后，只要令noAck=false，消费者就有足够的时间处理消息(任务)，不用担心处理消息过程中消费者进程挂掉后消息丢失的问题，因为RabbitMQ会一直持有消息直到消费者显式调用basicAck为止。</p><p>当noAck=false时，对于RabbitMQ服务器端而言，队列中的消息分成了两部分：</p><ul><li><p>一部分是等待投递给消费者的消息；</p></li><li><p>一部分是已经投递给消费者，但是还没有收到消费者ack信号的消息。</p></li></ul><p>RabbitMQ<strong>不会为没有ack确认的消息设置超时时间</strong>，它判断此消息是否需要重新投递给消费者的唯一依据是消费该消息的消费者连接是否已经断开。这么设计的原因是RabbitMQ允许消费者消费一条消息的时间可以很久很久。</p><p><strong>建议使用手动模式</strong></p><ul><li>如果服务器端<strong>一直没有收到消费者的ack信号，并且消费此消息的消费者已经断开连接</strong>，则服务器端会<strong>安排该消息重新进入队列，靠近队列头位置</strong>，等待投递给下一个消费者（也可能还是原来的那个消费者）。</li><li>如果收到了<strong>nack/reject信号且requeue为true</strong>,服务器端也会<strong>安排该消息重新进入队列，靠近队列头位置</strong>，等待投递给下一个消费者（也可能还是原来的那个消费者）。</li><li>如果收到了<strong>nack/reject信号且requeue为false</strong>,则<strong>进入死信队列</strong></li></ul><h2 id="3-broke可靠性保证"><a href="#3-broke可靠性保证" class="headerlink" title="3 broke可靠性保证"></a>3 broke可靠性保证</h2><p>broke可靠性需要两方面保证:</p><ul><li>持久化保证</li><li>集群高可用保证</li></ul><h3 id="3-1-持久化保证"><a href="#3-1-持久化保证" class="headerlink" title="3.1 持久化保证"></a>3.1 持久化保证</h3><p>就是 RabbitMQ 自己弄丢了数据，这个你必须<strong>开启 RabbitMQ 的持久化</strong>，就是消息写入之后会持久化到磁盘，哪怕是 RabbitMQ 自己挂了，恢复之后会自动读取之前存储的数据，一般数据不会丢。除非极其罕见的是，RabbitMQ 还没持久化，自己就挂了，可能导致少量数据丢失，但是这个概率较小。</p><p>设置持久化有两个步骤：</p><ul><li><strong>创建 queue 的时候将其设置为持久化</strong>,这样就可以保证 RabbitMQ 持久化 queue 的元数据，但是它是不会持久化 queue 里的数据的</li><li>发送消息的时候将消息的 <strong>deliveryMode 设置为 2</strong>就是将消息设置为持久化的，此时 RabbitMQ 就会将消息持久化到磁盘上去。</li></ul><p><strong>必须要同时设置这两个持久化才行</strong>，RabbitMQ 哪怕是挂了，再次重启，也会从磁盘上重启恢复 queue，恢复这个 queue 里的数据。</p><p>注意，哪怕是你给 RabbitMQ 开启了持久化机制，也有一种可能，就是这个消息写到了 RabbitMQ 中，但是还没来得及持久化到磁盘上，结果不巧，此时 RabbitMQ 挂了，就会导致内存里的一点点数据丢失。</p><p>所以，持久化可以跟生产者那边的 confirm 机制配合起来，只有消息被持久化到磁盘之后，才会通知生产者 ack 了，所以哪怕是在持久化到磁盘之前，RabbitMQ 挂了，数据丢了，生产者收不到 ack，你也是可以自己重发的。</p><h3 id="3-2-集群高可用"><a href="#3-2-集群高可用" class="headerlink" title="3.2 集群高可用"></a>3.2 集群高可用</h3><p><strong>开启镜像高可用模式</strong>。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会存在于多个实例上，就是说，<strong>每个 RabbitMQ 节点都有这个 queue 的一个完整镜像</strong>，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把消息同步到多个实例的 queue 上。</p><h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h2><p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/rmqsis.png" alt=""></p>]]></content>
       
       
       <categories>

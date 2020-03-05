@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>12.ES查询 | KenBetter</title>
+  <meta name="keywords" content=" Elaticsearch ">
+  <meta name="description" content="12.ES查询 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(60)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(49)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="消息队列">消息队列<small>(13)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="Elaticsearch">Elaticsearch<small>(16)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="60">
+<input type="hidden" id="yelog_site_word_count" value="86.5k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Kafka</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">消息队列</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">RabbitMQ</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">Elaticsearch</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka可靠性保证">Kafka可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:01:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/Kafka%E5%92%8CRabbitmq%E7%9A%84%E6%AF%94%E8%BE%83/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="Kafka和RabbitMQ的比较">Kafka和RabbitMQ的比较</span>
+                <span class="post-date"
+                      title="2020-02-27 20:40:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E4%BB%8B%E7%BB%8D/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ介绍">RabbitMQ介绍</span>
+                <span class="post-date"
+                      title="2020-02-25 19:41:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka幂等性保证">Kafka幂等性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:02:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ数据可靠性保证">RabbitMQ数据可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ集群模式">RabbitMQ集群模式</span>
+                <span class="post-date"
+                      title="2020-02-25 19:45:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息幂等性保证">消息幂等性保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:43:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E5%A4%84%E7%90%86/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息积压处理">消息积压处理</span>
+                <span class="post-date"
+                      title="2020-03-01 21:42:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列可靠性保证">消息队列可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-27 20:41:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息顺序性的保证">消息顺序性的保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:45:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%9C%E7%94%A8/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列的作用">消息队列的作用</span>
+                <span class="post-date"
+                      title="2020-02-27 20:42:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E4%BB%8B%E7%BB%8D/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka介绍">Kafka介绍</span>
+                <span class="post-date"
+                      title="2020-02-26 20:00:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ特殊队列">RabbitMQ特殊队列</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/10-ES%E9%9B%86%E7%BE%A4%E5%86%8D%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="10.ES集群再进阶">10.ES集群再进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:01:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/1-ES%E7%AE%80%E4%BB%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="1.ES简介">1.ES简介</span>
+                <span class="post-date"
+                      title="2020-03-02 21:00:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/11-ES%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="11.ES集群规划">11.ES集群规划</span>
+                <span class="post-date"
+                      title="2020-03-04 19:02:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/13-ES%E5%88%86%E5%B8%83%E5%BC%8F%E6%9F%A5%E8%AF%A2%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%80%A7%E7%AE%97%E5%88%86/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="13.ES分布式查询及相关性算分">13.ES分布式查询及相关性算分</span>
+                <span class="post-date"
+                      title="2020-03-04 19:10:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/14-ES%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="14.ES的并发控制">14.ES的并发控制</span>
+                <span class="post-date"
+                      title="2020-03-04 19:12:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/15-ES%E5%86%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="15.ES写性能优化">15.ES写性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:10:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/16-ES%E8%AF%BB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="16.ES读性能优化">16.ES读性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:14:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/2-ES%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="2.ES核心概念及基本操作">2.ES核心概念及基本操作</span>
+                <span class="post-date"
+                      title="2020-03-02 21:01:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/3-Lucene%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="3.Lucene倒排索引">3.Lucene倒排索引</span>
+                <span class="post-date"
+                      title="2020-03-02 21:02:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/4-ES%E5%88%86%E8%AF%8D%E5%99%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="4.ES分词器">4.ES分词器</span>
+                <span class="post-date"
+                      title="2020-03-02 21:03:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/6-ES%E7%AE%97%E6%B3%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="6.ES算法">6.ES算法</span>
+                <span class="post-date"
+                      title="2020-03-03 22:01:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/7-ES%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="7.ES分布式集群">7.ES分布式集群</span>
+                <span class="post-date"
+                      title="2020-03-03 22:03:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/5-ESMaping%E4%BB%8B%E7%BB%8D/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="5.ESMapping介绍">5.ESMapping介绍</span>
+                <span class="post-date"
+                      title="2020-03-03 22:00:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/8-ES%E9%9B%86%E7%BE%A4%E5%88%86%E7%89%87%E4%B8%8E%E6%96%87%E6%A1%A3%E5%AD%98%E5%82%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="8.ES集群分片与文档存储">8.ES集群分片与文档存储</span>
+                <span class="post-date"
+                      title="2020-03-03 22:05:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/9-ES%E9%9B%86%E7%BE%A4%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="9.ES集群进阶">9.ES集群进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:00:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/12-ES%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2%E7%B1%BB%E5%9E%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="12.ES查询">12.ES查询</span>
+                <span class="post-date"
+                      title="2020-03-04 19:04:00">2020/03/04</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-12-ES基本检索类型" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">12.ES查询</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="中间件">中间件</a>/
+            
+                <a  data-rel="Elaticsearch">Elaticsearch</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">Elaticsearch</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-03-04</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:2.3k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈10分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#12-1-检索和过滤"><span class="toc-text">12.1 检索和过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-1-检索和过滤的区别"><span class="toc-text">12.1.1 检索和过滤的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-1-2-检索和过滤的适用场景"><span class="toc-text">12.1.2 检索和过滤的适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-2-结构化检索"><span class="toc-text">12.2 结构化检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-1-精确匹配检索"><span class="toc-text">12.2.1 精确匹配检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-2-范围检索"><span class="toc-text">12.2.2 范围检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-3-存在与否检索"><span class="toc-text">12.2.3 存在与否检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-4-前缀检索"><span class="toc-text">12.2.4 前缀检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-5-通配符模糊检索"><span class="toc-text">12.2.5 通配符模糊检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-6-正则检索"><span class="toc-text">12.2.6 正则检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-7-模糊检索"><span class="toc-text">12.2.7 模糊检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-2-8-主键检索"><span class="toc-text">12.2.8 主键检索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-3-全文检索"><span class="toc-text">12.3 全文检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-1-分词全文检索"><span class="toc-text">12.3.1 分词全文检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-2-短语检索"><span class="toc-text">12.3.2 短语检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-3-短语前缀检索"><span class="toc-text">12.3.3 短语前缀检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-4-多字段匹配检索"><span class="toc-text">12.3.4 多字段匹配检索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-3-4-1-三种场景"><span class="toc-text">12.3.4.1 三种场景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-3-4-2-demo"><span class="toc-text">12.3.4.2 demo</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-5-支持与或非字符串检索"><span class="toc-text">12.3.5 支持与或非字符串检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-6-简化的字符串检索"><span class="toc-text">12.3.6 简化的字符串检索</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-4-复合检索"><span class="toc-text">12.4 复合检索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-4-1-固定得分检索"><span class="toc-text">12.4.1 固定得分检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-4-2-bool组合检索"><span class="toc-text">12.4.2 bool组合检索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-4-3-改变评分检索"><span class="toc-text">12.4.3 改变评分检索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-4-3-1-boosting-query"><span class="toc-text">12.4.3.1 boosting query</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-4-3-2-dis-max-query"><span class="toc-text">12.4.3.2 dis max query</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-4-3-3-function-scoring-query"><span class="toc-text">12.4.3.3 function scoring query</span></a></li></ol></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="12-1-检索和过滤"><a href="#12-1-检索和过滤" class="headerlink" title="12.1 检索和过滤"></a>12.1 检索和过滤</h2><h3 id="12-1-1-检索和过滤的区别"><a href="#12-1-1-检索和过滤的区别" class="headerlink" title="12.1.1 检索和过滤的区别"></a>12.1.1 检索和过滤的区别</h3><ul>
+<li><strong>query</strong>：查询操作不仅仅会进行查询，还会计算分值，用于确定相关度；</li>
+<li><strong>filter</strong>：查询操作仅判断是否满足查询条件，不会计算得分，查询的结果可以被缓存。</li>
+</ul>
+<h3 id="12-1-2-检索和过滤的适用场景"><a href="#12-1-2-检索和过滤的适用场景" class="headerlink" title="12.1.2 检索和过滤的适用场景"></a>12.1.2 检索和过滤的适用场景</h3><ul>
+<li>全文检索以及任何使用相关性评分的场景使用query检索。</li>
+<li>除此之外的其他使用filter过滤器过滤。</li>
+</ul>
+<h2 id="12-2-结构化检索"><a href="#12-2-结构化检索" class="headerlink" title="12.2 结构化检索"></a>12.2 结构化检索</h2><h3 id="12-2-1-精确匹配检索"><a href="#12-2-1-精确匹配检索" class="headerlink" title="12.2.1 精确匹配检索"></a>12.2.1 精确匹配检索</h3><ul>
+<li><strong>term 单值精确匹配</strong></li>
+<li><strong>terms多值精确匹配</strong></li>
+</ul>
+<p>Term 查询，对输⼊不做分词。会将输⼊作为⼀个整体，在倒排索引中查找准确的词项，并且使⽤相关度算分公式为<strong>每个包含该词项的⽂档</strong>进⾏相关度算分</p>
+<pre><code class="json">#search address contains &quot;zn&quot;
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;term&quot;: {
+      &quot;address&quot;: {
+        &quot;value&quot;: &quot;zn&quot;
+      }
+    }
+  }
+}
+
+#search tags contains &quot;yellow&quot; or &quot;red&quot;
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;constant_score&quot;: {
+      &quot;filter&quot;: {
+        &quot;terms&quot;: {
+          &quot;tags&quot;: [
+            &quot;yellow&quot;,
+            &quot;red&quot;
+          ]
+        }
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-2-范围检索"><a href="#12-2-2-范围检索" class="headerlink" title="12.2.2 范围检索"></a>12.2.2 范围检索</h3><ul>
+<li><strong>关键字 range</strong></li>
+<li>gt大于,lt小于,gte大于等于,Ite小于等于</li>
+</ul>
+<pre><code class="json">GET  staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;constant_score&quot;: {
+      &quot;filter&quot;: {
+        &quot;range&quot;: {
+          &quot;age&quot;: {
+            &quot;gte&quot;: 10,
+            &quot;lte&quot;: 20
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-3-存在与否检索"><a href="#12-2-3-存在与否检索" class="headerlink" title="12.2.3 存在与否检索"></a>12.2.3 存在与否检索</h3><ul>
+<li><strong>关键字 exist</strong></li>
+</ul>
+<pre><code class="json"># exist
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;constant_score&quot;: {
+      &quot;filter&quot;: {
+        &quot;exists&quot;: {
+          &quot;field&quot;: &quot;mobile&quot;
+        }
+      }
+    }
+  }
+}
+
+# not exist
+#注意是返回mobile字段不存在的doc
+#不包含doc中mobile为空的
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;constant_score&quot;: {
+      &quot;filter&quot;: {
+        &quot;bool&quot;: {
+          &quot;must_not&quot;:{
+            &quot;exists&quot;:{
+              &quot;field&quot;:&quot;mobile&quot;
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-4-前缀检索"><a href="#12-2-4-前缀检索" class="headerlink" title="12.2.4 前缀检索"></a>12.2.4 前缀检索</h3><ul>
+<li><strong>关键字prefix</strong></li>
+</ul>
+<pre><code class="json">#查询address以zn开头的数据
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;prefix&quot;: {
+      &quot;address&quot;: {
+        &quot;value&quot;: &quot;zn&quot;
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-5-通配符模糊检索"><a href="#12-2-5-通配符模糊检索" class="headerlink" title="12.2.5 通配符模糊检索"></a>12.2.5 通配符模糊检索</h3><ul>
+<li><strong>关键字wildcard</strong></li>
+<li>通配符*匹配任意字符（包含空字符）,通配符？匹配任何单个字符。</li>
+<li><strong>注意这个査询可能会比较缓慢，需要在许多索引词上面重复执行。为了避免极端缓慢的通配符査询，通配符索引词不应该以一个通配符开头</strong></li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;wildcard&quot;: {
+      &quot;mobile&quot;: {
+        &quot;value&quot;: &quot;138*8&quot;
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-6-正则检索"><a href="#12-2-6-正则检索" class="headerlink" title="12.2.6 正则检索"></a>12.2.6 正则检索</h3><ul>
+<li><strong>关键字regexp</strong></li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;regexp&quot;:{
+      &quot;mobile&quot;:&quot;13[0-9]{9}&quot;
+    }
+  }
+}
+</code></pre>
+<h3 id="12-2-7-模糊检索"><a href="#12-2-7-模糊检索" class="headerlink" title="12.2.7 模糊检索"></a>12.2.7 模糊检索</h3><ul>
+<li><strong>关键字fuzzy</strong></li>
+</ul>
+<pre><code class="jso">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;fuzzy&quot;: {
+      &quot;address&quot;: {
+        &quot;value&quot;: &quot;aaa&quot;,
+        &quot;fuzziness&quot;: 0.5,
+        &quot;prefix_length&quot;: 0,
+        &quot;max_expansions&quot;:10
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-2-8-主键检索"><a href="#12-2-8-主键检索" class="headerlink" title="12.2.8 主键检索"></a>12.2.8 主键检索</h3><ul>
+<li><strong>关键字ids</strong></li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;ids&quot;:{
+      &quot;values&quot;:[&quot;1&quot;,&quot;2&quot;]
+    }
+  }
+}</code></pre>
+<h2 id="12-3-全文检索"><a href="#12-3-全文检索" class="headerlink" title="12.3 全文检索"></a>12.3 全文检索</h2><h3 id="12-3-1-分词全文检索"><a href="#12-3-1-分词全文检索" class="headerlink" title="12.3.1 分词全文检索"></a>12.3.1 分词全文检索</h3><ul>
+<li><strong>关键字match</strong></li>
+<li>会将query里面的单词进行分词,然后默认or操作搜索</li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;address&quot;: {
+        &quot;query&quot;: &quot;zn daliangzi aaa&quot;
+      }
+    }
+  }
+}
+#address中最少应该包含&quot;zn&quot;,&quot;daliangzi&quot;,&quot;aaa&quot;中的两个
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;address&quot;: {
+        &quot;query&quot;: &quot;zn daliangzi aaa&quot;,
+        &quot;minimum_should_match&quot;:2
+      }
+    }
+  }
+}
+
+#change match query operator to and
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;address&quot;:{ 
+        &quot;query&quot;: &quot;zn daliangzi&quot;,
+        &quot;operator&quot;: &quot;AND&quot;
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-3-2-短语检索"><a href="#12-3-2-短语检索" class="headerlink" title="12.3.2 短语检索"></a>12.3.2 短语检索</h3><ul>
+<li><strong>关键字match_phrase</strong></li>
+<li>不将query中的单词进行分词,按照一个整体进行搜索</li>
+<li><strong>slop</strong> 搜索的单词之间最多可以隔几个单词</li>
+</ul>
+<pre><code class="json">
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match_phrase&quot;: {
+      &quot;address&quot;:{
+        &quot;query&quot;: &quot;zn aaa&quot;
+      }
+    }
+  }
+}
+
+
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match_phrase&quot;: {
+      &quot;address&quot;:{
+        &quot;query&quot;: &quot;zn aaa&quot;,
+        &quot;slop&quot;:1
+      }
+    }
+  }
+}</code></pre>
+<h3 id="12-3-3-短语前缀检索"><a href="#12-3-3-短语前缀检索" class="headerlink" title="12.3.3 短语前缀检索"></a>12.3.3 短语前缀检索</h3><ul>
+<li><strong>关键字match_phrase_prefix</strong></li>
+</ul>
+<pre><code class="json"># 可以匹配:
+# zn minaaa
+# zn minbbb
+# zn minccc
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;match_phrase_prefix&quot;: {
+      &quot;address&quot;: &quot;zn min&quot;
+    }
+  }
+}</code></pre>
+<h3 id="12-3-4-多字段匹配检索"><a href="#12-3-4-多字段匹配检索" class="headerlink" title="12.3.4 多字段匹配检索"></a>12.3.4 多字段匹配检索</h3><ul>
+<li><strong>关键字multi_match</strong></li>
+</ul>
+<h4 id="12-3-4-1-三种场景"><a href="#12-3-4-1-三种场景" class="headerlink" title="12.3.4.1 三种场景"></a>12.3.4.1 三种场景</h4><ol>
+<li><strong>最佳字段(Best Fields)</strong>:当字段之间相互竞争，又相互关联。例如title和body这样的字段。评分来自最匹配字段</li>
+<li><strong>多数字段(Most Fields)</strong>:处理英文内容时：一种常见的手段是，在主字English Analyzer),抽取词干，加入同义词，以匹配更多的文档。相同的文本，加入子字段(Standard Analyzer),以提供更加精确的匹配。其他字段作为匹配文档提高相关度的信号。匹配字段越多则越好</li>
+<li><strong>混合字段(Cross Field)</strong>:对于某些实体，例如人名，地址，图书信息。需要在多个字段中确定信息，单个字段只能作为整体的一部分。希望在任何这些列出的字段中找到尽可能多的词</li>
+</ol>
+<h4 id="12-3-4-2-demo"><a href="#12-3-4-2-demo" class="headerlink" title="12.3.4.2 demo"></a>12.3.4.2 demo</h4><pre><code class="json">//adress或者province里包含zn 按照这两个字段中分数高的一个字段排序
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;multi_match&quot;: {
+      &quot;query&quot;: &quot;zn&quot;,
+      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],
+      &quot;type&quot;:&quot;best_fields&quot;
+    }
+  }
+}
+
+//adress或者province里包含zn或sh 按照这两个字段的分数和排序
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;multi_match&quot;: {
+      &quot;query&quot;: &quot;zn sh&quot;,
+      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],
+      &quot;type&quot;:&quot;most_fields&quot;
+    }
+  }
+}
+//adress和province里　总共包含zn和sh
+//按照这两个字段的分数和排序
+
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;multi_match&quot;: {
+      &quot;query&quot;: &quot;zn sh&quot;,
+      &quot;fields&quot;: [&quot;address&quot;,&quot;province&quot;],
+      &quot;type&quot;:&quot;cross_fields&quot;,
+      &quot;operator&quot;:&quot;AND&quot;
+    }
+  }
+}</code></pre>
+<h3 id="12-3-5-支持与或非字符串检索"><a href="#12-3-5-支持与或非字符串检索" class="headerlink" title="12.3.5 支持与或非字符串检索"></a>12.3.5 支持与或非字符串检索</h3><ul>
+<li><strong>关键字query string</strong></li>
+<li>可以添加 AND/OR查询条件</li>
+<li>支持多字段查询</li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;query_string&quot;: {
+      &quot;query&quot;: &quot;MML OR Song&quot;,
+      &quot;fields&quot;: [&quot;firstName&quot;,&quot;lastName&quot;]
+    }
+  }
+}
+</code></pre>
+<h3 id="12-3-6-简化的字符串检索"><a href="#12-3-6-简化的字符串检索" class="headerlink" title="12.3.6 简化的字符串检索"></a>12.3.6 简化的字符串检索</h3><ul>
+<li><strong>关键字simple_query_string</strong></li>
+<li>类似 Query String , 但是会忽略错误的语法同时只支持部分查询语句</li>
+<li>不支持 AND OR NOT , 但会当作字符串处理</li>
+<li>Term 之间默认的关系是 OR, 可以指定 default_operator</li>
+</ul>
+<pre><code class="json">
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;simple_query_string&quot;: {
+      &quot;query&quot;: &quot;MML Song&quot;,
+      &quot;default_operator&quot;: &quot;AND&quot;, 
+      &quot;fields&quot;: [&quot;firstName&quot;,&quot;lastName&quot;]
+    }
+  }
+}</code></pre>
+<h2 id="12-4-复合检索"><a href="#12-4-复合检索" class="headerlink" title="12.4 复合检索"></a>12.4 复合检索</h2><h3 id="12-4-1-固定得分检索"><a href="#12-4-1-固定得分检索" class="headerlink" title="12.4.1 固定得分检索"></a>12.4.1 固定得分检索</h3><ul>
+<li><strong>关键字constant_score</strong> </li>
+<li>Wraps a filter query and returns every matching document with a relevance score equal to the boost parameter value.</li>
+</ul>
+<pre><code class="json">GET /_search
+{
+    &quot;query&quot;: {
+        &quot;constant_score&quot; : {
+            &quot;filter&quot; : {
+                &quot;term&quot; : { &quot;user&quot; : &quot;kimchy&quot;}
+            },
+            &quot;boost&quot; : 1.2
+        }
+    }
+}</code></pre>
+<h3 id="12-4-2-bool组合检索"><a href="#12-4-2-bool组合检索" class="headerlink" title="12.4.2 bool组合检索"></a>12.4.2 bool组合检索</h3><p>一个bool查询，是一个或者多个查询子句的组合,总共包括4种子句</p>
+<ul>
+<li><strong>must</strong>:必须匹配。贡献算</li>
+<li><strong>should</strong>:选择性匹配。贡献算分</li>
+<li><strong>must_not</strong>:Filter Context 查询字句，必须不能匹配</li>
+<li><strong>filter</strong>:Filter Context 必须匹配，但是不贡献算分</li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;should&quot;: [
+        {&quot;term&quot;:{&quot;age&quot;: {&quot;value&quot;: &quot;18&quot;}}},
+        {&quot;term&quot;: {&quot;age&quot;: {&quot;value&quot;: &quot;88&quot;}}}
+      ],
+      &quot;must&quot;: [
+        {&quot;term&quot;: {&quot;tags&quot;: &quot;yellow&quot;}},
+        {&quot;term&quot;: {&quot;tagsCount&quot;:1}}
+      ]
+    }
+  }
+}
+
+GET staffs/base/_search
+{
+    &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;should&quot;: [
+        {&quot;term&quot;:{&quot;age&quot;: {&quot;value&quot;: &quot;18&quot;}}},
+        {&quot;term&quot;: {&quot;age&quot;: {&quot;value&quot;: &quot;88&quot;}}}
+      ],
+      &quot;must_not&quot;: [
+        {&quot;term&quot;: {&quot;tags&quot;: &quot;yellow&quot;}},
+        {&quot;term&quot;: {&quot;tagsCount&quot;:2}}
+      ],
+      &quot;filter&quot;: {
+        &quot;term&quot;: {
+          &quot;province&quot;: &quot;sh&quot;
+        }
+      }
+    }
+  }
+}
+
+
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;bool&quot;: {
+      &quot;should&quot;: [
+        {&quot;term&quot;: {
+          &quot;province&quot;: {
+            &quot;value&quot;: &quot;zn&quot;
+          }
+        }},
+        {
+          &quot;term&quot;: {
+            &quot;address&quot;: {
+              &quot;value&quot;: &quot;zn&quot;
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+#将评分最⾼的字段评分作为结果返回，满⾜两个字段是竞争关系的场景
+GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;dis_max&quot;: {
+      &quot;queries&quot;: [
+        {&quot;match&quot;: {&quot;province&quot;: &quot;zn&quot;}},
+        {&quot;match&quot;: {&quot;address&quot;: &quot;zn&quot;}}
+      ],
+      &quot;tie_breaker&quot;: 0.2
+    }
+  }
+}</code></pre>
+<h3 id="12-4-3-改变评分检索"><a href="#12-4-3-改变评分检索" class="headerlink" title="12.4.3 改变评分检索"></a>12.4.3 改变评分检索</h3><h4 id="12-4-3-1-boosting-query"><a href="#12-4-3-1-boosting-query" class="headerlink" title="12.4.3.1 boosting query"></a>12.4.3.1 boosting query</h4><ul>
+<li><p><strong>关键字boosting</strong></p>
+</li>
+<li><p><strong>positive</strong>:(Required, query object) Query you wish to run. Any returned documents must match this query.</p>
+</li>
+<li><p><strong>negative</strong>:(Required, query object) Query used to decrease the relevance score of matching documents.If a returned document matches the positive query and this query, the boosting query calculates the final relevance score for the document as follows:</p>
+<ul>
+<li><p>Take the original relevance score from the positive query.</p>
+</li>
+<li><p>Multiply the score by the negative_boost value.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>negative_boost</strong>:(Required, float) Floating point number between 0 and 1.0 used to decrease the relevance scores of documents matching the negative query.</p>
+</li>
+</ul>
+<pre><code class="demo">GET /_search
+{
+    &quot;query&quot;: {
+        &quot;boosting&quot; : {
+            &quot;positive&quot; : {
+                &quot;term&quot; : {
+                    &quot;text&quot; : &quot;apple&quot;
+                }
+            },
+            &quot;negative&quot; : {
+                 &quot;term&quot; : {
+                     &quot;text&quot; : &quot;pie tart fruit crumble tree&quot;
+                }
+            },
+            &quot;negative_boost&quot; : 0.5
+        }
+    }
+}</code></pre>
+<h4 id="12-4-3-2-dis-max-query"><a href="#12-4-3-2-dis-max-query" class="headerlink" title="12.4.3.2 dis max query"></a>12.4.3.2 dis max query</h4><ul>
+<li><strong>关键字dis_max</strong></li>
+<li>获得<strong>最佳匹配语句的评分</strong></li>
+<li>将<strong>其他匹配语句的评分与tie_breaker相乘</strong></li>
+<li>对以上评分<strong>求和</strong></li>
+</ul>
+<pre><code class="json">GET staffs/base/_search
+{
+  &quot;query&quot;: {
+    &quot;dis_max&quot;: {
+      &quot;tie_breaker&quot;: 0.7,
+      &quot;boost&quot;: 1.2,
+      &quot;queries&quot;: [
+        {&quot;match&quot;: {&quot;address&quot;: &quot;zn&quot;}},
+        {&quot;match&quot;: {&quot;province&quot;: &quot;zn&quot;}}
+      ]
+    }
+  }
+}
+</code></pre>
+<h4 id="12-4-3-3-function-scoring-query"><a href="#12-4-3-3-function-scoring-query" class="headerlink" title="12.4.3.3 function scoring query"></a>12.4.3.3 function scoring query</h4><ul>
+<li><strong>Function Score Query</strong>:可以在查询结束后，对每⼀个匹配的⽂档进⾏⼀系列的重新算分，根据新⽣成的分数进⾏排序。</li>
+<li>提供了⼏种默认的计算分值的函<ul>
+<li>Weight ：为每⼀个⽂档设置⼀个简单⽽不被规范化的权重</li>
+<li>Field Value Factor：使⽤该数值来修改 _score，例如将 “热度”和“点赞数”作为算分的参考因素</li>
+<li>Random Score：为每⼀个⽤户使⽤⼀个不同的，随机算分结果</li>
+<li>衰减函数： 以某个字段的值为标准，距离某个值越近，得分越⾼</li>
+<li>Script Score：⾃定义脚本完全控制所需逻辑</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch1.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch2.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch3.png" alt=""><br><img src="http://dist415.oss-cn-beijing.aliyuncs.com/essearch4.png" alt=""></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存','#Kafka','#消息队列','#RabbitMQ','#Elaticsearch',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
