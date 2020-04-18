@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HTTP协议 | KenBetter</title>
+  <meta name="keywords" content=" 网络 , HTTP ">
+  <meta name="description" content="HTTP协议 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(94)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(53)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="消息队列">消息队列<small>(13)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="Elaticsearch">Elaticsearch<small>(20)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="分布式">分布式<small>(5)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="基础"><i class="fold iconfont icon-right"></i>基础<small>(25)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Linux命令">Linux命令<small>(8)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="Linux系统编程">Linux系统编程<small>(11)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="网络">网络<small>(6)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="94">
+<input type="hidden" id="yelog_site_word_count" value="133.6k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Kafka</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">消息队列</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">RabbitMQ</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">Elaticsearch</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">zookeeper</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">Linux命令</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Linux</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">系统编程</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">网络</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">HTTP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">TCP</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka可靠性保证">Kafka可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:01:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/Kafka%E5%92%8CRabbitmq%E7%9A%84%E6%AF%94%E8%BE%83/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="Kafka和RabbitMQ的比较">Kafka和RabbitMQ的比较</span>
+                <span class="post-date"
+                      title="2020-02-27 20:40:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E4%BB%8B%E7%BB%8D/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ介绍">RabbitMQ介绍</span>
+                <span class="post-date"
+                      title="2020-02-25 19:41:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka幂等性保证">Kafka幂等性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:02:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ数据可靠性保证">RabbitMQ数据可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ集群模式">RabbitMQ集群模式</span>
+                <span class="post-date"
+                      title="2020-02-25 19:45:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息幂等性保证">消息幂等性保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:43:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E5%A4%84%E7%90%86/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息积压处理">消息积压处理</span>
+                <span class="post-date"
+                      title="2020-03-01 21:42:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列可靠性保证">消息队列可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-27 20:41:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息顺序性的保证">消息顺序性的保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:45:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%9C%E7%94%A8/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列的作用">消息队列的作用</span>
+                <span class="post-date"
+                      title="2020-02-27 20:42:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E4%BB%8B%E7%BB%8D/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka介绍">Kafka介绍</span>
+                <span class="post-date"
+                      title="2020-02-26 20:00:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ特殊队列">RabbitMQ特殊队列</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/10-ES%E9%9B%86%E7%BE%A4%E5%86%8D%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="10.ES集群再进阶">10.ES集群再进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:01:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/1-ES%E7%AE%80%E4%BB%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="1.ES简介">1.ES简介</span>
+                <span class="post-date"
+                      title="2020-03-02 21:00:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/11-ES%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="11.ES集群规划">11.ES集群规划</span>
+                <span class="post-date"
+                      title="2020-03-04 19:02:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/13-ES%E5%88%86%E5%B8%83%E5%BC%8F%E6%9F%A5%E8%AF%A2%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%80%A7%E7%AE%97%E5%88%86/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="13.ES分布式查询及相关性算分">13.ES分布式查询及相关性算分</span>
+                <span class="post-date"
+                      title="2020-03-04 19:10:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/14-ES%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="14.ES的并发控制">14.ES的并发控制</span>
+                <span class="post-date"
+                      title="2020-03-04 19:12:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/15-ES%E5%86%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="15.ES写性能优化">15.ES写性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:10:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/16-ES%E8%AF%BB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="16.ES读性能优化">16.ES读性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:14:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/2-ES%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="2.ES核心概念及基本操作">2.ES核心概念及基本操作</span>
+                <span class="post-date"
+                      title="2020-03-02 21:01:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/3-Lucene%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="3.Lucene倒排索引">3.Lucene倒排索引</span>
+                <span class="post-date"
+                      title="2020-03-02 21:02:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/4-ES%E5%88%86%E8%AF%8D%E5%99%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="4.ES分词器">4.ES分词器</span>
+                <span class="post-date"
+                      title="2020-03-02 21:03:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/6-ES%E7%AE%97%E6%B3%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="6.ES算法">6.ES算法</span>
+                <span class="post-date"
+                      title="2020-03-03 22:01:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/7-ES%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="7.ES分布式集群">7.ES分布式集群</span>
+                <span class="post-date"
+                      title="2020-03-03 22:03:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/5-ESMaping%E4%BB%8B%E7%BB%8D/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="5.ESMapping介绍">5.ESMapping介绍</span>
+                <span class="post-date"
+                      title="2020-03-03 22:00:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/8-ES%E9%9B%86%E7%BE%A4%E5%88%86%E7%89%87%E4%B8%8E%E6%96%87%E6%A1%A3%E5%AD%98%E5%82%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="8.ES集群分片与文档存储">8.ES集群分片与文档存储</span>
+                <span class="post-date"
+                      title="2020-03-03 22:05:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/9-ES%E9%9B%86%E7%BE%A4%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="9.ES集群进阶">9.ES集群进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:00:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/12-ES%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2%E7%B1%BB%E5%9E%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="12.ES查询">12.ES查询</span>
+                <span class="post-date"
+                      title="2020-03-04 19:04:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/17-ES%E8%BF%90%E7%BB%B4/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="17.ES运维">17.ES运维</span>
+                <span class="post-date"
+                      title="2020-04-05 23:00:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/18-ES%E6%90%9C%E7%B4%A2%E6%8F%90%E7%A4%BA/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="18.ES搜索提示">18.ES搜索提示</span>
+                <span class="post-date"
+                      title="2020-04-05 23:01:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/19-ES-Reindex/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="19.ESReindex">19.ESReindex</span>
+                <span class="post-date"
+                      title="2020-04-05 23:05:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/20-ES%E5%88%86%E7%89%87%E5%8F%8A%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="20.ES分片及生命周期">20.ES分片及生命周期</span>
+                <span class="post-date"
+                      title="2020-04-05 23:10:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/CAS%E7%9A%84%E5%8E%9F%E7%90%86/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="CAS原理">CAS原理</span>
+                <span class="post-date"
+                      title="2020-04-06 20:00:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/07/Zookeeper%E7%AE%80%E4%BB%8B/"
+               data-tag="分布式,zookeeper"
+               data-author="">
+                <span class="post-title" title="Zookeeper简介">Zookeeper简介</span>
+                <span class="post-date"
+                      title="2020-04-07 22:00:00">2020/04/07</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="乐观锁与悲观锁">乐观锁与悲观锁</span>
+                <span class="post-date"
+                      title="2020-04-06 20:01:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/07/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="雪花算法">雪花算法</span>
+                <span class="post-date"
+                      title="2020-04-07 22:05:00">2020/04/07</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/%E5%88%86%E5%B8%83%E5%BC%8F%E9%80%89%E4%B8%BE/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="分布式选举">分布式选举</span>
+                <span class="post-date"
+                      title="2020-04-06 20:03:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux代码分析命令">Linux代码分析命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:15:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux查找命令">Linux查找命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:05:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux性能分析命令">Linux性能分析命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:10:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux网络命令">Linux网络命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:00:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/11-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="11.错误处理机制">11.错误处理机制</span>
+                <span class="post-date"
+                      title="2020-04-18 21:36:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="2.文件系统">2.文件系统</span>
+                <span class="post-date"
+                      title="2020-04-14 20:02:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/5-%E8%BF%9B%E7%A8%8B%E9%97%B4%E5%85%B3%E7%B3%BB/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="5.进程间关系">5.进程间关系</span>
+                <span class="post-date"
+                      title="2020-04-16 21:00:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/7-%E7%BA%BF%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="7.线程">7.线程</span>
+                <span class="post-date"
+                      title="2020-04-16 21:04:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTP2%E5%92%8C3/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTP2和3">HTTP2和3</span>
+                <span class="post-date"
+                      title="2020-04-13 19:45:00">2020/04/13</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTPS%E5%92%8CTLS/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTPS和TLS">HTTPS和TLS</span>
+                <span class="post-date"
+                      title="2020-04-13 19:42:00">2020/04/13</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/OSI%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="OSI模型">OSI模型</span>
+                <span class="post-date"
+                      title="2020-04-11 21:00:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/TCP%E5%85%B3%E9%97%AD%E8%BF%9E%E6%8E%A5/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="TCP关闭连接">TCP关闭连接</span>
+                <span class="post-date"
+                      title="2020-04-11 21:02:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/TCP%E5%8D%8F%E8%AE%AE/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="TCP协议">TCP协议</span>
+                <span class="post-date"
+                      title="2020-04-11 21:01:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E6%B8%85%E9%99%A4n%E5%A4%A9%E5%89%8D%E7%9A%84%E6%97%A5%E5%BF%97/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux清除n天前的日志">Linux清除n天前的日志</span>
+                <span class="post-date"
+                      title="2020-04-09 20:00:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E7%BB%9F%E8%AE%A1%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0%E5%89%8D%E5%8D%81%E7%9A%84IP/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux统计访问次数最多的十个ip">Linux统计访问次数最多的十个ip</span>
+                <span class="post-date"
+                      title="2020-04-09 20:01:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E7%BB%9F%E8%AE%A1%E8%AF%8D%E9%A2%91/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux统计词频">Linux统计词频</span>
+                <span class="post-date"
+                      title="2020-04-09 20:05:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E8%BD%AC%E7%BD%AE%E6%96%87%E4%BB%B6/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux转置文件">Linux转置文件</span>
+                <span class="post-date"
+                      title="2020-04-09 20:10:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/1-%E6%96%87%E4%BB%B6IO/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="1.文件系统IO">1.文件系统IO</span>
+                <span class="post-date"
+                      title="2020-04-14 20:00:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/10-%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="10.多路IO转接服务器">10.多路IO转接服务器</span>
+                <span class="post-date"
+                      title="2020-04-18 21:34:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/3-%E8%BF%9B%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="3.进程">3.进程</span>
+                <span class="post-date"
+                      title="2020-04-14 20:04:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/4-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="4.进程间通信">4.进程间通信</span>
+                <span class="post-date"
+                      title="2020-04-14 20:05:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/6-%E4%BF%A1%E5%8F%B7/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="6.信号">6.信号</span>
+                <span class="post-date"
+                      title="2020-04-16 21:02:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/8-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="8.线程同步">8.线程同步</span>
+                <span class="post-date"
+                      title="2020-04-18 21:30:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/9-socket%E7%BC%96%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="9.Socket编程">9.Socket编程</span>
+                <span class="post-date"
+                      title="2020-04-18 21:31:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTP%E5%8D%8F%E8%AE%AE/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTP协议">HTTP协议</span>
+                <span class="post-date"
+                      title="2020-04-13 19:40:00">2020/04/13</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-HTTP协议" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">HTTP协议</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="基础">基础</a>/
+            
+                <a  data-rel="网络">网络</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color3">网络</a>
+            
+            <a class="color5">HTTP</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-04-13</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:4.5k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈16分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-URI统一资源标识符"><span class="toc-text">1 URI统一资源标识符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-什么是URI"><span class="toc-text">1.1 什么是URI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-URI的组成"><span class="toc-text">1.2 URI的组成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-常见方法"><span class="toc-text">2 常见方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-HTTP-Code"><span class="toc-text">3 HTTP Code</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-分类"><span class="toc-text">3.1 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1xx"><span class="toc-text">3.2 1xx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-2xx"><span class="toc-text">3.3 2xx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-3xx"><span class="toc-text">3.4 3xx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-4xx"><span class="toc-text">3.5 4xx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-5xx"><span class="toc-text">3.6 5xx</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-HTTP连接流程"><span class="toc-text">4 HTTP连接流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-长连接与短连接"><span class="toc-text">5 长连接与短连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-短连接"><span class="toc-text">5.1 短连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-长连接"><span class="toc-text">5.2 长连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-连接相关的头字段"><span class="toc-text">5.3 连接相关的头字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-Connection作用范围"><span class="toc-text">5.4 Connection作用范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-桥头堵塞问题"><span class="toc-text">5.5 桥头堵塞问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-1-性能优化"><span class="toc-text">5.5.1 性能优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-HTTP-Range规范"><span class="toc-text">6 HTTP Range规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-Http-Range"><span class="toc-text">6.1 Http Range</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Range-请求范围的单位"><span class="toc-text">6.2 Range 请求范围的单位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-Range-条件请求"><span class="toc-text">6.3 Range 条件请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-服务器响应"><span class="toc-text">6.4 服务器响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-多重范围与-multipart"><span class="toc-text">6.5 多重范围与 multipart</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-Cookie"><span class="toc-text">7 Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-什么是Cookie"><span class="toc-text">7.1 什么是Cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Cookie属性"><span class="toc-text">7.2 Cookie属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-Cookie-在协议设计上的问题"><span class="toc-text">7.3 Cookie 在协议设计上的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-Cookie的应用"><span class="toc-text">7.4 Cookie的应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-同源策略"><span class="toc-text">8 同源策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-定义"><span class="toc-text">8.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-举例"><span class="toc-text">8.2 举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-解决方案－CORS"><span class="toc-text">8.3 解决方案－CORS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-1-简单请求"><span class="toc-text">8.3.1 简单请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-3-2-预检请求"><span class="toc-text">8.3.2 预检请求</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-4-响应头部"><span class="toc-text">8.4 响应头部</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-缓存机制"><span class="toc-text">9 缓存机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-缓存首部字段"><span class="toc-text">9.1 缓存首部字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-Cache-Control"><span class="toc-text">9.2 Cache-Control</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-1-作为请求头字段"><span class="toc-text">9.2.1 作为请求头字段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-2-作为响应字段"><span class="toc-text">9.2.2 作为响应字段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-缓存校验字段"><span class="toc-text">9.3 缓存校验字段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-1-Last-Modified"><span class="toc-text">9.3.1 Last-Modified</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-2-ETag"><span class="toc-text">9.3.2 ETag</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-缓存流程图"><span class="toc-text">9.4 缓存流程图</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-URI统一资源标识符"><a href="#1-URI统一资源标识符" class="headerlink" title="1 URI统一资源标识符"></a>1 URI统一资源标识符</h2><h3 id="1-1-什么是URI"><a href="#1-1-什么是URI" class="headerlink" title="1.1 什么是URI"></a>1.1 什么是URI</h3><ul>
+<li><strong>URL</strong>：Uniform Resource Locator，表示资源的位置， 期望提供查找资源的方法</li>
+<li><strong>URN</strong>：Uniform Resource Name，期望为资源提供持久 的、位置无关的标识方式，并允许简单地将多个命名空间映射到单个URN命名 空间<ul>
+<li>例如磁力链接 magnet:?xt=urn:sha1:YNCKHTQC5C </li>
+</ul>
+</li>
+<li><strong>URI</strong>：Uniform Resource Identifier，用以区分资源，是 URL 和 URN 的超集，用以取代 URL 和 URN 概念</li>
+</ul>
+<p>严格地说，URI 不完全等同于网址，它包含有 URL 和 URN两个部分，在 HTTP 世界里用的网址实际上是 URL——统一资源定位符（Uniform Resource Locator）。但因为URL 实在是太普及了，所以常常把这两者简单地视为相等。</p>
+<h3 id="1-2-URI的组成"><a href="#1-2-URI的组成" class="headerlink" title="1.2 URI的组成"></a>1.2 URI的组成</h3><p><img src="http://base422.oss-cn-beijing.aliyuncs.com/neturi2.png" alt=""></p>
+<ul>
+<li>URI 通常由 scheme、host:port、path 和 query 四个部分组成，有的可以省略；</li>
+<li>scheme 叫“方案名”或者“协议名”，表示资源应该使用哪种协议来访问；</li>
+<li>“host:port”表示资源所在的主机名和端口号;</li>
+<li>path 标记资源所在的位置；</li>
+<li>query 表示对资源附加的额外要求；</li>
+<li>在 URI 里对“<strong>@&amp;/”等特殊字符和汉字必须要做编码，否则服务器收到 HTTP 报文后会无法正确处理</strong></li>
+</ul>
+<h2 id="2-常见方法"><a href="#2-常见方法" class="headerlink" title="2 常见方法"></a>2 常见方法</h2><ul>
+<li><strong>GET</strong>：主要的获取信息方法，大量的性能优化都针对该方法，<strong>幂等方法</strong></li>
+<li><strong>HEAD</strong>：类似 GET 方法，但服务器不发送 BODY，用以获取 HEAD 元数据，<strong>幂等方法</strong></li>
+<li><strong>POST</strong>：常用于提交 HTML FORM 表单、新增资源等</li>
+<li><strong>PUT</strong>：更新资源，带条件时是<strong>幂等方法</strong> </li>
+<li><strong>DELETE</strong>：删除资源，<strong>幂等方法</strong> </li>
+<li><strong>CONNECT</strong>：建立 tunnel 隧道 </li>
+<li><strong>OPTIONS</strong>：显示服务器对访问资源支持的方法，幂等方法 </li>
+<li><strong>TRACE</strong>：回显服务器收到的请求，用于定位问题。有安全风险（<strong>已不使用</strong>）</li>
+</ul>
+<h2 id="3-HTTP-Code"><a href="#3-HTTP-Code" class="headerlink" title="3 HTTP Code"></a>3 HTTP Code</h2><h3 id="3-1-分类"><a href="#3-1-分类" class="headerlink" title="3.1 分类"></a>3.1 分类</h3><p>RFC 标准把状态码分成了五类，用数字的第一位表示分类:</p>
+<ul>
+<li><strong>1××</strong>：<strong>请求已接收到，需要进一步处理才能完成，HTTP1.0 不支持</strong>；</li>
+<li><strong>2××</strong>：<strong>成功</strong>，报文已经收到并被正确处理；</li>
+<li><strong>3××</strong>：<strong>重定向</strong>，资源位置发生变动，需要客户端重新发送请求;</li>
+<li><strong>4××</strong>：<strong>客户端错误</strong>，请求报文有误，服务器无法处理;</li>
+<li><strong>5××</strong>：<strong>服务器错误</strong>，服务器在处理请求时内部发生了错误</li>
+</ul>
+<h3 id="3-2-1xx"><a href="#3-2-1xx" class="headerlink" title="3.2 1xx"></a>3.2 1xx</h3><ul>
+<li><strong>100 Continue</strong>：<strong>上传大文件前使用</strong></li>
+<li><strong>101 Switch Protocols</strong>：<strong>协议升级使用</strong> ,由客户端发起请求中携带 Upgrade: 头部触发，如升级 websocket 或者 http/2.0</li>
+</ul>
+<h3 id="3-3-2xx"><a href="#3-3-2xx" class="headerlink" title="3.3 2xx"></a>3.3 2xx</h3><ul>
+<li><strong>200 OK</strong>:是最常见的成功状态码，表示一切正常，服务器如客户端所期望的那样返回了处理结果，如果是非 HEAD请求，通常在响应头后都会有 body 数据</li>
+<li><strong>204 No Content</strong>:是另一个很常见的成功状态码，它的含义<strong>与“200 OK”基本相同，但响应头后没有 body 数据</strong></li>
+<li><strong>206 Partial Content</strong>：使用 <strong>range 协议时返回部分响应内容时的响应码</strong>，状态码 206 通常还会伴随着头字段“<strong>Content-Range</strong>”，表示响应报文里 body 数据的具体范围，供客户端确认，例如“Content-Range: bytes 0-99/2000”，意思是此次获取的是总计 2000 个字节的前 100 个字节。</li>
+</ul>
+<h3 id="3-4-3xx"><a href="#3-4-3xx" class="headerlink" title="3.4 3xx"></a>3.4 3xx</h3><ul>
+<li><strong>301 Moved Permanently</strong>：资源<strong>永久性的重定</strong>向到另一个 URI 中</li>
+<li><strong>302 Found</strong>：资源<strong>临时的重定向</strong>到另一个 URI </li>
+<li><strong>304 Not Modified</strong>：当客户端拥有可能过期的缓存时，会携带缓存的标识 etag、时间等信息询问服务器缓存是否仍可复用，而304是告诉客户端可以<strong>复用缓存</strong></li>
+<li><strong>307 Temporary Redirect</strong>：<strong>类似302</strong>，但明确重定向后请求方法必须<strong>与原请求方法相同</strong>，不得改变</li>
+<li><strong>308 Permanent Redirect</strong>：<strong>类似301</strong>，但明确重定向后请求方法必须<strong>与原请求方法相同</strong>，不得改变</li>
+</ul>
+<h3 id="3-5-4xx"><a href="#3-5-4xx" class="headerlink" title="3.5 4xx"></a>3.5 4xx</h3><ul>
+<li><strong>400 Bad Request</strong>：服务器认为客户端出现了错误，但<strong>不能明确判断为以下哪种错误</strong>时使用此错误码。例如HTTP请求格式错误</li>
+<li><strong>401 Unauthorized</strong>：<strong>用户认证信息缺失或者不正确</strong>，导致服务器无法处理请求</li>
+<li><strong>403 Forbidden</strong>：服务器理解请求的含义，但<strong>没有权限执行</strong>此请求</li>
+<li><strong>404 Not Found</strong>：服务器没有找到对应的资源</li>
+</ul>
+<h3 id="3-6-5xx"><a href="#3-6-5xx" class="headerlink" title="3.6 5xx"></a>3.6 5xx</h3><ul>
+<li><strong>500 Internal Server Error</strong>：服务器<strong>内部错误</strong>，且不属于以下错误类型</li>
+<li><strong>501 Not Implemented</strong>：<strong>服务器不支持实现请求所需要的功能</strong> </li>
+<li><strong>502 Bad Gateway</strong>：代理服务器<strong>无法获取到合法响应</strong></li>
+<li><strong>503 Service Unavailable</strong>：服务器资源<strong>尚未准备好处理当前请求</strong></li>
+<li><strong>504 Gateway Timeout</strong>：代理服务器无法及时的<strong>从上游获得响应</strong></li>
+</ul>
+<h2 id="4-HTTP连接流程"><a href="#4-HTTP连接流程" class="headerlink" title="4 HTTP连接流程"></a>4 HTTP连接流程</h2><p><img src="http://base422.oss-cn-beijing.aliyuncs.com/httpduring.png" alt=""></p>
+<h2 id="5-长连接与短连接"><a href="#5-长连接与短连接" class="headerlink" title="5 长连接与短连接"></a>5 长连接与短连接</h2><h3 id="5-1-短连接"><a href="#5-1-短连接" class="headerlink" title="5.1 短连接"></a>5.1 短连接</h3><p>HTTP 协议最初（0.9/1.0）是个非常简单的协议，通信过程也采用了简单的“请求 - 应答”方式。</p>
+<p><strong>它底层的数据传输基于 TCP/IP，每次发送请求前需要先与服务器建立连接，收到响应报文后会立即关闭连接。</strong></p>
+<p>因为客户端与服务器的整个连接过程很短暂，不会与服务器保持长时间的连接状态，所以就被称为“短连接”（shortlived connections）。早期的 HTTP 协议也被称为是“无连接”的协议。</p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/nethttpshort.png" alt=""></p>
+<h3 id="5-2-长连接"><a href="#5-2-长连接" class="headerlink" title="5.2 长连接"></a>5.2 长连接</h3><p>针对短连接暴露出的缺点，HTTP 协议就提出了“长连接”的通信方式，也叫“持久连接”（persistent connections）、“连接保活”（keep alive）、“连接复用”（connection reuse）。<br>其实解决办法也很简单，用的就是“成本均摊”的思路，<strong>既然 TCP 的连接和关闭非常耗时间，那么就把这个时间成本由原来的一个“请求 - 应答”均摊到多个“请求 - 应答”上</strong>。<br>这样虽然不能改善 TCP 的连接效率，但基于“分母效应”，每个“请求 - 应答”的无效时间就会降低不少，整体传输效率也就提高了。<br>这里我画了一个短连接与长连接的对比示意图</p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/nethttplong.png" alt=""></p>
+<h3 id="5-3-连接相关的头字段"><a href="#5-3-连接相关的头字段" class="headerlink" title="5.3 连接相关的头字段"></a>5.3 连接相关的头字段</h3><ul>
+<li><strong>Keep-Alive</strong>：长连接<ul>
+<li>客户端请求长连接 <pre><code>- Connection: Keep-Alive</code></pre></li>
+<li>服务器表示支持长连接<ul>
+<li>Connection: Keep-Alive</li>
+</ul>
+</li>
+<li>客户端复用连接</li>
+<li>HTTP/1.1 默认支持长连接 </li>
+</ul>
+</li>
+<li><strong>Close</strong>：短连接</li>
+<li>对代理服务器的要求<ul>
+<li>不转发 Connection 列出头部，该头部仅与当前连接相关</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-4-Connection作用范围"><a href="#5-4-Connection作用范围" class="headerlink" title="5.4 Connection作用范围"></a>5.4 Connection作用范围</h3><p><strong>Connection 仅针对当前连接有效!</strong></p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netkeepalive.png" alt=""></p>
+<h3 id="5-5-桥头堵塞问题"><a href="#5-5-桥头堵塞问题" class="headerlink" title="5.5 桥头堵塞问题"></a>5.5 桥头堵塞问题</h3><p>因为 HTTP 规定报文必须是“一发一收”，这就形成了一个先进先出的“串行”队列。队列里的请求没有轻重缓急的优先级，只有入队的先后顺序，排在最前面的请求被最优先处理。<br><strong>如果队首的请求因为处理的太慢耽误了时间，那么队列里后面的所有请求也不得不跟着一起等待，结果就是其他的请求承担了不应有的时间成本</strong></p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/httpheadblocking.png" alt=""></p>
+<h4 id="5-5-1-性能优化"><a href="#5-5-1-性能优化" class="headerlink" title="5.5.1 性能优化"></a>5.5.1 性能优化</h4><p>因为“请求 - 应答”模型不能变，所以“队头阻塞”问题在HTTP/1.1 里无法解决，只能缓解，有什么办法呢？</p>
+<p><strong>通过HTTP 里的“并发连接”（concurrentconnections）来缓解此问题，也就是同时对一个域名发起多个长连接，用数量来解决质量的问题。</strong></p>
+<p>一个客户端<strong>最多对一个域名发起6~8个并发连接</strong></p>
+<p>若果是多个域名,一共可以发起并发的数量为:<strong>域名数乘以(6~8)</strong>，通过多个域名提高并发的技术我们称为<strong>域名分片</strong></p>
+<p><strong>总结:“队头阻塞”问题会导致性能下降，可以用“并发连接”和“域名分片”技术缓解</strong></p>
+<h2 id="6-HTTP-Range规范"><a href="#6-HTTP-Range规范" class="headerlink" title="6 HTTP Range规范"></a>6 HTTP Range规范</h2><h3 id="6-1-Http-Range"><a href="#6-1-Http-Range" class="headerlink" title="6.1 Http Range"></a>6.1 Http Range</h3><ul>
+<li><p>允许服务器基于客户端的请求只发送响应包体的一部分给到客户端，而客户端 自动将多个片断的包体组合成完整的体积更大的包体</p>
+<ul>
+<li><p>支持断点续传</p>
+</li>
+<li><p>支持多线程下载</p>
+</li>
+<li><p>支持视频播放器实时拖动</p>
+</li>
+</ul>
+</li>
+<li><p>服务器通过 Accept-Range 头部表示是否支持 Range 请求</p>
+<ul>
+<li>Accept-Ranges = acceptable-ranges</li>
+<li>例如:<ul>
+<li>Accept-Ranges: bytes：支持 </li>
+<li>Accept-Ranges: none：不支持</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-2-Range-请求范围的单位"><a href="#6-2-Range-请求范围的单位" class="headerlink" title="6.2 Range 请求范围的单位"></a>6.2 Range 请求范围的单位</h3><p>基于字节，设包体总长度为 10000 </p>
+<ul>
+<li><p>第 1 个 500 字节：bytes=0-499</p>
+</li>
+<li><p>第 2 个 500 字节</p>
+<ul>
+<li>bytes=500-999 </li>
+<li>bytes=500-600,601-999 •</li>
+<li>bytes=500-700,601-999</li>
+</ul>
+</li>
+<li><p>最后 1 个 500 字节</p>
+<ul>
+<li>bytes=-500 </li>
+<li>bytes=9500</li>
+</ul>
+</li>
+<li><p>仅要第 1 个和最后 1 个字节：bytes=0-0,-1 </p>
+</li>
+</ul>
+<p><strong>通过Range头部传递请求范围，如：Range: bytes=0-499</strong></p>
+<h3 id="6-3-Range-条件请求"><a href="#6-3-Range-条件请求" class="headerlink" title="6.3 Range 条件请求"></a>6.3 Range 条件请求</h3><ul>
+<li>如果客户端已经得到了 Range 响应的一部分，并想在这部分响应未过期 的情况下，获取其他部分的响应<ul>
+<li>常与 If-Unmodified-Since 或者 If-Match 头部共同使用</li>
+</ul>
+</li>
+<li>If-Range = entity-tag / HTTP-date<ul>
+<li>可以使用 Etag 或者 Last-Modified</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-4-服务器响应"><a href="#6-4-服务器响应" class="headerlink" title="6.4 服务器响应"></a>6.4 服务器响应</h3><ul>
+<li><strong>206 Partial Content</strong> :<strong>正常返回</strong>,Content-Range 头部：显示当前片断包体在完整包体中的位置</li>
+<li><strong>416 Range Not Satisfiable</strong> :<strong>请求范围不满足实际资源的大小</strong>，其中 Content-Range 中的 complete- length 显示完整响应的长度，例如:Content-Range: bytes */1234</li>
+<li><strong>200 OK</strong> :服务器<strong>不支持 Range 请求时</strong>，则以 200 返回完整的响应包体</li>
+</ul>
+<h3 id="6-5-多重范围与-multipart"><a href="#6-5-多重范围与-multipart" class="headerlink" title="6.5 多重范围与 multipart"></a>6.5 多重范围与 multipart</h3><ul>
+<li>请求：<ul>
+<li>Range: bytes=0-50, 100-150</li>
+</ul>
+</li>
+<li>响应:<ul>
+<li>Content-Type：multipart/byteranges; boundary=…</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-Cookie"><a href="#7-Cookie" class="headerlink" title="7 Cookie"></a>7 Cookie</h2><h3 id="7-1-什么是Cookie"><a href="#7-1-什么是Cookie" class="headerlink" title="7.1 什么是Cookie"></a>7.1 什么是Cookie</h3><p>保存在客户端、由浏览器维护、表示应用状态的 HTTP 头部</p>
+<ul>
+<li>存放在内存或者磁盘中</li>
+<li>服务器端生成 Cookie 在响应中通过 Set-Cookie 头部告知客户端（允许多 个 Set-Cookie 头部传递多个值）</li>
+<li>客户端得到 Cookie 后，后续请求都会 自动将 Cookie 头部携带至请求中</li>
+</ul>
+<h3 id="7-2-Cookie属性"><a href="#7-2-Cookie属性" class="headerlink" title="7.2 Cookie属性"></a>7.2 Cookie属性</h3><ul>
+<li><strong>expires-av = “Expires=” sane-cookie-date</strong> <ul>
+<li>cookie 到日期 sane-cookie-date 后失效</li>
+</ul>
+</li>
+<li><strong>max-age-av = “Max-Age=” x</strong><ul>
+<li>cookie 经过x 秒后失效。max-age 优先级高于 expires</li>
+</ul>
+</li>
+<li><strong>domain-av = “Domain=” domain-value</strong><ul>
+<li>指定 cookie 可用于哪些域名，默认可以访问当前域名</li>
+</ul>
+</li>
+<li><strong>path-av = “Path=” path-value</strong> <ul>
+<li>指定 Path 路径下才能使用 cookie</li>
+</ul>
+</li>
+<li><strong>secure-av = “Secure“</strong> <ul>
+<li>只有使用 TLS/SSL 协议（https）时才能使用 cookie</li>
+</ul>
+</li>
+<li><strong>httponly-av = “HttpOnly“</strong> <ul>
+<li>不能使用 JavaScript（Document.cookie 、XMLHttpRequest 、Request APIs）访问到 cookie</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-3-Cookie-在协议设计上的问题"><a href="#7-3-Cookie-在协议设计上的问题" class="headerlink" title="7.3 Cookie 在协议设计上的问题"></a>7.3 Cookie 在协议设计上的问题</h3><ul>
+<li>Cookie 会被附加在每个 HTTP 请求中，所以<strong>无形中增加了流量</strong></li>
+<li>由于在 HTTP 请求中的 Cookie 是明文传递的，<strong>所以安全性成问题</strong>（除非用 HTTPS）</li>
+<li>Cookie 的大小不应超过 4KB，故对于复杂的存储需求来说是不够用的</li>
+</ul>
+<h3 id="7-4-Cookie的应用"><a href="#7-4-Cookie的应用" class="headerlink" title="7.4 Cookie的应用"></a>7.4 Cookie的应用</h3><ul>
+<li><strong>身份识别</strong></li>
+<li><strong>广告追踪</strong></li>
+</ul>
+<h2 id="8-同源策略"><a href="#8-同源策略" class="headerlink" title="8 同源策略"></a>8 同源策略</h2><h3 id="8-1-定义"><a href="#8-1-定义" class="headerlink" title="8.1 定义"></a>8.1 定义</h3><p><strong>所有的浏览器都遵守同源策略,服务器不管你是不是同源都返回数据！</strong>，这个策略能够保证一个源的动态脚本不能读取或操作其他源的http响应和cookie，这就使浏览器隔离了来自不同源的内容，防止它们互相操作。所谓同源是指<code>协议、域名和端口</code>都一致的情况。</p>
+<p>简单的来说，出于安全方面的考虑，页面中的JavaScript无法访问其他服务器上的数据，即“同源策略”。而跨域就是通过某些手段来绕过同源策略限制，实现不同服务器之间通信的效果。</p>
+<h3 id="8-2-举例"><a href="#8-2-举例" class="headerlink" title="8.2 举例"></a>8.2 举例</h3><p>举例说明：</p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netcrof.png" alt=""></p>
+<h3 id="8-3-解决方案－CORS"><a href="#8-3-解决方案－CORS" class="headerlink" title="8.3 解决方案－CORS"></a>8.3 解决方案－CORS</h3><p>如果站点 A 允许站点 B 的脚本访问其资源，必须在 HTTP 响应中显式的告知浏览器：站点 B 是被允许的 :</p>
+<ul>
+<li><p>访问站点 A 的请求，浏览器应告知该请求来自站点 B</p>
+</li>
+<li><p>站点 A 的响应中，应明确哪些跨域请求是被允许的</p>
+</li>
+</ul>
+<h4 id="8-3-1-简单请求"><a href="#8-3-1-简单请求" class="headerlink" title="8.3.1 简单请求"></a>8.3.1 简单请求</h4><p>何为简单请求？ </p>
+<ul>
+<li>GET/HEAD/POST 方法之一</li>
+<li>仅能使用 CORS 安全的头部：Accept、Accept-Language、Content-Language、Content-Type </li>
+<li>Content-Type 值只能是： text/plain、multipart/form-data、application/x-www-form-urlencoded 三者其中之一 </li>
+</ul>
+<p>处理方式:</p>
+<ul>
+<li>请求中携带 Origin 头部告知来自哪个域</li>
+<li>响应中携带 Access-Control-Allow-Origin 头部表示允许哪些域</li>
+<li>浏览器放行</li>
+</ul>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netsimplerequest.png" alt=""></p>
+<h4 id="8-3-2-预检请求"><a href="#8-3-2-预检请求" class="headerlink" title="8.3.2 预检请求"></a>8.3.2 预检请求</h4><p>简单请求以外的其他请求,访问资源前需要先发起 prefilght 预检请求（方法为 OPTIONS）询问何种请求是被允许的:</p>
+<ul>
+<li>预检请求头部<ul>
+<li>Access-Control-Request-Method</li>
+<li>Access-Control-Request-Headers</li>
+</ul>
+</li>
+<li>预检请求响应 <ul>
+<li>Access-Control-Allow-Methods</li>
+<li>Access-Control-Allow-Headers</li>
+<li>Access-Control-Max-Age</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netprerequest.png" alt=""></p>
+<h3 id="8-4-响应头部"><a href="#8-4-响应头部" class="headerlink" title="8.4 响应头部"></a>8.4 响应头部</h3><ul>
+<li><strong>Access-Control-Allow-Methods</strong><ul>
+<li>在 preflight 预检请求的响应中，告知客户端后续请求允许使用的方法</li>
+</ul>
+</li>
+<li><strong>Access-Control-Allow-Headers</strong><ul>
+<li>在 preflight 预检请求的响应中，告知客户端后续请求允许携带的头部</li>
+</ul>
+</li>
+<li><strong>Access-Control-Max-Age</strong><ul>
+<li>在 preflight 预检请求的响应中，告知客户端该响应的信息可以缓存多久</li>
+</ul>
+</li>
+<li><strong>Access-Control-Expose-Headers</strong><ul>
+<li>告知浏览器哪些响应头部可以供客户端使用，默认情况下只有 Cache-Control、Content-Language、 Content-Type、Expires、Last-Modified、Pragma 可供使用 </li>
+</ul>
+</li>
+<li><strong>Access-Control-Allow-Origin</strong><ul>
+<li>告知浏览器允许哪些域访问当前资源，<code>*</code>表示允许所有域。为避免缓存错乱，响应中需要携带 Vary: Origin </li>
+</ul>
+</li>
+<li><strong>Access-Control-Allow-Credentials</strong><ul>
+<li>告知浏览器是否可以将 Credentials 暴露给客户端使用，Credentials 包含 cookie、authorization 类头部、 TLS证书等</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-缓存机制"><a href="#9-缓存机制" class="headerlink" title="9 缓存机制"></a>9 缓存机制</h2><h3 id="9-1-缓存首部字段"><a href="#9-1-缓存首部字段" class="headerlink" title="9.1 缓存首部字段"></a>9.1 缓存首部字段</h3><table>
+<thead>
+<tr>
+<th align="center">头字段</th>
+<th align="left">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>Pragma</strong></td>
+<td align="left">http1.0产物,控制缓存行为和http1.1中的Cache-Control功能类似</td>
+<td align="center">历史产物</td>
+</tr>
+<tr>
+<td align="center"><strong>Expires</strong></td>
+<td align="left">http1.0产物,Expires的值为服务端返回的到期时间，即下一次请求时，请求时间小于服务端返回的到期时间，直接使用缓存数据。</td>
+<td align="center">历史产物</td>
+</tr>
+<tr>
+<td align="center"><strong>Cache-Control</strong></td>
+<td align="left">http1.1 时期的缓存方案</td>
+<td align="center">主流使用</td>
+</tr>
+</tbody></table>
+<ul>
+<li>如果使用了Pragma: ‘no-cache’的话，再设置Expires或者Cache-Control，就没有用了，说明Pragma的权值比后两者高。</li>
+<li>如果设置了Expires之后，客户端在需要请求数据的时候，首先会对比当前系统时间和这个Expires时间，如果没有超过Expires时间，则直接读取本地磁盘中的缓存数据，不发送请求。</li>
+</ul>
+<h3 id="9-2-Cache-Control"><a href="#9-2-Cache-Control" class="headerlink" title="9.2 Cache-Control"></a>9.2 Cache-Control</h3><h4 id="9-2-1-作为请求头字段"><a href="#9-2-1-作为请求头字段" class="headerlink" title="9.2.1 作为请求头字段"></a>9.2.1 作为请求头字段</h4><p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netcache3.png" alt=""></p>
+<h4 id="9-2-2-作为响应字段"><a href="#9-2-2-作为响应字段" class="headerlink" title="9.2.2 作为响应字段"></a>9.2.2 作为响应字段</h4><p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netcache4.png" alt=""></p>
+<h3 id="9-3-缓存校验字段"><a href="#9-3-缓存校验字段" class="headerlink" title="9.3 缓存校验字段"></a>9.3 缓存校验字段</h3><h4 id="9-3-1-Last-Modified"><a href="#9-3-1-Last-Modified" class="headerlink" title="9.3.1 Last-Modified"></a>9.3.1 Last-Modified</h4><p>服务器将资源传递给客户端时，会将资源最后更改的时间以“Last-Modified: GMT”的形式加在实体首部上一起返回给客户端。</p>
+<pre><code class="http">Last-Modified: Fri, 22 Jul 2016 01:47:00 GMT</code></pre>
+<p>客户端会为资源标记上该信息，下次再次请求时，会把该信息附带在请求报文中一并带给服务器去做检查，若传递的时间值与服务器上该资源最终修改时间是一致的，则说明该资源没有被修改过，直接返回304状态码，内容为空，这样就节省了传输数据量 。</p>
+<p>如果两个时间不一致，则服务器会发回该资源并返回200状态码，和第一次请求时类似。这样保证不向客户端重复发出资源，也保证当服务器有变化时，客户端能够得到最新的资源。一个304响应比一个静态资源通常小得多，这样就节省了网络带宽。</p>
+<p>至于传递标记起来的最终修改时间的请求报文为：</p>
+<p><strong>If-Modified-Since: Last-Modified-value</strong></p>
+<p>示例为:</p>
+<pre><code class="http">If-Modified-Since: Thu, 31 Mar 2016 07:07:52 GMT</code></pre>
+<p>该请求首部告诉服务器如果客户端传来的最后修改时间与服务器上的一致，则直接回送304 和响应报头即可。<br>当前各浏览器均是使用的该请求首部来向服务器传递保存的 Last-Modified 值。</p>
+<p><strong>Last-Modified 存在一定问题，如果在服务器上，一个资源被修改了，但其实际内容根本没发生改变，会因为Last-Modified时间匹配不上而返回了整个实体给客户端（即使客户端缓存里有个一模一样的资源</strong>）。</p>
+<h4 id="9-3-2-ETag"><a href="#9-3-2-ETag" class="headerlink" title="9.3.2 ETag"></a>9.3.2 ETag</h4><p>为了解决上述Last-Modified可能存在的不准确的问题，Http1.1还推出了 ETag 实体首部字段。 服务器会通过某种算法，给资源计算得出一个唯一标志符（比如md5标志），在把资源响应给客户端的时候，会在实体首部上“ETag: 唯一标识符”一起返回给客户端。例如：</p>
+<pre><code class="http">Etag: &quot;5d8c72a5edda8d6a:3239&quot;</code></pre>
+<p>客户端会保留该 ETag 字段，并在下一次请求时将其一并带过去给服务器。服务器只需要比较客户端传来的ETag跟自己服务器上该资源的ETag是否一致，就能很好地判断资源相对客户端而言是否被修改过了。<br>如果服务器发现ETag匹配不上，那么直接以常规GET 200回包形式将新的资源（当然也包括了新的ETag）发给客户端；如果ETag是一致的，则直接返回304知会客户端直接使用本地缓存即可。</p>
+<p>那么客户端是如何把标记在资源上的 ETag 传回给服务器的呢？请求报文中有两个首部字段可以带上 ETag 值：</p>
+<p><strong>If-None-Match: ETag-value</strong><br>示例为:</p>
+<pre><code class="http">If-None-Match: &quot;5d8c72a5edda8d6a:3239&quot; </code></pre>
+<p>告诉服务端如果 ETag 没匹配上需要重发资源数据，否则直接回送304 和响应报头即可。 当前各浏览器均是使用的该请求首部来向服务器传递保存的 ETag 值。</p>
+<h3 id="9-4-缓存流程图"><a href="#9-4-缓存流程图" class="headerlink" title="9.4 缓存流程图"></a>9.4 缓存流程图</h3><p><img src="http://base422.oss-cn-beijing.aliyuncs.com/netcachelc.png" alt=""></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存','#Kafka','#消息队列','#RabbitMQ','#Elaticsearch','#分布式','#zookeeper','#Linux命令','#Linux','#系统编程','#网络','#HTTP','#TCP',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>

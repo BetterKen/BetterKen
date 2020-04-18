@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>6.信号 | KenBetter</title>
+  <meta name="keywords" content=" Linux , 系统编程 ">
+  <meta name="description" content="6.信号 | KenBetter">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="aaaaaa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KenBetter">
+<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta property="og:site_name" content="KenBetter">
+<meta property="og:description" content="aaaaaa">
+<meta property="og:locale" content="zh">
+<meta property="article:published_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:modified_time" content="2020-05-01T15:24:44.067Z">
+<meta property="article:author" content="KenBetter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="http://base422.oss-cn-beijing.aliyuncs.com/k.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="http://base422.oss-cn-beijing.aliyuncs.com/avatar.jpg" />
+</a>
+<div class="author">
+    <span>KenBetter</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/BetterKen" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+        <a title="email" href="mailto:gaosong0301#foxmail.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(94)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库"><i class="fold iconfont icon-right"></i>数据库<small>(11)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Mysql">Mysql<small>(11)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="中间件"><i class="fold iconfont icon-right"></i>中间件<small>(53)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Redis">Redis<small>(20)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="消息队列">消息队列<small>(13)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="Elaticsearch">Elaticsearch<small>(20)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+            <li><div data-rel="分布式">分布式<small>(5)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="基础"><i class="fold iconfont icon-right"></i>基础<small>(25)</small></div>
+                
+                    <ul class="sub hide">
+                        
+                        <li><div data-rel="Linux命令">Linux命令<small>(8)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="Linux系统编程">Linux系统编程<small>(11)</small></div>
+                            
+                        </li>
+                            
+                        <li><div data-rel="网络">网络<small>(6)</small></div>
+                            
+                        </li>
+                            
+                    </ul>
+                
+            </li>
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+        
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">我是谁</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="94">
+<input type="hidden" id="yelog_site_word_count" value="133.6k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text"
+               placeholder="以 in: 开头进行全文搜索"/>
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none"/>
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Mysql</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Redis</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">缓存</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Kafka</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">消息队列</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">RabbitMQ</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">Elaticsearch</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">zookeeper</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">Linux命令</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Linux</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">系统编程</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">网络</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">HTTP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">TCP</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+        <div id="local-search-result">
+
+        </div>
+    
+    <nav id="title-list-nav">
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/13/2-Mysql%E4%BA%A7%E5%93%81%E7%BA%BF/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="2.Mysql产品线">2.Mysql产品线</span>
+                <span class="post-date"
+                      title="2020-02-13 13:15:16">2020/02/13</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/14/3-Mysql%E5%AE%89%E8%A3%85%E5%8F%8A%E5%88%9D%E5%A7%8B%E5%8C%96/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="3.Mysql安装及初始化">3.Mysql安装及初始化</span>
+                <span class="post-date"
+                      title="2020-02-14 13:15:17">2020/02/14</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/4-Mysql%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="4.MySQL体系结构">4.MySQL体系结构</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/15/5-MysqlSQL%E5%9F%BA%E7%A1%80/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="5.MysqlSQL基础">5.MysqlSQL基础</span>
+                <span class="post-date"
+                      title="2020-02-15 13:15:18">2020/02/15</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/7-Mysql%E4%BC%98%E5%8C%96%E5%99%A8%E7%AE%97%E6%B3%95/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="7.Mysql优化器算法">7.Mysql优化器算法</span>
+                <span class="post-date"
+                      title="2020-02-16 19:17:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/8-MysqlExplain%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="8.MysqlExplain介绍">8.MysqlExplain介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/6-Mysql%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="6.Mysql索引介绍">6.Mysql索引介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:16:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/16/9-MysqlProfile%E4%BB%8B%E7%BB%8D/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="9.MysqlProfile介绍">9.MysqlProfile介绍</span>
+                <span class="post-date"
+                      title="2020-02-16 19:18:10">2020/02/16</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/12/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="1.数据库分类">1.数据库分类</span>
+                <span class="post-date"
+                      title="2020-02-12 13:15:15">2020/02/12</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/11-Mysql%E6%97%A5%E5%BF%97/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="11.Mysql日志">11.Mysql日志</span>
+                <span class="post-date"
+                      title="2020-02-18 20:16:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="数据库 Mysql "
+               href="/2020/02/18/10-MysqlInnodb%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"
+               data-tag="Mysql"
+               data-author="">
+                <span class="post-title" title="10.MysqlInnodb存储引擎">10.MysqlInnodb存储引擎</span>
+                <span class="post-date"
+                      title="2020-02-18 20:15:00">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/1-Redis%E7%AE%80%E4%BB%8B/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="1.Redis简介">1.Redis简介</span>
+                <span class="post-date"
+                      title="2020-02-18 13:15:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/2-Redis%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="2.Redis数据操作">2.Redis数据操作</span>
+                <span class="post-date"
+                      title="2020-02-18 13:16:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/3-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-SDS/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="3.Redis数据结构——SDS">3.Redis数据结构——SDS</span>
+                <span class="post-date"
+                      title="2020-02-18 13:18:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/18/4-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-listNode/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="4.Redis数据结构——listNode">4.Redis数据结构——listNode</span>
+                <span class="post-date"
+                      title="2020-02-18 13:19:15">2020/02/18</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/7-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-iniset/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="7.Redis数据结构——iniset">7.Redis数据结构——iniset</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/5-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%AD%97%E5%85%B8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="5.Redis数据结构——字典">5.Redis数据结构——字典</span>
+                <span class="post-date"
+                      title="2020-02-19 13:19:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/19/6-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E8%B7%B3%E8%A1%A8/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="6.Redis数据结构——跳表">6.Redis数据结构——跳表</span>
+                <span class="post-date"
+                      title="2020-02-19 13:20:15">2020/02/19</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/12-Redis%E6%8C%81%E4%B9%85%E5%8C%96-RDB/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="12.Redis持久化——RDB">12.Redis持久化——RDB</span>
+                <span class="post-date"
+                      title="2020-02-21 11:37:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/14-Redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="14.Redis持久化总结">14.Redis持久化总结</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/15-Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="15.Redis主从架构">15.Redis主从架构</span>
+                <span class="post-date"
+                      title="2020-02-22 17:38:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/17-RedisCluster/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="17.RedisCluster">17.RedisCluster</span>
+                <span class="post-date"
+                      title="2020-02-22 17:40:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/18-Redis%E9%AB%98%E5%8F%AF%E7%94%A8%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="18.Redis高可用模式总结">18.Redis高可用模式总结</span>
+                <span class="post-date"
+                      title="2020-02-23 17:40:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="19.Redis雪崩击穿穿透">19.Redis雪崩击穿穿透</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="20.Redis缓存数据库读写一致性">20.Redis缓存数据库读写一致性</span>
+                <span class="post-date"
+                      title="2020-02-23 17:41:18">2020/02/23</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/9-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-zipmap/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="9.Redis数据结构——zipmap">9.Redis数据结构——zipmap</span>
+                <span class="post-date"
+                      title="2020-02-20 17:22:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/21/13-Redis%E6%8C%81%E4%B9%85%E5%8C%96-AOF/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="13.Redis持久化——AOF">13.Redis持久化——AOF</span>
+                <span class="post-date"
+                      title="2020-02-21 11:38:18">2020/02/21</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/22/16-Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="16.Redis哨兵模式">16.Redis哨兵模式</span>
+                <span class="post-date"
+                      title="2020-02-22 17:39:18">2020/02/22</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/8-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ziplist/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="8.Redis数据结构——ziplist">8.Redis数据结构——ziplist</span>
+                <span class="post-date"
+                      title="2020-02-20 17:21:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/11-Redis%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="11.Redis过期机制">11.Redis过期机制</span>
+                <span class="post-date"
+                      title="2020-02-20 17:24:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Redis "
+               href="/2020/02/20/10-Redis%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-object/"
+               data-tag="Redis,缓存"
+               data-author="">
+                <span class="post-title" title="10.Redis数据结构——object">10.Redis数据结构——object</span>
+                <span class="post-date"
+                      title="2020-02-20 17:23:16">2020/02/20</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka可靠性保证">Kafka可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:01:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/Kafka%E5%92%8CRabbitmq%E7%9A%84%E6%AF%94%E8%BE%83/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="Kafka和RabbitMQ的比较">Kafka和RabbitMQ的比较</span>
+                <span class="post-date"
+                      title="2020-02-27 20:40:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E4%BB%8B%E7%BB%8D/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ介绍">RabbitMQ介绍</span>
+                <span class="post-date"
+                      title="2020-02-25 19:41:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka幂等性保证">Kafka幂等性保证</span>
+                <span class="post-date"
+                      title="2020-02-26 20:02:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ数据可靠性保证">RabbitMQ数据可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ集群模式">RabbitMQ集群模式</span>
+                <span class="post-date"
+                      title="2020-02-25 19:45:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息幂等性保证">消息幂等性保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:43:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E5%A4%84%E7%90%86/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息积压处理">消息积压处理</span>
+                <span class="post-date"
+                      title="2020-03-01 21:42:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列可靠性保证">消息队列可靠性保证</span>
+                <span class="post-date"
+                      title="2020-02-27 20:41:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/03/01/%E6%B6%88%E6%81%AF%E9%A1%BA%E5%BA%8F%E6%80%A7%E7%9A%84%E4%BF%9D%E8%AF%81/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息顺序性的保证">消息顺序性的保证</span>
+                <span class="post-date"
+                      title="2020-03-01 21:45:00">2020/03/01</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/27/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BD%9C%E7%94%A8/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="消息队列的作用">消息队列的作用</span>
+                <span class="post-date"
+                      title="2020-02-27 20:42:00">2020/02/27</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/26/Kafka%E4%BB%8B%E7%BB%8D/"
+               data-tag="Kafka,消息队列"
+               data-author="">
+                <span class="post-title" title="Kafka介绍">Kafka介绍</span>
+                <span class="post-date"
+                      title="2020-02-26 20:00:18">2020/02/26</span>
+            </a>
+
+        
+            <a 
+               class="中间件 消息队列 "
+               href="/2020/02/25/RabbitMQ%E7%89%B9%E6%AE%8A%E9%98%9F%E5%88%97/"
+               data-tag="消息队列,RabbitMQ"
+               data-author="">
+                <span class="post-title" title="RabbitMQ特殊队列">RabbitMQ特殊队列</span>
+                <span class="post-date"
+                      title="2020-02-25 19:42:18">2020/02/25</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/10-ES%E9%9B%86%E7%BE%A4%E5%86%8D%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="10.ES集群再进阶">10.ES集群再进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:01:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/1-ES%E7%AE%80%E4%BB%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="1.ES简介">1.ES简介</span>
+                <span class="post-date"
+                      title="2020-03-02 21:00:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/11-ES%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="11.ES集群规划">11.ES集群规划</span>
+                <span class="post-date"
+                      title="2020-03-04 19:02:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/13-ES%E5%88%86%E5%B8%83%E5%BC%8F%E6%9F%A5%E8%AF%A2%E5%8F%8A%E7%9B%B8%E5%85%B3%E6%80%A7%E7%AE%97%E5%88%86/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="13.ES分布式查询及相关性算分">13.ES分布式查询及相关性算分</span>
+                <span class="post-date"
+                      title="2020-03-04 19:10:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/14-ES%E7%9A%84%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="14.ES的并发控制">14.ES的并发控制</span>
+                <span class="post-date"
+                      title="2020-03-04 19:12:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/15-ES%E5%86%99%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="15.ES写性能优化">15.ES写性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:10:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/05/16-ES%E8%AF%BB%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="16.ES读性能优化">16.ES读性能优化</span>
+                <span class="post-date"
+                      title="2020-03-05 20:14:00">2020/03/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/2-ES%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="2.ES核心概念及基本操作">2.ES核心概念及基本操作</span>
+                <span class="post-date"
+                      title="2020-03-02 21:01:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/3-Lucene%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="3.Lucene倒排索引">3.Lucene倒排索引</span>
+                <span class="post-date"
+                      title="2020-03-02 21:02:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/02/4-ES%E5%88%86%E8%AF%8D%E5%99%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="4.ES分词器">4.ES分词器</span>
+                <span class="post-date"
+                      title="2020-03-02 21:03:00">2020/03/02</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/6-ES%E7%AE%97%E6%B3%95/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="6.ES算法">6.ES算法</span>
+                <span class="post-date"
+                      title="2020-03-03 22:01:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/7-ES%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="7.ES分布式集群">7.ES分布式集群</span>
+                <span class="post-date"
+                      title="2020-03-03 22:03:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/5-ESMaping%E4%BB%8B%E7%BB%8D/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="5.ESMapping介绍">5.ESMapping介绍</span>
+                <span class="post-date"
+                      title="2020-03-03 22:00:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/03/8-ES%E9%9B%86%E7%BE%A4%E5%88%86%E7%89%87%E4%B8%8E%E6%96%87%E6%A1%A3%E5%AD%98%E5%82%A8/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="8.ES集群分片与文档存储">8.ES集群分片与文档存储</span>
+                <span class="post-date"
+                      title="2020-03-03 22:05:00">2020/03/03</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/9-ES%E9%9B%86%E7%BE%A4%E8%BF%9B%E9%98%B6/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="9.ES集群进阶">9.ES集群进阶</span>
+                <span class="post-date"
+                      title="2020-03-04 19:00:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/03/04/12-ES%E5%9F%BA%E6%9C%AC%E6%A3%80%E7%B4%A2%E7%B1%BB%E5%9E%8B/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="12.ES查询">12.ES查询</span>
+                <span class="post-date"
+                      title="2020-03-04 19:04:00">2020/03/04</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/17-ES%E8%BF%90%E7%BB%B4/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="17.ES运维">17.ES运维</span>
+                <span class="post-date"
+                      title="2020-04-05 23:00:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/18-ES%E6%90%9C%E7%B4%A2%E6%8F%90%E7%A4%BA/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="18.ES搜索提示">18.ES搜索提示</span>
+                <span class="post-date"
+                      title="2020-04-05 23:01:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/19-ES-Reindex/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="19.ESReindex">19.ESReindex</span>
+                <span class="post-date"
+                      title="2020-04-05 23:05:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="中间件 Elaticsearch "
+               href="/2020/04/05/20-ES%E5%88%86%E7%89%87%E5%8F%8A%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/"
+               data-tag="Elaticsearch"
+               data-author="">
+                <span class="post-title" title="20.ES分片及生命周期">20.ES分片及生命周期</span>
+                <span class="post-date"
+                      title="2020-04-05 23:10:00">2020/04/05</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/CAS%E7%9A%84%E5%8E%9F%E7%90%86/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="CAS原理">CAS原理</span>
+                <span class="post-date"
+                      title="2020-04-06 20:00:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/07/Zookeeper%E7%AE%80%E4%BB%8B/"
+               data-tag="分布式,zookeeper"
+               data-author="">
+                <span class="post-title" title="Zookeeper简介">Zookeeper简介</span>
+                <span class="post-date"
+                      title="2020-04-07 22:00:00">2020/04/07</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/%E4%B9%90%E8%A7%82%E9%94%81%E4%B8%8E%E6%82%B2%E8%A7%82%E9%94%81/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="乐观锁与悲观锁">乐观锁与悲观锁</span>
+                <span class="post-date"
+                      title="2020-04-06 20:01:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/07/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="雪花算法">雪花算法</span>
+                <span class="post-date"
+                      title="2020-04-07 22:05:00">2020/04/07</span>
+            </a>
+
+        
+            <a 
+               class="分布式 "
+               href="/2020/04/06/%E5%88%86%E5%B8%83%E5%BC%8F%E9%80%89%E4%B8%BE/"
+               data-tag="分布式"
+               data-author="">
+                <span class="post-title" title="分布式选举">分布式选举</span>
+                <span class="post-date"
+                      title="2020-04-06 20:03:00">2020/04/06</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux代码分析命令">Linux代码分析命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:15:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E6%9F%A5%E6%89%BE%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux查找命令">Linux查找命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:05:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux性能分析命令">Linux性能分析命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:10:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/08/%E7%BD%91%E7%BB%9C%E5%91%BD%E4%BB%A4/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux网络命令">Linux网络命令</span>
+                <span class="post-date"
+                      title="2020-04-08 21:00:00">2020/04/08</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/11-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="11.错误处理机制">11.错误处理机制</span>
+                <span class="post-date"
+                      title="2020-04-18 21:36:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/2-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="2.文件系统">2.文件系统</span>
+                <span class="post-date"
+                      title="2020-04-14 20:02:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/5-%E8%BF%9B%E7%A8%8B%E9%97%B4%E5%85%B3%E7%B3%BB/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="5.进程间关系">5.进程间关系</span>
+                <span class="post-date"
+                      title="2020-04-16 21:00:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/7-%E7%BA%BF%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="7.线程">7.线程</span>
+                <span class="post-date"
+                      title="2020-04-16 21:04:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTP2%E5%92%8C3/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTP2和3">HTTP2和3</span>
+                <span class="post-date"
+                      title="2020-04-13 19:45:00">2020/04/13</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTPS%E5%92%8CTLS/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTPS和TLS">HTTPS和TLS</span>
+                <span class="post-date"
+                      title="2020-04-13 19:42:00">2020/04/13</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/OSI%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="OSI模型">OSI模型</span>
+                <span class="post-date"
+                      title="2020-04-11 21:00:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/TCP%E5%85%B3%E9%97%AD%E8%BF%9E%E6%8E%A5/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="TCP关闭连接">TCP关闭连接</span>
+                <span class="post-date"
+                      title="2020-04-11 21:02:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/11/TCP%E5%8D%8F%E8%AE%AE/"
+               data-tag="网络,TCP"
+               data-author="">
+                <span class="post-title" title="TCP协议">TCP协议</span>
+                <span class="post-date"
+                      title="2020-04-11 21:01:00">2020/04/11</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E6%B8%85%E9%99%A4n%E5%A4%A9%E5%89%8D%E7%9A%84%E6%97%A5%E5%BF%97/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux清除n天前的日志">Linux清除n天前的日志</span>
+                <span class="post-date"
+                      title="2020-04-09 20:00:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E7%BB%9F%E8%AE%A1%E8%AE%BF%E9%97%AE%E6%AC%A1%E6%95%B0%E5%89%8D%E5%8D%81%E7%9A%84IP/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux统计访问次数最多的十个ip">Linux统计访问次数最多的十个ip</span>
+                <span class="post-date"
+                      title="2020-04-09 20:01:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E7%BB%9F%E8%AE%A1%E8%AF%8D%E9%A2%91/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux统计词频">Linux统计词频</span>
+                <span class="post-date"
+                      title="2020-04-09 20:05:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux命令 "
+               href="/2020/04/09/%E8%BD%AC%E7%BD%AE%E6%96%87%E4%BB%B6/"
+               data-tag="Linux命令"
+               data-author="">
+                <span class="post-title" title="Linux转置文件">Linux转置文件</span>
+                <span class="post-date"
+                      title="2020-04-09 20:10:00">2020/04/09</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/1-%E6%96%87%E4%BB%B6IO/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="1.文件系统IO">1.文件系统IO</span>
+                <span class="post-date"
+                      title="2020-04-14 20:00:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/10-%E5%A4%9A%E8%B7%AFIO%E8%BD%AC%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="10.多路IO转接服务器">10.多路IO转接服务器</span>
+                <span class="post-date"
+                      title="2020-04-18 21:34:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/3-%E8%BF%9B%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="3.进程">3.进程</span>
+                <span class="post-date"
+                      title="2020-04-14 20:04:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/14/4-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="4.进程间通信">4.进程间通信</span>
+                <span class="post-date"
+                      title="2020-04-14 20:05:00">2020/04/14</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/16/6-%E4%BF%A1%E5%8F%B7/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="6.信号">6.信号</span>
+                <span class="post-date"
+                      title="2020-04-16 21:02:00">2020/04/16</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/8-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="8.线程同步">8.线程同步</span>
+                <span class="post-date"
+                      title="2020-04-18 21:30:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 Linux系统编程 "
+               href="/2020/04/18/9-socket%E7%BC%96%E7%A8%8B/"
+               data-tag="Linux,系统编程"
+               data-author="">
+                <span class="post-title" title="9.Socket编程">9.Socket编程</span>
+                <span class="post-date"
+                      title="2020-04-18 21:31:00">2020/04/18</span>
+            </a>
+
+        
+            <a 
+               class="基础 网络 "
+               href="/2020/04/13/HTTP%E5%8D%8F%E8%AE%AE/"
+               data-tag="网络,HTTP"
+               data-author="">
+                <span class="post-title" title="HTTP协议">HTTP协议</span>
+                <span class="post-date"
+                      title="2020-04-13 19:40:00">2020/04/13</span>
+            </a>
+
+        
+    </nav>
+</div>
+
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-6-信号" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">6.信号</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="基础">基础</a>/
+            
+                <a  data-rel="Linux系统编程">Linux系统编程</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Linux</a>
+            
+            <a class="color5">系统编程</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:&nbsp;2020-04-16</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>总字数:3.6k字&nbsp;&nbsp;</span>
+        <span>阅读时长≈14分钟</span>
+        
+
+        
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-信号概念"><span class="toc-text">6.1 信号概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-1-编号"><span class="toc-text">6.1.1 编号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-2-动作类型"><span class="toc-text">6.1.2 动作类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-2-1-默认动作"><span class="toc-text">6.1.2.1 默认动作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-2-详细说明"><span class="toc-text">6.1.2 详细说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-kill"><span class="toc-text">6.2 kill</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-阻塞信号"><span class="toc-text">6.3 阻塞信号</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-1-信号在内核中的表示"><span class="toc-text">6.3.1 信号在内核中的表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-2-信号集操作函数"><span class="toc-text">6.3.2 信号集操作函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-3-sigprocmask"><span class="toc-text">6.3.3 sigprocmask</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-4-sigpending"><span class="toc-text">6.3.4 sigpending</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-5-demo"><span class="toc-text">6.3.5 demo</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-信号捕捉"><span class="toc-text">6.4 信号捕捉</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-1-内核如何实现信号的捕捉"><span class="toc-text">6.4.1 内核如何实现信号的捕捉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-2-signaction"><span class="toc-text">6.4.2 signaction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-3-pause"><span class="toc-text">6.4.3 pause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-4-demo"><span class="toc-text">6.4.4 demo</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="6-1-信号概念"><a href="#6-1-信号概念" class="headerlink" title="6.1 信号概念"></a>6.1 信号概念</h2><p><strong>处理时间时发送的不同类型的通知</strong></p>
+<h3 id="6-1-1-编号"><a href="#6-1-1-编号" class="headerlink" title="6.1.1 编号"></a>6.1.1 编号</h3><pre><code class="shell">ken@Ken:~$ kill -l
+ 1) SIGHUP     2) SIGINT     3) SIGQUIT     4) SIGILL     5) SIGTRAP
+ 6) SIGABRT     7) SIGBUS     8) SIGFPE     9) SIGKILL    10) SIGUSR1
+11) SIGSEGV    12) SIGUSR2    13) SIGPIPE    14) SIGALRM    15) SIGTERM
+16) SIGSTKFLT    17) SIGCHLD    18) SIGCONT    19) SIGSTOP    20) SIGTSTP
+21) SIGTTIN    22) SIGTTOU    23) SIGURG    24) SIGXCPU    25) SIGXFSZ
+26) SIGVTALRM    27) SIGPROF    28) SIGWINCH    29) SIGIO    30) SIGPWR
+31) SIGSYS    34) SIGRTMIN    35) SIGRTMIN+1    36) SIGRTMIN+2    37) SIGRTMIN+3
+38) SIGRTMIN+4    39) SIGRTMIN+5    40) SIGRTMIN+6    41) SIGRTMIN+7    42) SIGRTMIN+8
+43) SIGRTMIN+9    44) SIGRTMIN+10    45) SIGRTMIN+11    46) SIGRTMIN+12    47) SIGRTMIN+13
+48) SIGRTMIN+14    49) SIGRTMIN+15    50) SIGRTMAX-14    51) SIGRTMAX-13    52) SIGRTMAX-12
+53) SIGRTMAX-11    54) SIGRTMAX-10    55) SIGRTMAX-9    56) SIGRTMAX-8    57) SIGRTMAX-7
+58) SIGRTMAX-6    59) SIGRTMAX-5    60) SIGRTMAX-4    61) SIGRTMAX-3    62) SIGRTMAX-2
+63) SIGRTMAX-1    64) SIGRTMAX    </code></pre>
+<h3 id="6-1-2-动作类型"><a href="#6-1-2-动作类型" class="headerlink" title="6.1.2 动作类型"></a>6.1.2 动作类型</h3><ul>
+<li><strong>Term表示终止当前进程.</strong></li>
+<li><strong>Core表示终止当前进程并且Core Dump（Core Dump 用于gdb调试）.</strong></li>
+<li><strong>Ign表示忽略该信号.</strong></li>
+<li><strong>Stop表示停止,暂停当前进程.</strong> </li>
+<li><strong>Cont表示继续执行先前停止的进程,继续</strong></li>
+</ul>
+<h4 id="6-1-2-1-默认动作"><a href="#6-1-2-1-默认动作" class="headerlink" title="6.1.2.1 默认动作"></a>6.1.2.1 默认动作</h4><table>
+<thead>
+<tr>
+<th align="center">Signal</th>
+<th align="center">Value</th>
+<th align="center">Action</th>
+<th align="center">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">SIGHUP</td>
+<td align="center">1</td>
+<td align="center">Term</td>
+<td align="center">Hangup detected on controlling terminal or death of controlling process</td>
+</tr>
+<tr>
+<td align="center">SIGINT</td>
+<td align="center">2</td>
+<td align="center">Term</td>
+<td align="center">Interrupt from keyboard</td>
+</tr>
+<tr>
+<td align="center">SIGQUIT</td>
+<td align="center">3</td>
+<td align="center">Core</td>
+<td align="center">Quit from keyboard</td>
+</tr>
+<tr>
+<td align="center">SIGILL</td>
+<td align="center">4</td>
+<td align="center">Core</td>
+<td align="center">Illegal Instruction</td>
+</tr>
+<tr>
+<td align="center">SIGABRT</td>
+<td align="center">6</td>
+<td align="center">Core</td>
+<td align="center">Abort signal from abort(3)</td>
+</tr>
+<tr>
+<td align="center">SIGFPE</td>
+<td align="center">8</td>
+<td align="center">Core</td>
+<td align="center">Floating point exception</td>
+</tr>
+<tr>
+<td align="center">SIGKILL</td>
+<td align="center">9</td>
+<td align="center">Term</td>
+<td align="center">Kill signal</td>
+</tr>
+<tr>
+<td align="center">SIGSEGV</td>
+<td align="center">11</td>
+<td align="center">Core</td>
+<td align="center">Invalid memory reference</td>
+</tr>
+<tr>
+<td align="center">SIGPIPE</td>
+<td align="center">13</td>
+<td align="center">Term</td>
+<td align="center">Broken pipe: write to pipe with no readers</td>
+</tr>
+<tr>
+<td align="center">SIGALRM</td>
+<td align="center">14</td>
+<td align="center">Term</td>
+<td align="center">Timer signal from alarm(2)</td>
+</tr>
+<tr>
+<td align="center">SIGTERM</td>
+<td align="center">15</td>
+<td align="center">Term</td>
+<td align="center">Termination signal</td>
+</tr>
+<tr>
+<td align="center">SIGUSR1</td>
+<td align="center">30,10,16</td>
+<td align="center">Term</td>
+<td align="center">User-defined signal 1</td>
+</tr>
+<tr>
+<td align="center">SIGUSR2</td>
+<td align="center">31,12,17</td>
+<td align="center">Term</td>
+<td align="center">User-defined signal 2</td>
+</tr>
+<tr>
+<td align="center">SIGCHLD</td>
+<td align="center">20,17,18</td>
+<td align="center">Ign</td>
+<td align="center">Child stopped or terminated</td>
+</tr>
+<tr>
+<td align="center">SIGCONT</td>
+<td align="center">19,18,25</td>
+<td align="center">Cont</td>
+<td align="center">Continue if stopped</td>
+</tr>
+<tr>
+<td align="center">SIGSTOP</td>
+<td align="center">17,19,23</td>
+<td align="center">Stop</td>
+<td align="center">Stop process</td>
+</tr>
+<tr>
+<td align="center">SIGTSTP</td>
+<td align="center">18,20,24</td>
+<td align="center">Stop</td>
+<td align="center">Stop typed at tty</td>
+</tr>
+<tr>
+<td align="center">SIGTTIN</td>
+<td align="center">21,21,26</td>
+<td align="center">Stop</td>
+<td align="center">tty input for background process</td>
+</tr>
+<tr>
+<td align="center">SIGTTOU</td>
+<td align="center">22,22,27</td>
+<td align="center">Stop</td>
+<td align="center">tty output for background process</td>
+</tr>
+</tbody></table>
+<h3 id="6-1-2-详细说明"><a href="#6-1-2-详细说明" class="headerlink" title="6.1.2 详细说明"></a>6.1.2 详细说明</h3><pre><code class="c">1) SIGHUP:当用户退出shell时，由该shell启动的所有进程将收到这个信号，默认动作为终止进程
+2）SIGINT：当用户按下了&lt;Ctrl+C&gt;组合键时，用户终端向正在运行中的由该终端启动的程序发出此信号。默认动
+作为终止里程。
+3）SIGQUIT：当用户按下&lt;ctrl+\&gt;组合键时产生该信号，用户终端向正在运行中的由该终端启动的程序发出些信
+号。默认动作为终止进程。
+4）SIGILL：CPU检测到某进程执行了非法指令。默认动作为终止进程并产生core文件
+5）SIGTRAP：该信号由断点指令或其他 trap指令产生。默认动作为终止里程 并产生core文件。
+6) SIGABRT:调用abort函数时产生该信号。默认动作为终止进程并产生core文件。
+7）SIGBUS：非法访问内存地址，包括内存对齐出错，默认动作为终止进程并产生core文件。
+8）SIGFPE：在发生致命的运算错误时发出。不仅包括浮点运算错误，还包括溢出及除数为0等所有的算法错误。默
+认动作为终止进程并产生core文件。
+9）SIGKILL：无条件终止进程。本信号不能被忽略，处理和阻塞。默认动作为终止进程。它向系统管理员提供了可
+以杀死任何进程的方法。
+10）SIGUSE1：用户定义 的信号。即程序员可以在程序中定义并使用该信号。默认动作为终止进程。
+11）SIGSEGV：指示进程进行了无效内存访问。默认动作为终止进程并产生core文件。
+12）SIGUSR2：这是另外一个用户自定义信号 ，程序员可以在程序中定义 并使用该信号。默认动作为终止进程。1
+13）SIGPIPE：Broken pipe向一个没有读端的管道写数据。默认动作为终止进程。
+14) SIGALRM:定时器超时，超时的时间 由系统调用alarm设置。默认动作为终止进程。
+15）SIGTERM：程序结束信号，与SIGKILL不同的是，该信号可以被阻塞和终止。通常用来要示程序正常退出。执行
+shell命令Kill时，缺省产生这个信号。默认动作为终止进程。
+16）SIGCHLD：子进程结束时，父进程会收到这个信号。默认动作为忽略这个信号。
+17）SIGCONT：停止进程的执行。信号不能被忽略，处理和阻塞。默认动作为终止进程。
+18）SIGTTIN：后台进程读终端控制台。默认动作为暂停进程。
+19）SIGSTOP：停止进程的运行。按下&lt;ctrl+z&gt;组合键时发出这个信号。默认动作为暂停进程。
+21）SIGTTOU:该信号类似于SIGTTIN，在后台进程要向终端输出数据时发生。默认动作为暂停进程。
+22）SIGURG：套接字上有紧急数据时，向当前正在运行的进程发出些信号，报告有紧急数据到达。如网络带外数据
+到达，默认动作为忽略该信号。
+23）SIGXFSZ：进程执行时间超过了分配给该进程的CPU时间 ，系统产生该信号并发送给该进程。默认动作为终止
+进程。
+24）SIGXFSZ：超过文件的最大长度设置。默认动作为终止进程。
+25）SIGVTALRM：虚拟时钟超时时产生该信号。类似于SIGALRM，但是该信号只计算该进程占用CPU的使用时间。默
+认动作为终止进程。
+26）SGIPROF：类似于SIGVTALRM，它不公包括该进程占用CPU时间还包括执行系统调用时间。默认动作为终止进
+程。
+27）SIGWINCH：窗口变化大小时发出。默认动作为忽略该信号。
+28）SIGIO：此信号向进程指示发出了一个异步IO事件。默认动作为忽略。
+29）SIGPWR：关机。默认动作为终止进程。
+30）SIGSYS：无效的系统调用。默认动作为终止进程并产生core文件。
+31）SIGRTMIN～（64）SIGRTMAX：LINUX的实时信号，它们没有固定的含义（可以由用户自定义）。所有的实时信
+号的默认动作都为终止进程。</code></pre>
+<h2 id="6-2-kill"><a href="#6-2-kill" class="headerlink" title="6.2 kill"></a>6.2 kill</h2><p><strong>kill信号原型</strong></p>
+<pre><code class="c">int kill(pid_t pid, int sig)
+pid &gt; 0
+sig发送给ID为pid的进程
+        pid == 0
+sig发送给与发送进程同组的所有进程
+        pid &lt; 0
+sig发送给组ID为|-pid|的进程，并且发送进程具有向其发送信号的权限
+        pid == -1
+sig发送给发送进程有权限向他们发送信号的系统上的所有进程
+        sig为0时，用于检测，特定为pid进程是否存在，如不存在，返回-1。
+
+
+sig:信号3种处理方式：
+    SIG_IGN 忽略
+    SIG_DFL 默认处理动作
+    a signal handling function 捕捉</code></pre>
+<h2 id="6-3-阻塞信号"><a href="#6-3-阻塞信号" class="headerlink" title="6.3 阻塞信号"></a>6.3 阻塞信号</h2><h3 id="6-3-1-信号在内核中的表示"><a href="#6-3-1-信号在内核中的表示" class="headerlink" title="6.3.1 信号在内核中的表示"></a>6.3.1 信号在内核中的表示</h3><p><strong>实际执行信号的处理动作称为信号递达（Delivery），信号从产生到递达之间的状态，称为信号未决（Pending）</strong></p>
+<p><strong>进程可以选择阻塞（Block）某个信号。被阻塞的信号产生时将保持在未决状态，直到进程解除对此信号的阻塞，才执行递达的动作。</strong></p>
+<p><strong>注意，阻塞和忽略是不同的，只要信号被阻塞就不会递达，而忽略是在递达之后可选的一种处理动作。信号在内核中的表示可以看作是这样的</strong></p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/syssign.png" alt=""></p>
+<p><strong>每个信号都有两个标志位分别表示阻塞和未决，还有一个函数指针表示处理动作</strong>。信号产生时，内核在进程控制块中设置该信号的未决标志，直到信号递达才清除该标志。在上图的例子中，</p>
+<ul>
+<li><strong>SIGHUP信号未阻塞也未产生过，当它递达时执行默认处理动作。</strong></li>
+<li><strong>SIGINT信号产生过，但正在被阻塞，所以暂时不能递达。虽然它的处理动作是忽略，但在没有解除阻塞之前不能忽略这个信号，因为进程仍有机会改变处理动作之后再解除阻塞。</strong></li>
+<li><strong>SIGQUIT信号未产生过，一旦产生SIGQUIT信号将被阻塞，它的处理动作是用户自定义函数sighandler。</strong></li>
+</ul>
+<h3 id="6-3-2-信号集操作函数"><a href="#6-3-2-信号集操作函数" class="headerlink" title="6.3.2 信号集操作函数"></a>6.3.2 信号集操作函数</h3><p>sigset_t类型对于每种信号用一个bit表示“有效”或“无效”状态，至于这个类型内部如何存储这些bit则依赖于系统实现，从使用者的角度是不必关心的，使用者只能调用以下函数来操作sigset_t变量，而不应该对它的内部数据做任何解释，比如用printf直接打印sigset_t变量是没有意义的。</p>
+<pre><code class="c">int sigemptyset(sigset_t *set)
+int sigfillset(sigset_t *set)
+int sigaddset(sigset_t *set, int signo)
+int sigdelset(sigset_t *set, int signo)
+int sigismember(const sigset_t *set, int signo)</code></pre>
+<p><strong>这四个函数都是成功返回0，出错返回-1。</strong></p>
+<p><strong>注意，在使用sigset_t类型的变量之前，一定要调用sigemptyset或sigfillset做初始化，使信号集处于确定的状态。初始化sigset_t变量之后就可以在调用sigaddset和sigdelset在该信号集中添加或删除某种有效信号。</strong></p>
+<h3 id="6-3-3-sigprocmask"><a href="#6-3-3-sigprocmask" class="headerlink" title="6.3.3 sigprocmask"></a>6.3.3 sigprocmask</h3><p>调用函数sigprocmask可以读取或更改进程的信号屏蔽字。</p>
+<pre><code>#include &lt;signal.h&gt;
+int sigprocmask(int how, const sigset_t *set, sigset_t *oset);</code></pre><p><strong>返回值：若成功则为0，若出错则为-1</strong></p>
+<p>如果oset是非空指针，则读取进程的当前信号屏蔽字通过oset参数传出。如果set是非空指针，则更改进程的信号屏蔽字，参数how指示如何更改。如果oset和set都是非空指针，则先将原来的信号屏蔽字备份到oset里，然后根据set和how参数更改信号屏蔽字。假设当前的信号屏蔽字为mask，下表说明了how参数的可选值。</p>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/syssgnmask.png" alt=""></p>
+<h3 id="6-3-4-sigpending"><a href="#6-3-4-sigpending" class="headerlink" title="6.3.4 sigpending"></a>6.3.4 sigpending</h3><p>sigpending读取当前进程的未决信号集，通过set参数传出。</p>
+<pre><code class="c">#include &lt;signal.h&gt;
+int sigpending(sigset_t *set);
+</code></pre>
+<p><strong>调用成功则返回0，出错则返回-1</strong></p>
+<h3 id="6-3-5-demo"><a href="#6-3-5-demo" class="headerlink" title="6.3.5 demo"></a>6.3.5 demo</h3><pre><code class="c">#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+void printsigset(const sigset_t *set)
+{
+    int i;
+    for (i = 1; i &lt; 32; i++)
+        if (sigismember(set, i) == 1)
+            putchar(&#39;1&#39;);
+        else
+            putchar(&#39;0&#39;);
+    puts(&quot;&quot;);
+}
+
+int main(void)
+{
+    sigset_t s, p;
+    sigemptyset(&amp;s);
+    sigaddset(&amp;s, SIGINT);
+    sigprocmask(SIG_BLOCK, &amp;s, NULL);
+    while (1) {
+        sigpending(&amp;p);
+        printsigset(&amp;p);
+        sleep(1);
+    }
+    return 0;
+}</code></pre>
+<p>程序运行时，每秒钟把各信号的未决状态打印一遍，由于我们阻塞了SIGINT信号，按Ctrl-C将会使SIGINT信号处于未决状态，按Ctrl-\仍然可以终止程序，因为SIGQUIT信号没有阻塞。</p>
+<pre><code class="shell">$ ./a.out 
+0000000000000000000000000000000
+0000000000000000000000000000000（这时按Ctrl-C）
+0100000000000000000000000000000
+0100000000000000000000000000000（这时按Ctrl-\）
+Quit (core dumped)</code></pre>
+<h2 id="6-4-信号捕捉"><a href="#6-4-信号捕捉" class="headerlink" title="6.4 信号捕捉"></a>6.4 信号捕捉</h2><h3 id="6-4-1-内核如何实现信号的捕捉"><a href="#6-4-1-内核如何实现信号的捕捉" class="headerlink" title="6.4.1 内核如何实现信号的捕捉"></a>6.4.1 内核如何实现信号的捕捉</h3><p>​        如果信号的处理动作是用户自定义函数，在信号递达时就调用这个函数，这称为捕捉信号。由于信号处理函数的代码是在用户空间的，处理过程比较复杂，举例如下：</p>
+<ol>
+<li>用户程序注册了SIGQUIT信号的处理函数sighandler。</li>
+<li>当前正在执行main函数，这时发生中断或异常切换到内核态。</li>
+<li>在中断处理完毕后要返回用户态的main函数之前检查到有信号SIGQUIT递达。</li>
+<li>内核决定返回用户态后不是恢复main函数的上下文继续执行，而是执行sighandler函数，sighandler和main函数使用不同的堆栈空间，它们之间不存在调用和被调用的关系，是两个独立的控制流程。</li>
+<li>sighandler函数返回后自动执行特殊的系统调用sigreturn再次进入内核态。</li>
+<li>如果没有新的信号要递达，这次再返回用户态就是恢复main函数的上下文继续执行了。</li>
+</ol>
+<p><img src="http://base422.oss-cn-beijing.aliyuncs.com/syssignalcatch.png" alt=""></p>
+<h3 id="6-4-2-signaction"><a href="#6-4-2-signaction" class="headerlink" title="6.4.2 signaction"></a>6.4.2 signaction</h3><p>sigaction函数可以读取和修改与指定信号相关联的处理动作</p>
+<pre><code class="c">#include &lt;signal.h&gt;
+int sigaction(int signo, const struct sigaction *act, struct sigaction *oact);</code></pre>
+<p><strong>调用成功则返回0，出错则返回-1。</strong></p>
+<p>signo是指定信号的编号。若act指针非空，则根据act修改该信号的处理动作。若oact指针非空，则通过oact传出该信号原来的处理动作。act和oact指向sigaction结构体：</p>
+<pre><code class="c">struct sigaction {
+   void      (*sa_handler)(int);   /* addr of signal handler, */
+                                       /* or SIG_IGN, or SIG_DFL */
+   sigset_t sa_mask;               /* additional signals to block */
+   int      sa_flags;              /* signal options, Figure 10.16 */
+
+   /* alternate handler */
+   void     (*sa_sigaction)(int, siginfo_t *, void *);
+};</code></pre>
+<p>​        将sa_handler赋值为常数SIG_IGN传给sigaction表示忽略信号，赋值为常数SIG_DFL表示执行系统默认动作，赋值为一个函数指针表示用自定义函数捕捉信号，或者说向内核注册了一个信号处理函数，该函数返回值为void，可以带一个int参数，通过参数可以得知当前信号的编号，这样就可以用同一个函数处理多种信号。显然，这也是一个回调函数，不是被main函数调用，而是被系统所调用。</p>
+<p>​        当某个信号的处理函数被调用时，内核自动将当前信号加入进程的信号屏蔽字，当信号处理函数返回时自动恢复原来的信号屏蔽字，这样就保证了在处理某个信号时，如果这种信号再次产生，那么它会被阻塞到当前处理结束为止。如果在调用信号处理函数时，除了当前信号被自动屏蔽之外，还希望自动屏蔽另外一些信号，则用sa_mask字段说明这些需要额外屏蔽的信号，当信号处理函数返回时自动恢复原来的信号屏蔽字。</p>
+<h3 id="6-4-3-pause"><a href="#6-4-3-pause" class="headerlink" title="6.4.3 pause"></a>6.4.3 pause</h3><p>pause函数使调用进程挂起直到有信号递达。</p>
+<pre><code class="c">#include &lt;unistd.h&gt;
+int pause(void);</code></pre>
+<p>如果信号的处理动作是终止进程，则进程终止，pause函数没有机会返回；如果信号的处理动作是忽略，则进程继续处于挂起状态，pause不返回；如果信号的处理动作是捕捉，则调用了信号处理函数之后pause返回-1，errno设置为EINTR，所以pause只有出错的返回值。错误码EINTR表示“被信号中断”</p>
+<h3 id="6-4-4-demo"><a href="#6-4-4-demo" class="headerlink" title="6.4.4 demo"></a>6.4.4 demo</h3><pre><code class="c">#include &lt;unistd.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;stdio.h&gt;
+
+void sig_alrm(int signo)
+{
+    /* nothing to do */
+}
+
+unsigned int mysleep(unsigned int nsecs)
+{
+    struct sigaction newact, oldact;
+    unsigned int unslept;
+
+    newact.sa_handler = sig_alrm;
+    sigemptyset(&amp;newact.sa_mask);
+    newact.sa_flags = 0;
+    sigaction(SIGALRM, &amp;newact, &amp;oldact);
+
+    alarm(nsecs);
+    pause();
+
+    unslept = alarm(0);
+    sigaction(SIGALRM, &amp;oldact, NULL);
+
+    return unslept;
+}
+
+int main(void)
+{
+    while(1){
+        mysleep(2);
+        printf(&quot;Two seconds passed\n&quot;);
+    }
+    return 0;
+}</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达 </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">微信</a>
+</p>
+
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©Who I am? KenBetter</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>添加请注明来意~</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <!-- <img src="/img/weixin.jpg" class="weixin" title="扫码支持"> -->
+        </div>
+    </div>
+    <!-- <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div> -->
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Mysql','#Redis','#缓存','#Kafka','#消息队列','#RabbitMQ','#Elaticsearch','#分布式','#zookeeper','#Linux命令','#Linux','#系统编程','#网络','#HTTP','#TCP',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 542px;
+    }
+    .nav.fullscreen {
+        margin-left: -542px;
+    }
+    .nav-left {
+        width: 120px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
