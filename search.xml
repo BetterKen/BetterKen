@@ -4,6 +4,231 @@
   
     
     <entry>
+      <title>中介者模式</title>
+      <link href="/2020/04/29/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/29/%E4%B8%AD%E4%BB%8B%E8%80%85%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p>在用户与用户直接聊天的设计方案中，用户对象之间存在很强的关联性，将导致系统出现如下问题：</p><ul><li>系统结构复杂：对象之间存在大量的相互关联和调用，若有一个对象发生变化，则需要跟踪和该对象关联的其他所有对象，并进行适当处理。</li><li>对象可重用性差：由于一个对象和其他对象具有很强的关联，若没有其他对象的支持，一个对象很难被另一个系统或模块重用，这些对象表现出来更像一个不可分割的整体，职责较为混乱。</li><li>系统扩展性低：增加一个新的对象需要在原有相关对象上增加引用，增加新的引用关系也需要调整原有对象，系统耦合度很高，对象操作很不灵活，扩展性差。</li><li>在面向对象的软件设计与开发过程中，根据“单一职责原则”，我们应该尽量将对象细化，使其只负责或呈现单一的职责。</li><li>对于一个模块，可能由很多对象构成，而且这些对象之间可能存在相互的引用，为了<strong>减少对象两两之间复杂的引用关系，使之成为一个松耦合的系统</strong>，我们需要使用中介者模式，这就是中介者模式的模式动机。</li></ul><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>中介者模式(Mediator Pattern)定义：用一个中介对象来封装一系列的对象交互，中介者使各对象不需要显式地相互引用，从而使其耦合松散，而且可以独立地改变它们之间的交互。中介者模式又称为调停者模式，它是一种对象行为型模式。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Mediator.go====================package maintype MediatorInter interface {    Register(c *Collage)    Relay(c *Collage)}type ConcreteMediator struct {    name     string    collages map[string]*Collage}func NewConcreteMediator(name string) *ConcreteMediator {    return &amp;ConcreteMediator{        name:     name,        collages: make(map[string]*Collage),    }}func (c *ConcreteMediator) Register(coll *Collage) {    c.collages[coll.name] = coll}func (c *ConcreteMediator) Relay(coll *Collage) {    for name, collage := range c.collages {        if name != coll.name {            collage.Receive()        }    }}#=================Collage.go===================package mainimport &quot;fmt&quot;type CollageInter interface {    SetMedium(m MediatorInter)    Receive()    Send()}type Collage struct {    name     string    mediator MediatorInter}func NewCollage(name string) *Collage {    return &amp;Collage{        name: name,    }}func (coll *Collage) SetMedium(m MediatorInter) {    coll.mediator = m    coll.mediator.Register(coll)}func (coll *Collage) Receive() {    fmt.Println(coll.name + &quot;收到消息&quot;)}func (coll *Collage) Send() {    fmt.Println(coll.name + &quot;发送消息&quot;)    coll.mediator.Relay(coll)}#===================main.go====================package mainfunc main()  {    lianjia := NewConcreteMediator(&quot;链家&quot;)    collA := NewCollage(&quot;中介从业者1&quot;)    collA.SetMedium(lianjia)    collB := NewCollage(&quot;中介从业者2&quot;)    collB.SetMedium(lianjia)    collC := NewCollage(&quot;买房人A&quot;)    collC.SetMedium(lianjia)    collC.Send()    woaiwojia := NewConcreteMediator(&quot;我爱我家&quot;)    collA1 := NewCollage(&quot;中介从业者11&quot;)    collA1.SetMedium(woaiwojia)    collB1 := NewCollage(&quot;中介从业者21&quot;)    collB1.SetMedium(woaiwojia)    collC1 := NewCollage(&quot;买房人A1&quot;)    collC1.SetMedium(woaiwojia)    collC1.Send()}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>迭代器模式</title>
+      <link href="/2020/04/29/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/29/%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p>意图：提供一种方法顺序访问一个聚合对象中各个元素, 而又无须暴露该对象的内部表示。</p><p>主要解决：不同的方式来遍历整个整合对象。</p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>迭代器（Iterator）模式：提供一种方法来顺序访问聚合对象中的一系列数据，而不暴露聚合对象的内部表示。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Iterator.go====================package maintype iteratorInter interface {    First() interface{}    Next() interface{}    HasNext() bool}type iterator struct {    index int    list  []interface{}}func NewIterator(list []interface{}) *iterator {    return &amp;iterator{        index: 0,        list:  list,    }}func (i *iterator) First() interface{} {    return i.list[0]}func (i *iterator) Next() interface{} {    if i.HasNext() {        i.index = i.index + 1        return i.list[i.index-1]    }    return nil}func (i *iterator) HasNext() bool {    return i.index &lt; len(i.list)}#=================Aggregate.go===================package maintype aggregateInter interface {    Add(o interface{})    Remove()    GetIterator() *iterator}type Aggregate struct {    list []interface{}}func NewAggregate() aggregateInter {    return &amp;Aggregate{list: make([]interface{}, 0)}}func (a *Aggregate) Add(o interface{}) {    a.list = append(a.list, o)}func (a *Aggregate) Remove() {    a.list = a.list[:len(a.list)-1]}func (a *Aggregate) GetIterator() *iterator {    return NewIterator(a.list)}#===================main.go====================package mainimport &quot;fmt&quot;func main() {    agg := NewAggregate()    agg.Add(&quot;甲&quot;)    agg.Add(&quot;已&quot;)    agg.Add(&quot;丙&quot;)    agg.Add(&quot;丁&quot;)    agg.Remove()    i := agg.GetIterator()    for i.HasNext() {        fmt.Println(i.Next())    }}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>解释器模式</title>
+      <link href="/2020/04/29/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/29/%E8%A7%A3%E9%87%8A%E5%99%A8%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p>给定一个语言，定义它的文法表示，并定义一个解释器，这个解释器使用该标识来解释语言中的句子。</p><p>业务上使用较少</p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>解释器模式（Interpreter Pattern）提供了评估语言的语法或表达式的方式，它属于行为型模式。这种模式实现了一个表达式接口，该接口解释一个特定的上下文。这种模式被用在 SQL 解析、符号处理引擎等。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Parse.go====================package mainimport (    &quot;strconv&quot;    &quot;strings&quot;)type Parser struct {    exp   []string    index int    prev  Node}func (p *Parser) Parse(exp string) {    p.exp = strings.Split(exp, &quot; &quot;)    for {        if p.index &gt;= len(p.exp) {            return        }        switch p.exp[p.index] {        case &quot;+&quot;:            p.prev = p.newAddNode()        case &quot;-&quot;:            p.prev = p.newSubNode()        default:            p.prev = p.newValNode()        }    }}func (p *Parser) newAddNode() Node {    p.index++    return &amp;AddNode{p.prev, p.newValNode()}}func (p *Parser) newSubNode() Node {    p.index++    return &amp;SubNode{p.prev, p.newValNode()}}func (p *Parser) newValNode() Node {    v, _ := strconv.Atoi(p.exp[p.index]) //转换类型    p.index++    return &amp;ValNode{v}}func (p *Parser) Result() Node {    return p.prev}#=================Node.go===================package main//节点，返回一个数据type Node interface {    Interpret () int}type ValNode struct {    val int}func (valn *ValNode)Interpret () int {    return valn.val}#=================AddNode.go===================package maintype AddNode struct {    left, right Node}func (a *AddNode) Interpret() int {    return a.left.Interpret() + a.right.Interpret()}#=================SubNode.go===================package maintype SubNode struct {    left, right Node}func (a *SubNode) Interpret() int {    return a.left.Interpret() - a.right.Interpret()}#===================main.go====================package mainimport &quot;fmt&quot;//解释器（Interpreter）模式的定义：给分析对象定义一个语言，并定义该语言的文法表示，//再设计一个解析器来解释语言中的句子。也就是说，//用编译语言的方式来分析应用中的实例。这种模式实现了文法表达式处理的接口，该接口解释一个特定的上下文。func main() {    p := &amp;Parser{}    fmt.Print(&quot;start\n&quot;)    p.Parse(&quot;1 + 3 - 2 + 5 - 6 + 7 + 21&quot;)    fmt.Println(p.Result().Interpret())}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>命令模式</title>
+      <link href="/2020/04/29/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/29/%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p><strong>将一个请求封装成一个对象，从而使您可以用不同的请求对客户进行参数化。</strong></p><p><strong>调用者只关系调用的命令　不用关心调用的接收者</strong></p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>命令模式（Command Pattern）是一种数据驱动的设计模式，它属于行为型模式。请求以命令的形式包裹在对象中，并传给调用对象。调用对象寻找可以处理该命令的合适的对象，并把该命令传给相应的对象，该对象执行命令。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Command.go====================package maintype ReceiverInter interface {    action()}type InvokerInter interface {    setCommand(inter commandInter)    call()}type commandInter interface {    execute()}type command struct {    receiver Receiver}func NewCommand() *command {    receiver := Receiver{}    c := &amp;command{}    c.receiver = receiver    return c}func (c *command) execute() {    c.receiver.action()}#=================Invoker.go===================package maintype Invoker struct {    command commandInter}func NewInvoker() *Invoker {    return &amp;Invoker{}}func (i *Invoker) setCommand(command commandInter) {    i.command = command}func (i *Invoker) call() () {    i.command.execute()}#===================Receiver.go====================package mainimport &quot;fmt&quot;type Receiver struct {}func (r *Receiver) action() {    fmt.Print(&quot;Receiver action&quot;)}#===================main.go====================package mainfunc main()  {    invoker := NewInvoker()    command := NewCommand()    invoker.setCommand(command)    invoker.call()}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>责任链模式</title>
+      <link href="/2020/04/29/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/29/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p><strong>避免请求发送者与接收者耦合在一起</strong>，让多个对象都有可能接收请求，将这些对象连接成一条链，并且沿着这条链传递请求，直到有对象处理它为止。</p><p><strong>在不明确指定接收者的情况下，向多个对象中的一个提交一个请求</strong></p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>顾名思义，责任链模式（Chain of Responsibility Pattern）为请求创建了一个接收者对象的链。这种模式给予请求的类型，对请求的发送者和接收者进行解耦。这种类型的设计模式属于行为型模式。</p><p>在这种模式中，通常每个接收者都包含对另一个接收者的引用。如果一个对象不能处理该请求，那么它会把相同的请求传给下一个接收者，依此类推。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Handler.go====================package mainimport &quot;fmt&quot;type handlerInter interface {    setNext(handler handlerInter)    getNext() handlerInter    handleRequest(request int)}type handlerBase struct {    next handlerInter}func (h *handlerBase) setNext(base handlerInter) {    h.next = base}func (h *handlerBase) getNext() handlerInter {    return h.next}func (h *handlerBase) handleRequest(request int) {}type AHandler struct {    handlerBase}func (h *AHandler) handleRequest(request int) {    if request &lt; 100 {        fmt.Println(&quot;AHandler 处理了请求&quot;)        return    }    if h.getNext() != nil {        h.getNext().handleRequest(request)        return    }    fmt.Println(&quot;没有人能处理该请求&quot;)}type BHandler struct {    handlerBase}func (h *BHandler) handleRequest(request int) {    if request &lt; 200 {        fmt.Println(&quot;BHandler 处理了请求&quot;)        return    }    if h.getNext() != nil {        h.getNext().handleRequest(request)        return    }    fmt.Println(&quot;没有人能处理该请求&quot;)}#===================main.go====================package mainfunc main()  {    ha := new(AHandler)    hb := new(BHandler)    ha.setNext(hb)    ha.handleRequest(100)}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>组合模式</title>
+      <link href="/2020/04/28/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/28/%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p><strong>使用场景：部分、整体场景，如树形菜单，文件、文件夹的管理。</strong></p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>组合模式（Composite Pattern），又叫部分整体模式，是用于把一组相似的对象当作一个单一的对象。组合模式依据树形结构来组合对象，用来表示部分以及整体层次。这种类型的设计模式属于结构型模式，它创建了对象组的树形结构。</p><p>这种模式创建了一个包含自己对象组的类。该类提供了修改相同对象组的方式。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#=================Composite.go===================package mainimport &quot;fmt&quot;type Composite struct {    component    children []Component //叶子集合}//创建一个组合结构体func NewComposite() *Composite {    return &amp;Composite{children: make([]Component, 0)}}func (c *Composite) AddChild(child Component) {    child.SetParent(c)    c.children = append(c.children, child) //加入孩子节点}func (c *Composite) Print(pre string) { //打印显示每一个节点    fmt.Println(pre, c.name)    pre += &quot;  &quot;    for _, leaf := range c.children {        leaf.Print(pre)    }}#===================Component.go====================package main//有的时候是父节点，叶子type Component interface {    Parent() Component    SetParent(Component)    Name() string    SetName(string)    AddChild(Component)    Print(string)}const (    LeafNode = iota    CompositeNode)type component struct {    parent Component    name   string}func NewComponent(kind int, name string) Component {    var c Component    switch kind {    case LeafNode: //根据不同的类型        c = NewLeaf()    case CompositeNode:        c = NewComposite()    }    c.SetName(name)    return c}func (c *component) Parent() Component {    return c.parent}func (c *component) SetParent(parent Component) {    c.parent = parent}func (c *component) Name() string {    return c.name}func (c *component) SetName(name string) {    c.name = name}func (c *component) AddChild(Component) {}func (c *component) Print(string) {}#===================leaf.go====================package mainimport &quot;fmt&quot;type Leaf struct {    component}func NewLeaf() *Leaf { //开辟一个叶子    return &amp;Leaf{}}func (c *Leaf) Print(pre string) {    fmt.Println(pre, c.Name())}#===================main.go====================package main//组合（Composite）模式的定义：有时又叫作部分-整体模式，//它是一种将对象组合成树状的层次结构的模式，用来表示“部分-整体”的关系，//使用户对单个对象和组合对象具有一致的访问性。//组合模式包含以下主要角色。//抽象构件（Component）角色：它的主要作用是为树叶构件和树枝构件声明公共接口，并实现它们的默认行为。在透明式的组合模式中抽象构件还声明访问和管理子类的接口；在安全式的组合模式中不声明访问和管理子类的接口，管理工作由树枝构件完成。//树叶构件（Leaf）角色：是组合中的叶节点对象，它没有子节点，用于实现抽象构件角色中 声明的公共接口。//树枝构件（Composite）角色：是组合中的分支节点对象，它有子节点。它实现了抽象构件角色中声明的接口，它的主要作用是存储和管理子部件，通常包含 Add()、Remove()、GetChild() 等方法。func main()  {    root := NewComponent(CompositeNode,&quot;root&quot;)    l1 := NewComponent(LeafNode,&quot;l1&quot;)    l2 := NewComponent(LeafNode,&quot;l2&quot;)    l3 := NewComponent(LeafNode,&quot;l3&quot;)    l4 := NewComponent(CompositeNode,&quot;l4&quot;)    ll1 := NewComponent(LeafNode,&quot;ll1&quot;)    ll2 := NewComponent(LeafNode,&quot;ll2&quot;)    ll3 := NewComponent(LeafNode,&quot;ll3&quot;)    root.AddChild(l1)    root.AddChild(l2)    root.AddChild(l3)    root.AddChild(l4)    l4.AddChild(ll1)    l4.AddChild(ll2)    l4.AddChild(ll3)    root.Print(&quot;&quot;)}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>享元模式</title>
+      <link href="/2020/04/28/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/28/%E4%BA%AB%E5%85%83%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p>面向对象技术可以很好地解决一些灵活性或可扩展性问题，但在很多情况下需要在系统中增加类和对象的个数。当对象数量太多时，将导致运行代价过高，带来性能下降等问题。</p><ul><li>享元模式正是为解决这一类问题而诞生的。<strong>享元模式通过共享技术实现相同或相似对象的重用</strong>。</li><li>在享元模式中可以共享的相同内容称为内部状态(IntrinsicState)，而那些需要外部环境来设置的不能共享的内容称为外部状态(Extrinsic State)，由于区分了内部状态和外部状态，因此可以通过设置不同的外部状态使得相同的对象可以具有一些不同的特征，而相同的内部状态是可以共享的。</li><li><strong>在享元模式中通常会出现工厂模式，需要创建一个享元工厂来负责维护一个享元池(Flyweight Pool)用于存储具有相同内部状态的享元对象</strong>。</li><li>在享元模式中共享的是享元对象的内部状态，外部状态需要通过环境来设置。在实际使用中，能够共享的内部状态是有限的，因此享元对象一般都设计为较小的对象，它所包含的内部状态较少，这种对象也称为细粒度对象。享元模式的目的就是使用共享技术来实现大量细粒度对象的复用。</li></ul><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>享元模式(Flyweight Pattern)：运用共享技术有效地支持大量细粒度对象的复用。系统只使用少量的对象，而这些对象都很相似，状态变化很小，可以实现对象的多次复用。由于享元模式要求能够共享的对象必须是细粒度对象，因此它又称为轻量级模式，它是一种对象结构型模式。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================ImageFlyWeightFactory.go====================package mainimport &quot;sync&quot;type ImageFlyWeightFactory struct {    maps map[string]*ImageFlyWeight}var imageFlyWeightFactory *ImageFlyWeightFactoryvar mux sync.Oncefunc NewImageFlyWeightFactory() *ImageFlyWeightFactory {    mux.Do(func() {        imageFlyWeightFactory = &amp;ImageFlyWeightFactory{maps: make(map[string]*ImageFlyWeight)}    })    return imageFlyWeightFactory}func (imf *ImageFlyWeightFactory) Get(filename string) *ImageFlyWeight {    image := imf.maps[filename]    if image == nil {        image = NewImageFlyWeight(filename)        imf.maps[filename] = image    }    return image}func (imf *ImageFlyWeightFactory) GetMapCount() int {    return len(imf.maps)}#=================ImageFlyWeight.go===================package maintype ImageFlyWeight struct {    data string}func NewImageFlyWeight(filename string) *ImageFlyWeight {    return &amp;ImageFlyWeight{data: filename}}func (imw *ImageFlyWeight) GetData() string {    return imw.data}#===================main.go====================package mainimport &quot;fmt&quot;//运用共享技术来有効地支持大量细粒度对象的复用。它通过共享已经存在的对象来大幅度减少需要创建的对象数量、//避免大量相似类的开销，从而提高系统资源的利用率。func main()  {    imf := NewImageFlyWeightFactory()    f1 := imf.Get(&quot;fA&quot;)    fmt.Println(imf.GetMapCount())    imf.Get(&quot;fB&quot;)    fmt.Println(imf.GetMapCount())    f3 := imf.Get(&quot;fA&quot;)    fmt.Println(imf.GetMapCount())    if f1 == f3{        println(&quot;没有消耗多余内存&quot;)    }}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>外观模式</title>
+      <link href="/2020/04/28/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/28/%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p><strong>建造者模式的目的是希望用同样的生产过程，根据不同的生产者得到不同的产品。</strong><br><strong>外观模式是将多个对象组合起来，它不需要生产者，也不需要得到不同的结果。</strong></p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>外观模式(Facade Pattern)：外部与一个子系统的通信必须通过一个统一的外观对象进行，为子系统中的一组接口提供一个一致的界面，外观模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。外观模式又称为门面模式，它是一种对象结构型模式。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Facade.go====================package maintype Facade struct {    Japanese *Japanese    Chinese  *Chinese    English  *English}func NewFacade() *Facade {    Japanese := new(Japanese)    Chinese := new(Chinese)    English := new(English)    return &amp;Facade{        Japanese: Japanese,        Chinese:  Chinese,        English:  English,    }}func (f *Facade) SayHello() {    f.Chinese.SayHello()    f.Japanese.SayHello()    f.English.SayHello()}#=================SubSystem.go===================package mainimport &quot;fmt&quot;type Chinese struct {}func (c *Chinese) SayHello() {    fmt.Println(&quot;你好&quot;)}type Japanese struct {}func (j *Japanese) SayHello() {    fmt.Println(&quot;库尼奇瓦&quot;)}type English struct {}func (e *English) SayHello() {    fmt.Println(&quot;Hello&quot;)}#===================main.go====================package main//外观（Facade）模式的定义：是一种通过为多个复杂的子系统提供一个一致的接口，//而使这些子系统更加容易被访问的模式。该模式对外有一个统一接口，//外部应用程序不用关心内部子系统的具体的细节，//这样会大大降低应用程序的复杂度，提高了程序的可维护性。//建造者模式的目的是希望用同样的生产过程，根据不同的生产者得到不同的产品。//外观模式是将多个对象组合起来，它不需要生产者，也不需要得到不同的结果。func main() {    f := NewFacade()    f.SayHello()}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>装饰模式</title>
+      <link href="/2020/04/28/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2020/04/28/%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-模式动机"><a href="#1-模式动机" class="headerlink" title="1 模式动机"></a>1 模式动机</h2><p>一般有两种方式可以实现给一个类或对象增加行为：</p><ul><li>继承机制，使用继承机制是给现有类添加功能的一种有效途径，通过继承一个现有类可以使得子类在拥有自身方法的同时还拥有父类的方法。但是这种方法是静态的，用户不能控制增加行为的方式和时机。</li><li><strong>关联机制，即将一个类的对象嵌入另一个对象中，由另一个对象来决定是否调用嵌入对象的行为以便扩展自己的行为，我们称这个嵌入的对象为装饰器(Decorator)</strong></li></ul><p>装饰模式以对客户透明的方式动态地给一个对象附加上更多的责任，换言之，客户端并不会觉得对象在装饰前和装饰后有什么不同。<strong>装饰模式可以在不需要创造更多子类的情况下，将对象的功能加以扩展</strong>。这就是装饰模式的模式动机。</p><h2 id="2-模式定义"><a href="#2-模式定义" class="headerlink" title="2 模式定义"></a>2 模式定义</h2><p>装饰模式(Decorator Pattern) ：动态地给一个对象增加一些额外的职责(Responsibility)，就增加对象功能来说，装饰模式比生成子类实现更为灵活。其别名也可以称为包装器(Wrapper)，与适配器模式的别名相同，但它们适用于不同的场合。根据翻译的不同，装饰模式也有人称之为“油漆工模式”，它是一种对象结构型模式。</p><h2 id="3-Demo"><a href="#3-Demo" class="headerlink" title="3 Demo"></a>3 Demo</h2><pre><code class="go">#===================Component.go====================package mainimport &quot;fmt&quot;type CarInter interface {    Run()}type Car struct {}func (c *Car) Run() {    fmt.Print(&quot;行驶&quot;)}#=================Decorator.go===================package mainimport &quot;fmt&quot;type DecoCar struct {    car Car}func NewDecoCar() *DecoCar {    return new(DecoCar)}func (d *DecoCar) Run() {    fmt.Print(&quot;加速&quot;)    d.car.Run()}#===================main.go====================package main//为让自己的能力增强，使得增强后的自己能够使用更多的方法，拓展在自己基础之上的功能的，就是装饰器模式//让别人帮助你做你并不关心的事情，这是代理模式func main() {    d := NewDecoCar()    d.Run()}</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代理模式</title>
       <link href="/2020/04/27/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/"/>
       <url>/2020/04/27/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</url>
@@ -2260,11 +2485,11 @@
     
     
     <entry>
-      <title>20.Redis缓存数据库读写一致性</title>
-      <link href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"/>
-      <url>/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/</url>
+      <title>19.Redis雪崩击穿穿透</title>
+      <link href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"/>
+      <url>/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/</url>
       
-        <content type="html"><![CDATA[<h2 id="20-1-Cache-Aside-Pattern"><a href="#20-1-Cache-Aside-Pattern" class="headerlink" title="20.1 Cache Aside Pattern"></a>20.1 Cache Aside Pattern</h2><p>最经典的缓存+数据库读写的模式:Cache Aside Pattern 　旁路缓存</p><p>有几个原则:</p><ul><li>读的时候，先读缓存，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。</li><li>更新的时候，先<strong>删除缓存</strong>，然后再更新数据库。</li></ul><h3 id="20-1-1-删除缓存"><a href="#20-1-1-删除缓存" class="headerlink" title="20.1.1 删除缓存"></a>20.1.1 删除缓存</h3><p>更新时是删除缓存，而不是更新缓存</p><ul><li><p>缓存有的时候不但是从数据库里取出的一个简单值,可能会经过复杂计算</p></li><li><p>更新的数据不一定会被频繁访问到,如果去更新缓存可能会<strong>造成大量的冷数据</strong></p></li><li><p>懒加载思想:<strong>用到缓存才去算缓存</strong></p></li></ul><h2 id="20-2-双写不一致问题"><a href="#20-2-双写不一致问题" class="headerlink" title="20.2 双写不一致问题"></a>20.2 双写不一致问题</h2><h3 id="20-2-1-更新顺序颠倒情形"><a href="#20-2-1-更新顺序颠倒情形" class="headerlink" title="20.2.1 更新顺序颠倒情形"></a>20.2.1 更新顺序颠倒情形</h3><p>问题描述: <strong>先修改数据库,再删除缓存</strong>,当删除缓存失败了,会导致数据库中是新数据,缓存中是旧数据</p><p>解决思路: <strong>先删除缓存,再更新数据库</strong>,如果删除缓存成功了,修改数据库失败了,那么数据库中是旧数据,缓存中是空的,那么数据不会不一致,因为读的时候缓存没有,则读数据库中的旧数据,然后更新到缓存中</p><h3 id="20-2-2-更新数据库并发读情形"><a href="#20-2-2-更新数据库并发读情形" class="headerlink" title="20.2.2 更新数据库并发读情形"></a>20.2.2 更新数据库并发读情形</h3><p>问题描述:数据发生了变更,先删除了缓存,然后要去修改数据库,<strong>此时还没有修改数据库</strong>,一个请求过来去读缓存,没有读到,去查数据库,<strong>查到了修改前的旧数据,放到缓存中</strong>,数据变更的程序完成了数据库的修改,此时数据库和缓存的数据不一致了</p><p>解决思路:　更新数据的时候，根据数据的唯一标识，hash之后，<strong>发送到一个队列中,队列可是redis的队列,Java的内存队列</strong>等,读取数据的时候，如果发现数据不在缓存中，那么将重新执行“读取数据+更新缓存”的操作，根据唯一标识路由之后，也发送到同一个队列中。</p><p>一个队列对应一个工作线程，每个工作线程串行拿到对应的操作，然后一条一条的执行。这样的话，一个数据变更的操作，先删除缓存，然后再去更新数据库，但是还没完成更新。此时如果一个读请求过来，没有读到缓存，那么可以先将缓存更新的请求发送到队列中，此时会在队列中积压，然后同步等待缓存更新完成。</p><p>这里有一个<strong>优化点</strong>，一个队列中，<strong>其实多个更新缓存请求串在一起是没意义的</strong>，因此可以做过滤，如果发现队列中已经有一个更新缓存的请求了，那么就不用再放个更新请求操作进去了，直接等待前面的更新操作请求完成即可。</p><p>待那个队列对应的工作线程完成了上一个操作的数据库的修改之后，才会去执行下一个操作，也就是缓存更新的操作，此时会从数据库中读取最新的值，然后写入缓存中。</p><p>如果请求还在等待时间范围内，不断轮询发现可以取到值了，那么就直接返回；如果请求等待的时间超过一定时长，那么这一次直接从数据库中读取当前的旧值</p>]]></content>
+        <content type="html"><![CDATA[<h2 id="19-1-雪崩"><a href="#19-1-雪崩" class="headerlink" title="19.1 雪崩"></a>19.1 雪崩</h2><h3 id="19-1-1-定义"><a href="#19-1-1-定义" class="headerlink" title="19.1.1 定义"></a>19.1.1 定义</h3><p>缓存同一时间大面积的失效，后面的请求都会落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p><h3 id="19-1-2-解决方式"><a href="#19-1-2-解决方式" class="headerlink" title="19.1.2 解决方式"></a>19.1.2 解决方式</h3><ul><li><p>事前:尽量保证整个 redis 集群的高可用性，发现机器宕机尽快补上。选择合适的内存淘汰策略</p><ul><li><strong>缓存预热</strong>:数据加热的含义就是在正式部署之前，把可能的数据先预先访问一遍，这样部分可能大量访问的数据就会加载到缓存中。可以使用阿里开源的<strong>canal</strong></li><li><strong>设置热点数据永远不过期</strong>，有更新操作就更新缓存就好了</li><li>往Redis存数据的时候，把每个Key的<strong>失效时间都加个随机值</strong>就好了，这样可以保证数据不会在同一时间大面积失效</li></ul><pre><code class="java">setRedis（Key，value，time + Math.random() * 10000）；</code></pre></li><li><p>事中：本地ehcache缓存 + hystrix限流&amp;降级，避免MySQL崩掉</p></li><li><p>事后：利用 redis 持久化机制保存的数据尽快恢复缓存</p></li></ul><h2 id="19-2-击穿"><a href="#19-2-击穿" class="headerlink" title="19.2 击穿"></a>19.2 击穿</h2><h3 id="19-2-1-定义"><a href="#19-2-1-定义" class="headerlink" title="19.2.1 定义"></a>19.2.1 定义</h3><p>缓存击穿，就是说某个 key 非常热点，访问非常频繁，处于集中式高并发访问的情况，当这个 key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库，就像是在一道屏障上凿开了一个洞。</p><h3 id="19-2-2-解决方式"><a href="#19-2-2-解决方式" class="headerlink" title="19.2.2 解决方式"></a>19.2.2 解决方式</h3><p>不同场景下的解决方式可如下：</p><ul><li>若缓存的数据是基本不会发生更新的，则可尝试将该热点数据设置为永不过期。</li><li>若缓存的数据更新不频繁，且缓存刷新的整个流程耗时较少的情况下，则可以采用基于 redis、zookeeper 等分布式中间件的分布式互斥锁，或者本地互斥锁以保证仅少量的请求能请求数据库并重新构建缓存，其余线程则在锁释放后能访问到新缓存。</li><li>若缓存的数据更新频繁或者缓存刷新的流程耗时较长的情况下，可以利用定时线程在缓存过期前主动的重新构建缓存或者延后缓存的过期时间，以保证所有的请求能一直访问到对应的缓存。</li></ul><h2 id="19-3-穿透"><a href="#19-3-穿透" class="headerlink" title="19.3 穿透"></a>19.3 穿透</h2><h3 id="19-3-1-定义"><a href="#19-3-1-定义" class="headerlink" title="19.3.1 定义"></a>19.3.1 定义</h3><p>对于系统A，假设一秒 5000 个请求，结果其中 4000 个请求是黑客发出的恶意攻击。</p><p>黑客发出的那 4000 个攻击，缓存中查不到，每次你去数据库里查，也查不到。</p><p>举个栗子。数据库 id 是从 1 开始的，结果黑客发过来的请求 id 全部都是负数。这样的话，缓存中不会有，请求每次都“视缓存于无物”，直接查询数据库。这种恶意攻击场景的缓存穿透就会直接把数据库给打死。</p><h3 id="19-3-2-解决方式"><a href="#19-3-2-解决方式" class="headerlink" title="19.3.2 解决方式"></a>19.3.2 解决方式</h3><ul><li><strong>初级</strong>:每次系统 A 从数据库中只要没查到，就<strong>写一个空值到缓存</strong>里去，比如 <code>set -999 UNKNOWN</code>。然后设置一个过期时间，这样的话，下次有相同的 key 来访问的时候，在缓存失效之前，都可以直接从缓存中取数据。</li><li><strong>进阶</strong>: <strong>在接口层增加校验</strong>，比如用户鉴权校验，参数做校验，不合法的参数直接代码Return，比如：id 做基础校验，id &lt;=0的直接拦截等。</li><li><strong>高级</strong>: 使用<strong>布隆过滤器（Bloom Filter）</strong>这个也能很好的防止缓存穿透的发生，他的原理也很简单就是利用高效的数据结构和算法快速<strong>判断出你这个Key是否在数据库中存在，不存在你return就好了，存在你就去查了DB刷新KV再return</strong>。</li></ul>]]></content>
       
       
       <categories>
@@ -2289,11 +2514,11 @@
     
     
     <entry>
-      <title>19.Redis雪崩击穿穿透</title>
-      <link href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"/>
-      <url>/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/</url>
+      <title>20.Redis缓存数据库读写一致性</title>
+      <link href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"/>
+      <url>/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/</url>
       
-        <content type="html"><![CDATA[<h2 id="19-1-雪崩"><a href="#19-1-雪崩" class="headerlink" title="19.1 雪崩"></a>19.1 雪崩</h2><h3 id="19-1-1-定义"><a href="#19-1-1-定义" class="headerlink" title="19.1.1 定义"></a>19.1.1 定义</h3><p>缓存同一时间大面积的失效，后面的请求都会落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p><h3 id="19-1-2-解决方式"><a href="#19-1-2-解决方式" class="headerlink" title="19.1.2 解决方式"></a>19.1.2 解决方式</h3><ul><li><p>事前:尽量保证整个 redis 集群的高可用性，发现机器宕机尽快补上。选择合适的内存淘汰策略</p><ul><li><strong>缓存预热</strong>:数据加热的含义就是在正式部署之前，把可能的数据先预先访问一遍，这样部分可能大量访问的数据就会加载到缓存中。可以使用阿里开源的<strong>canal</strong></li><li><strong>设置热点数据永远不过期</strong>，有更新操作就更新缓存就好了</li><li>往Redis存数据的时候，把每个Key的<strong>失效时间都加个随机值</strong>就好了，这样可以保证数据不会在同一时间大面积失效</li></ul><pre><code class="java">setRedis（Key，value，time + Math.random() * 10000）；</code></pre></li><li><p>事中：本地ehcache缓存 + hystrix限流&amp;降级，避免MySQL崩掉</p></li><li><p>事后：利用 redis 持久化机制保存的数据尽快恢复缓存</p></li></ul><h2 id="19-2-击穿"><a href="#19-2-击穿" class="headerlink" title="19.2 击穿"></a>19.2 击穿</h2><h3 id="19-2-1-定义"><a href="#19-2-1-定义" class="headerlink" title="19.2.1 定义"></a>19.2.1 定义</h3><p>缓存击穿，就是说某个 key 非常热点，访问非常频繁，处于集中式高并发访问的情况，当这个 key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库，就像是在一道屏障上凿开了一个洞。</p><h3 id="19-2-2-解决方式"><a href="#19-2-2-解决方式" class="headerlink" title="19.2.2 解决方式"></a>19.2.2 解决方式</h3><p>不同场景下的解决方式可如下：</p><ul><li>若缓存的数据是基本不会发生更新的，则可尝试将该热点数据设置为永不过期。</li><li>若缓存的数据更新不频繁，且缓存刷新的整个流程耗时较少的情况下，则可以采用基于 redis、zookeeper 等分布式中间件的分布式互斥锁，或者本地互斥锁以保证仅少量的请求能请求数据库并重新构建缓存，其余线程则在锁释放后能访问到新缓存。</li><li>若缓存的数据更新频繁或者缓存刷新的流程耗时较长的情况下，可以利用定时线程在缓存过期前主动的重新构建缓存或者延后缓存的过期时间，以保证所有的请求能一直访问到对应的缓存。</li></ul><h2 id="19-3-穿透"><a href="#19-3-穿透" class="headerlink" title="19.3 穿透"></a>19.3 穿透</h2><h3 id="19-3-1-定义"><a href="#19-3-1-定义" class="headerlink" title="19.3.1 定义"></a>19.3.1 定义</h3><p>对于系统A，假设一秒 5000 个请求，结果其中 4000 个请求是黑客发出的恶意攻击。</p><p>黑客发出的那 4000 个攻击，缓存中查不到，每次你去数据库里查，也查不到。</p><p>举个栗子。数据库 id 是从 1 开始的，结果黑客发过来的请求 id 全部都是负数。这样的话，缓存中不会有，请求每次都“视缓存于无物”，直接查询数据库。这种恶意攻击场景的缓存穿透就会直接把数据库给打死。</p><h3 id="19-3-2-解决方式"><a href="#19-3-2-解决方式" class="headerlink" title="19.3.2 解决方式"></a>19.3.2 解决方式</h3><ul><li><strong>初级</strong>:每次系统 A 从数据库中只要没查到，就<strong>写一个空值到缓存</strong>里去，比如 <code>set -999 UNKNOWN</code>。然后设置一个过期时间，这样的话，下次有相同的 key 来访问的时候，在缓存失效之前，都可以直接从缓存中取数据。</li><li><strong>进阶</strong>: <strong>在接口层增加校验</strong>，比如用户鉴权校验，参数做校验，不合法的参数直接代码Return，比如：id 做基础校验，id &lt;=0的直接拦截等。</li><li><strong>高级</strong>: 使用<strong>布隆过滤器（Bloom Filter）</strong>这个也能很好的防止缓存穿透的发生，他的原理也很简单就是利用高效的数据结构和算法快速<strong>判断出你这个Key是否在数据库中存在，不存在你return就好了，存在你就去查了DB刷新KV再return</strong>。</li></ul>]]></content>
+        <content type="html"><![CDATA[<h2 id="20-1-Cache-Aside-Pattern"><a href="#20-1-Cache-Aside-Pattern" class="headerlink" title="20.1 Cache Aside Pattern"></a>20.1 Cache Aside Pattern</h2><p>最经典的缓存+数据库读写的模式:Cache Aside Pattern 　旁路缓存</p><p>有几个原则:</p><ul><li>读的时候，先读缓存，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。</li><li>更新的时候，先<strong>删除缓存</strong>，然后再更新数据库。</li></ul><h3 id="20-1-1-删除缓存"><a href="#20-1-1-删除缓存" class="headerlink" title="20.1.1 删除缓存"></a>20.1.1 删除缓存</h3><p>更新时是删除缓存，而不是更新缓存</p><ul><li><p>缓存有的时候不但是从数据库里取出的一个简单值,可能会经过复杂计算</p></li><li><p>更新的数据不一定会被频繁访问到,如果去更新缓存可能会<strong>造成大量的冷数据</strong></p></li><li><p>懒加载思想:<strong>用到缓存才去算缓存</strong></p></li></ul><h2 id="20-2-双写不一致问题"><a href="#20-2-双写不一致问题" class="headerlink" title="20.2 双写不一致问题"></a>20.2 双写不一致问题</h2><h3 id="20-2-1-更新顺序颠倒情形"><a href="#20-2-1-更新顺序颠倒情形" class="headerlink" title="20.2.1 更新顺序颠倒情形"></a>20.2.1 更新顺序颠倒情形</h3><p>问题描述: <strong>先修改数据库,再删除缓存</strong>,当删除缓存失败了,会导致数据库中是新数据,缓存中是旧数据</p><p>解决思路: <strong>先删除缓存,再更新数据库</strong>,如果删除缓存成功了,修改数据库失败了,那么数据库中是旧数据,缓存中是空的,那么数据不会不一致,因为读的时候缓存没有,则读数据库中的旧数据,然后更新到缓存中</p><h3 id="20-2-2-更新数据库并发读情形"><a href="#20-2-2-更新数据库并发读情形" class="headerlink" title="20.2.2 更新数据库并发读情形"></a>20.2.2 更新数据库并发读情形</h3><p>问题描述:数据发生了变更,先删除了缓存,然后要去修改数据库,<strong>此时还没有修改数据库</strong>,一个请求过来去读缓存,没有读到,去查数据库,<strong>查到了修改前的旧数据,放到缓存中</strong>,数据变更的程序完成了数据库的修改,此时数据库和缓存的数据不一致了</p><p>解决思路:　更新数据的时候，根据数据的唯一标识，hash之后，<strong>发送到一个队列中,队列可是redis的队列,Java的内存队列</strong>等,读取数据的时候，如果发现数据不在缓存中，那么将重新执行“读取数据+更新缓存”的操作，根据唯一标识路由之后，也发送到同一个队列中。</p><p>一个队列对应一个工作线程，每个工作线程串行拿到对应的操作，然后一条一条的执行。这样的话，一个数据变更的操作，先删除缓存，然后再去更新数据库，但是还没完成更新。此时如果一个读请求过来，没有读到缓存，那么可以先将缓存更新的请求发送到队列中，此时会在队列中积压，然后同步等待缓存更新完成。</p><p>这里有一个<strong>优化点</strong>，一个队列中，<strong>其实多个更新缓存请求串在一起是没意义的</strong>，因此可以做过滤，如果发现队列中已经有一个更新缓存的请求了，那么就不用再放个更新请求操作进去了，直接等待前面的更新操作请求完成即可。</p><p>待那个队列对应的工作线程完成了上一个操作的数据库的修改之后，才会去执行下一个操作，也就是缓存更新的操作，此时会从数据库中读取最新的值，然后写入缓存中。</p><p>如果请求还在等待时间范围内，不断轮询发现可以取到值了，那么就直接返回；如果请求等待的时间超过一定时长，那么这一次直接从数据库中读取当前的旧值</p>]]></content>
       
       
       <categories>
