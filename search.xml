@@ -4,6 +4,73 @@
   
     
     <entry>
+      <title>Go并发channel</title>
+      <link href="/2020/05/06/Go%E5%B9%B6%E5%8F%91channel/"/>
+      <url>/2020/05/06/Go%E5%B9%B6%E5%8F%91channel/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Go make和new的区别</title>
+      <link href="/2020/05/06/Gomake%E5%92%8Cnew%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+      <url>/2020/05/06/Gomake%E5%92%8Cnew%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<p>new 和 make 是 Go 语言中两种内存分配原语。</p><p>二者所做的事情和针对的类型都不一样。</p><p> new 和其他编程语言中的关键字功能类似，都是向系统申请一段内存空间来存储对应类型的数据，但又有些区别，区别在于它会将该片空间置零。也就是说 new(T) 会根据类型 T 在堆上 申请一片置零的内存空间，并返回指针 *T。</p><p> <strong>make 只针对切片，映射和信道三种数据类型 T 的构建，并返回类型为 T 的一个已经初始化（而非零）的值</strong>。原因是这三种数据类型都是引用数据类型，在使用前必须初始化。就像切片是一个具有三项内容的描述符，包含一个指向数组的指针，长度和容量。通过 make 创建对应类型的变量过程是先分配一段空间，接着根据对应的描述符来创建对应的类型变量</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> go </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> go </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Go 函数参数slice和map的区别</title>
+      <link href="/2020/05/06/Go%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0slice%E5%92%8Cmap%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+      <url>/2020/05/06/Go%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0slice%E5%92%8Cmap%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<p><strong>从变量本身来说，go只有值传递</strong></p><h2 id="1-slice"><a href="#1-slice" class="headerlink" title="1.slice"></a>1.slice</h2><p><strong>slice本身是传递给func的时候是结构体传递,后对外部的slice生成一个副本</strong></p><p>但是slice的结构体如下:</p><pre><code class="go">type slice struct {    array unsafe.Pointer    len   int    cap   int}</code></pre><p>slice结构体中真正指向数组array的是一个指针,所以修改了func里面的slice可能会影响外面的slice:</p><pre><code class="go">func main() {    arr := []int{1, 2, 3, 4, 5, 6}    fmt.Println(&quot;main函数:arr&quot;, arr)    fmt.Printf(&quot;main函数:arr的地址%p\n&quot;, arr)    fmt.Println(&quot;=====================&quot;)    test1(arr)    fmt.Println(&quot;=====================&quot;)    fmt.Println(&quot;执行过test1函数后,main函数:arr&quot;, arr)    fmt.Printf(&quot;执行过test1函数后,main函数:arr的地址%p\n&quot;, arr)    test2(arr)    fmt.Println(&quot;=====================&quot;)    fmt.Println(&quot;执行过test2函数后,main函数:arr&quot;, arr)    fmt.Printf(&quot;执行过test2函数后,main函数:arr的地址%p\n&quot;, arr)}func test1(arr []int) {    //arr = append(arr,111,111,111,1111,1111,1111,1111,1111)    arr = append(arr,111)    arr[0] = 1111    fmt.Println(&quot;test1函数:arr&quot;, arr)    fmt.Printf(&quot;test1函数:arr的地址%p\n&quot;, arr)}func test2(arr []int) {    arr[0] = 1111    arr = append(arr,111)    fmt.Println(&quot;test2函数:arr&quot;, arr)    fmt.Printf(&quot;test2函数:arr的地址%p\n&quot;, arr)}</code></pre><p>输出:</p><pre><code>main函数:arr [1 2 3 4 5 6]main函数:arr的地址0x94b0020=====================test1函数:arr [1111 2 3 4 5 6 111]test1函数:arr的地址0x94aa030=====================执行过test1函数后,main函数:arr [1 2 3 4 5 6]执行过test1函数后,main函数:arr的地址0x94b0020test2函数:arr [1111 2 3 4 5 6 111]test2函数:arr的地址0x94aa060=====================执行过test2函数后,main函数:arr [1111 2 3 4 5 6]执行过test2函数后,main函数:arr的地址0x94b0020</code></pre><p>解释:</p><pre><code class="go">append的操作会返回一个新的结构体func append(slice []Type, elems ...Type) []Type替换掉原来外部的指针地址,因此不会以外部的变量产生影响了而先进行arr[0]修改操作还是会影响原来的指针</code></pre><p><strong>以上对于slice的坑需要额外注意,说出来都是泪T T</strong></p><h2 id="2-map"><a href="#2-map" class="headerlink" title="2.map"></a>2.map</h2><p>map相比slice简单了很多</p><pre><code class="go">func makemap(t *maptype, hint int, h *hmap) *hmap</code></pre><p><strong>创建map的时候会返回一个指针</strong></p><p><strong>传入到func之后就是对原地址进行操作,一般不会有其他的坑,除了map不支持并发以外= =</strong></p><p><strong>还有尽量不要用浮点数做key值,会有精度丢失的问题</strong></p><p>demo:</p><pre><code class="go">func main() {    tMap := make(map[string]string)    tMap[&quot;aaaa&quot;] = &quot;aaaa&quot;    fmt.Println(&quot;main函数:tMap&quot;, tMap)    fmt.Printf(&quot;main函数:tMap的地址%p\n&quot;, tMap)    test1(tMap)    fmt.Println(&quot;执行过test1后main函数:tMap&quot;, tMap)    fmt.Printf(&quot;执行过test1后main函数:tMap的地址%p\n&quot;, tMap)}func test1(tMap map[string]string) {    tMap[&quot;aaaa&quot;] = &quot;vvvvv&quot;    tMap[&quot;bbbb&quot;] = &quot;bbbbb&quot;    fmt.Println(&quot;test1函数:tMap&quot;, tMap)    fmt.Printf(&quot;test1函数:tMap的地址%p\n&quot;, tMap)}</code></pre><p>输出:</p><pre><code>main函数:tMap map[aaaa:aaaa]main函数:tMap的地址0xa058100test1函数:tMap map[aaaa:vvvvv bbbb:bbbbb]test1函数:tMap的地址0xa058100执行过test1后main函数:tMap map[aaaa:vvvvv bbbb:bbbbb]执行过test1后main函数:tMap的地址0xa058100</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 语言 </category>
+          
+          <category> go </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> go </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>访问者模式</title>
       <link href="/2020/05/03/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
       <url>/2020/05/03/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F/</url>
@@ -2635,11 +2702,11 @@
     
     
     <entry>
-      <title>20.Redis缓存数据库读写一致性</title>
-      <link href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"/>
-      <url>/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/</url>
+      <title>19.Redis雪崩击穿穿透</title>
+      <link href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"/>
+      <url>/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/</url>
       
-        <content type="html"><![CDATA[<h2 id="20-1-Cache-Aside-Pattern"><a href="#20-1-Cache-Aside-Pattern" class="headerlink" title="20.1 Cache Aside Pattern"></a>20.1 Cache Aside Pattern</h2><p>最经典的缓存+数据库读写的模式:Cache Aside Pattern 　旁路缓存</p><p>有几个原则:</p><ul><li>读的时候，先读缓存，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。</li><li>更新的时候，先<strong>删除缓存</strong>，然后再更新数据库。</li></ul><h3 id="20-1-1-删除缓存"><a href="#20-1-1-删除缓存" class="headerlink" title="20.1.1 删除缓存"></a>20.1.1 删除缓存</h3><p>更新时是删除缓存，而不是更新缓存</p><ul><li><p>缓存有的时候不但是从数据库里取出的一个简单值,可能会经过复杂计算</p></li><li><p>更新的数据不一定会被频繁访问到,如果去更新缓存可能会<strong>造成大量的冷数据</strong></p></li><li><p>懒加载思想:<strong>用到缓存才去算缓存</strong></p></li></ul><h2 id="20-2-双写不一致问题"><a href="#20-2-双写不一致问题" class="headerlink" title="20.2 双写不一致问题"></a>20.2 双写不一致问题</h2><h3 id="20-2-1-更新顺序颠倒情形"><a href="#20-2-1-更新顺序颠倒情形" class="headerlink" title="20.2.1 更新顺序颠倒情形"></a>20.2.1 更新顺序颠倒情形</h3><p>问题描述: <strong>先修改数据库,再删除缓存</strong>,当删除缓存失败了,会导致数据库中是新数据,缓存中是旧数据</p><p>解决思路: <strong>先删除缓存,再更新数据库</strong>,如果删除缓存成功了,修改数据库失败了,那么数据库中是旧数据,缓存中是空的,那么数据不会不一致,因为读的时候缓存没有,则读数据库中的旧数据,然后更新到缓存中</p><h3 id="20-2-2-更新数据库并发读情形"><a href="#20-2-2-更新数据库并发读情形" class="headerlink" title="20.2.2 更新数据库并发读情形"></a>20.2.2 更新数据库并发读情形</h3><p>问题描述:数据发生了变更,先删除了缓存,然后要去修改数据库,<strong>此时还没有修改数据库</strong>,一个请求过来去读缓存,没有读到,去查数据库,<strong>查到了修改前的旧数据,放到缓存中</strong>,数据变更的程序完成了数据库的修改,此时数据库和缓存的数据不一致了</p><p>解决思路:　更新数据的时候，根据数据的唯一标识，hash之后，<strong>发送到一个队列中,队列可是redis的队列,Java的内存队列</strong>等,读取数据的时候，如果发现数据不在缓存中，那么将重新执行“读取数据+更新缓存”的操作，根据唯一标识路由之后，也发送到同一个队列中。</p><p>一个队列对应一个工作线程，每个工作线程串行拿到对应的操作，然后一条一条的执行。这样的话，一个数据变更的操作，先删除缓存，然后再去更新数据库，但是还没完成更新。此时如果一个读请求过来，没有读到缓存，那么可以先将缓存更新的请求发送到队列中，此时会在队列中积压，然后同步等待缓存更新完成。</p><p>这里有一个<strong>优化点</strong>，一个队列中，<strong>其实多个更新缓存请求串在一起是没意义的</strong>，因此可以做过滤，如果发现队列中已经有一个更新缓存的请求了，那么就不用再放个更新请求操作进去了，直接等待前面的更新操作请求完成即可。</p><p>待那个队列对应的工作线程完成了上一个操作的数据库的修改之后，才会去执行下一个操作，也就是缓存更新的操作，此时会从数据库中读取最新的值，然后写入缓存中。</p><p>如果请求还在等待时间范围内，不断轮询发现可以取到值了，那么就直接返回；如果请求等待的时间超过一定时长，那么这一次直接从数据库中读取当前的旧值</p>]]></content>
+        <content type="html"><![CDATA[<h2 id="19-1-雪崩"><a href="#19-1-雪崩" class="headerlink" title="19.1 雪崩"></a>19.1 雪崩</h2><h3 id="19-1-1-定义"><a href="#19-1-1-定义" class="headerlink" title="19.1.1 定义"></a>19.1.1 定义</h3><p>缓存同一时间大面积的失效，后面的请求都会落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p><h3 id="19-1-2-解决方式"><a href="#19-1-2-解决方式" class="headerlink" title="19.1.2 解决方式"></a>19.1.2 解决方式</h3><ul><li><p>事前:尽量保证整个 redis 集群的高可用性，发现机器宕机尽快补上。选择合适的内存淘汰策略</p><ul><li><strong>缓存预热</strong>:数据加热的含义就是在正式部署之前，把可能的数据先预先访问一遍，这样部分可能大量访问的数据就会加载到缓存中。可以使用阿里开源的<strong>canal</strong></li><li><strong>设置热点数据永远不过期</strong>，有更新操作就更新缓存就好了</li><li>往Redis存数据的时候，把每个Key的<strong>失效时间都加个随机值</strong>就好了，这样可以保证数据不会在同一时间大面积失效</li></ul><pre><code class="java">setRedis（Key，value，time + Math.random() * 10000）；</code></pre></li><li><p>事中：本地ehcache缓存 + hystrix限流&amp;降级，避免MySQL崩掉</p></li><li><p>事后：利用 redis 持久化机制保存的数据尽快恢复缓存</p></li></ul><h2 id="19-2-击穿"><a href="#19-2-击穿" class="headerlink" title="19.2 击穿"></a>19.2 击穿</h2><h3 id="19-2-1-定义"><a href="#19-2-1-定义" class="headerlink" title="19.2.1 定义"></a>19.2.1 定义</h3><p>缓存击穿，就是说某个 key 非常热点，访问非常频繁，处于集中式高并发访问的情况，当这个 key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库，就像是在一道屏障上凿开了一个洞。</p><h3 id="19-2-2-解决方式"><a href="#19-2-2-解决方式" class="headerlink" title="19.2.2 解决方式"></a>19.2.2 解决方式</h3><p>不同场景下的解决方式可如下：</p><ul><li>若缓存的数据是基本不会发生更新的，则可尝试将该热点数据设置为永不过期。</li><li>若缓存的数据更新不频繁，且缓存刷新的整个流程耗时较少的情况下，则可以采用基于 redis、zookeeper 等分布式中间件的分布式互斥锁，或者本地互斥锁以保证仅少量的请求能请求数据库并重新构建缓存，其余线程则在锁释放后能访问到新缓存。</li><li>若缓存的数据更新频繁或者缓存刷新的流程耗时较长的情况下，可以利用定时线程在缓存过期前主动的重新构建缓存或者延后缓存的过期时间，以保证所有的请求能一直访问到对应的缓存。</li></ul><h2 id="19-3-穿透"><a href="#19-3-穿透" class="headerlink" title="19.3 穿透"></a>19.3 穿透</h2><h3 id="19-3-1-定义"><a href="#19-3-1-定义" class="headerlink" title="19.3.1 定义"></a>19.3.1 定义</h3><p>对于系统A，假设一秒 5000 个请求，结果其中 4000 个请求是黑客发出的恶意攻击。</p><p>黑客发出的那 4000 个攻击，缓存中查不到，每次你去数据库里查，也查不到。</p><p>举个栗子。数据库 id 是从 1 开始的，结果黑客发过来的请求 id 全部都是负数。这样的话，缓存中不会有，请求每次都“视缓存于无物”，直接查询数据库。这种恶意攻击场景的缓存穿透就会直接把数据库给打死。</p><h3 id="19-3-2-解决方式"><a href="#19-3-2-解决方式" class="headerlink" title="19.3.2 解决方式"></a>19.3.2 解决方式</h3><ul><li><strong>初级</strong>:每次系统 A 从数据库中只要没查到，就<strong>写一个空值到缓存</strong>里去，比如 <code>set -999 UNKNOWN</code>。然后设置一个过期时间，这样的话，下次有相同的 key 来访问的时候，在缓存失效之前，都可以直接从缓存中取数据。</li><li><strong>进阶</strong>: <strong>在接口层增加校验</strong>，比如用户鉴权校验，参数做校验，不合法的参数直接代码Return，比如：id 做基础校验，id &lt;=0的直接拦截等。</li><li><strong>高级</strong>: 使用<strong>布隆过滤器（Bloom Filter）</strong>这个也能很好的防止缓存穿透的发生，他的原理也很简单就是利用高效的数据结构和算法快速<strong>判断出你这个Key是否在数据库中存在，不存在你return就好了，存在你就去查了DB刷新KV再return</strong>。</li></ul>]]></content>
       
       
       <categories>
@@ -2664,11 +2731,11 @@
     
     
     <entry>
-      <title>19.Redis雪崩击穿穿透</title>
-      <link href="/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/"/>
-      <url>/2020/02/23/19-Redis%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF%E7%A9%BF%E9%80%8F/</url>
+      <title>20.Redis缓存数据库读写一致性</title>
+      <link href="/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/"/>
+      <url>/2020/02/23/20-Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%BB%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7/</url>
       
-        <content type="html"><![CDATA[<h2 id="19-1-雪崩"><a href="#19-1-雪崩" class="headerlink" title="19.1 雪崩"></a>19.1 雪崩</h2><h3 id="19-1-1-定义"><a href="#19-1-1-定义" class="headerlink" title="19.1.1 定义"></a>19.1.1 定义</h3><p>缓存同一时间大面积的失效，后面的请求都会落到数据库上，造成数据库短时间内承受大量请求而崩掉。</p><h3 id="19-1-2-解决方式"><a href="#19-1-2-解决方式" class="headerlink" title="19.1.2 解决方式"></a>19.1.2 解决方式</h3><ul><li><p>事前:尽量保证整个 redis 集群的高可用性，发现机器宕机尽快补上。选择合适的内存淘汰策略</p><ul><li><strong>缓存预热</strong>:数据加热的含义就是在正式部署之前，把可能的数据先预先访问一遍，这样部分可能大量访问的数据就会加载到缓存中。可以使用阿里开源的<strong>canal</strong></li><li><strong>设置热点数据永远不过期</strong>，有更新操作就更新缓存就好了</li><li>往Redis存数据的时候，把每个Key的<strong>失效时间都加个随机值</strong>就好了，这样可以保证数据不会在同一时间大面积失效</li></ul><pre><code class="java">setRedis（Key，value，time + Math.random() * 10000）；</code></pre></li><li><p>事中：本地ehcache缓存 + hystrix限流&amp;降级，避免MySQL崩掉</p></li><li><p>事后：利用 redis 持久化机制保存的数据尽快恢复缓存</p></li></ul><h2 id="19-2-击穿"><a href="#19-2-击穿" class="headerlink" title="19.2 击穿"></a>19.2 击穿</h2><h3 id="19-2-1-定义"><a href="#19-2-1-定义" class="headerlink" title="19.2.1 定义"></a>19.2.1 定义</h3><p>缓存击穿，就是说某个 key 非常热点，访问非常频繁，处于集中式高并发访问的情况，当这个 key 在失效的瞬间，大量的请求就击穿了缓存，直接请求数据库，就像是在一道屏障上凿开了一个洞。</p><h3 id="19-2-2-解决方式"><a href="#19-2-2-解决方式" class="headerlink" title="19.2.2 解决方式"></a>19.2.2 解决方式</h3><p>不同场景下的解决方式可如下：</p><ul><li>若缓存的数据是基本不会发生更新的，则可尝试将该热点数据设置为永不过期。</li><li>若缓存的数据更新不频繁，且缓存刷新的整个流程耗时较少的情况下，则可以采用基于 redis、zookeeper 等分布式中间件的分布式互斥锁，或者本地互斥锁以保证仅少量的请求能请求数据库并重新构建缓存，其余线程则在锁释放后能访问到新缓存。</li><li>若缓存的数据更新频繁或者缓存刷新的流程耗时较长的情况下，可以利用定时线程在缓存过期前主动的重新构建缓存或者延后缓存的过期时间，以保证所有的请求能一直访问到对应的缓存。</li></ul><h2 id="19-3-穿透"><a href="#19-3-穿透" class="headerlink" title="19.3 穿透"></a>19.3 穿透</h2><h3 id="19-3-1-定义"><a href="#19-3-1-定义" class="headerlink" title="19.3.1 定义"></a>19.3.1 定义</h3><p>对于系统A，假设一秒 5000 个请求，结果其中 4000 个请求是黑客发出的恶意攻击。</p><p>黑客发出的那 4000 个攻击，缓存中查不到，每次你去数据库里查，也查不到。</p><p>举个栗子。数据库 id 是从 1 开始的，结果黑客发过来的请求 id 全部都是负数。这样的话，缓存中不会有，请求每次都“视缓存于无物”，直接查询数据库。这种恶意攻击场景的缓存穿透就会直接把数据库给打死。</p><h3 id="19-3-2-解决方式"><a href="#19-3-2-解决方式" class="headerlink" title="19.3.2 解决方式"></a>19.3.2 解决方式</h3><ul><li><strong>初级</strong>:每次系统 A 从数据库中只要没查到，就<strong>写一个空值到缓存</strong>里去，比如 <code>set -999 UNKNOWN</code>。然后设置一个过期时间，这样的话，下次有相同的 key 来访问的时候，在缓存失效之前，都可以直接从缓存中取数据。</li><li><strong>进阶</strong>: <strong>在接口层增加校验</strong>，比如用户鉴权校验，参数做校验，不合法的参数直接代码Return，比如：id 做基础校验，id &lt;=0的直接拦截等。</li><li><strong>高级</strong>: 使用<strong>布隆过滤器（Bloom Filter）</strong>这个也能很好的防止缓存穿透的发生，他的原理也很简单就是利用高效的数据结构和算法快速<strong>判断出你这个Key是否在数据库中存在，不存在你return就好了，存在你就去查了DB刷新KV再return</strong>。</li></ul>]]></content>
+        <content type="html"><![CDATA[<h2 id="20-1-Cache-Aside-Pattern"><a href="#20-1-Cache-Aside-Pattern" class="headerlink" title="20.1 Cache Aside Pattern"></a>20.1 Cache Aside Pattern</h2><p>最经典的缓存+数据库读写的模式:Cache Aside Pattern 　旁路缓存</p><p>有几个原则:</p><ul><li>读的时候，先读缓存，缓存没有的话，就读数据库，然后取出数据后放入缓存，同时返回响应。</li><li>更新的时候，先<strong>删除缓存</strong>，然后再更新数据库。</li></ul><h3 id="20-1-1-删除缓存"><a href="#20-1-1-删除缓存" class="headerlink" title="20.1.1 删除缓存"></a>20.1.1 删除缓存</h3><p>更新时是删除缓存，而不是更新缓存</p><ul><li><p>缓存有的时候不但是从数据库里取出的一个简单值,可能会经过复杂计算</p></li><li><p>更新的数据不一定会被频繁访问到,如果去更新缓存可能会<strong>造成大量的冷数据</strong></p></li><li><p>懒加载思想:<strong>用到缓存才去算缓存</strong></p></li></ul><h2 id="20-2-双写不一致问题"><a href="#20-2-双写不一致问题" class="headerlink" title="20.2 双写不一致问题"></a>20.2 双写不一致问题</h2><h3 id="20-2-1-更新顺序颠倒情形"><a href="#20-2-1-更新顺序颠倒情形" class="headerlink" title="20.2.1 更新顺序颠倒情形"></a>20.2.1 更新顺序颠倒情形</h3><p>问题描述: <strong>先修改数据库,再删除缓存</strong>,当删除缓存失败了,会导致数据库中是新数据,缓存中是旧数据</p><p>解决思路: <strong>先删除缓存,再更新数据库</strong>,如果删除缓存成功了,修改数据库失败了,那么数据库中是旧数据,缓存中是空的,那么数据不会不一致,因为读的时候缓存没有,则读数据库中的旧数据,然后更新到缓存中</p><h3 id="20-2-2-更新数据库并发读情形"><a href="#20-2-2-更新数据库并发读情形" class="headerlink" title="20.2.2 更新数据库并发读情形"></a>20.2.2 更新数据库并发读情形</h3><p>问题描述:数据发生了变更,先删除了缓存,然后要去修改数据库,<strong>此时还没有修改数据库</strong>,一个请求过来去读缓存,没有读到,去查数据库,<strong>查到了修改前的旧数据,放到缓存中</strong>,数据变更的程序完成了数据库的修改,此时数据库和缓存的数据不一致了</p><p>解决思路:　更新数据的时候，根据数据的唯一标识，hash之后，<strong>发送到一个队列中,队列可是redis的队列,Java的内存队列</strong>等,读取数据的时候，如果发现数据不在缓存中，那么将重新执行“读取数据+更新缓存”的操作，根据唯一标识路由之后，也发送到同一个队列中。</p><p>一个队列对应一个工作线程，每个工作线程串行拿到对应的操作，然后一条一条的执行。这样的话，一个数据变更的操作，先删除缓存，然后再去更新数据库，但是还没完成更新。此时如果一个读请求过来，没有读到缓存，那么可以先将缓存更新的请求发送到队列中，此时会在队列中积压，然后同步等待缓存更新完成。</p><p>这里有一个<strong>优化点</strong>，一个队列中，<strong>其实多个更新缓存请求串在一起是没意义的</strong>，因此可以做过滤，如果发现队列中已经有一个更新缓存的请求了，那么就不用再放个更新请求操作进去了，直接等待前面的更新操作请求完成即可。</p><p>待那个队列对应的工作线程完成了上一个操作的数据库的修改之后，才会去执行下一个操作，也就是缓存更新的操作，此时会从数据库中读取最新的值，然后写入缓存中。</p><p>如果请求还在等待时间范围内，不断轮询发现可以取到值了，那么就直接返回；如果请求等待的时间超过一定时长，那么这一次直接从数据库中读取当前的旧值</p>]]></content>
       
       
       <categories>
